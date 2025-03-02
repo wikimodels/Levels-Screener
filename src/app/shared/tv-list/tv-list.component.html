@@ -1,0 +1,14 @@
+<div class="modal-content">
+  <div *ngFor="let coinList of coinLists; let i = index" class="modal-half">
+    <!-- Header with dynamic exchange names and logos -->
+    <div class="header">
+      <img [src]="getExchangeLogo(i)" [alt]="getExchangeName(i)" class="logo">
+      {{ getExchangeName(i) }}
+    </div>
+
+    <!-- Body content with coin list and download functionality -->
+    <div class="body">
+      <code (click)="downloadCodeAsTxt(i)">{{ coinList }}</code>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+<div class="controls-container">
+  <div>
+    <!-- FILTER BOX -->
+    <mat-form-field appearance="outline" class="filter-box">
+      <mat-icon matPrefix>filter_list</mat-icon>
+      <mat-label>Filter</mat-label>
+      <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter($event)" placeholder="Search">
+      <button mat-icon-button matSuffix class="small-icon-button" (click)="clearInput()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div>
+    <h1>Archived Alerts</h1>
+  </div>
+  <div>
+    <button mat-raised-button [disabled]="deleteDisabled" (click)="onDeleteSelected()" color="warn" matTooltip="Delete"
+      matTooltipPosition="above"><mat-icon style="margin-left: 5px;" svgIcon="delete"></mat-icon></button>
+  </div>
+</div>
+
+<div>
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 archived-alerts-table">
+
+    <!-- SYMBOL -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Symbol</th>
+      <td mat-cell *matCellDef="let element" class="symbol-cell">
+        <img [src]="element.image_url ? element.image_url : 'assets/img/noname.png'" alt="logo" class="round-image" />
+        {{element.symbol}} ({{element.category}})
+      </td>
+    </ng-container>
+
+    <!-- Alert Name -->
+    <ng-container matColumnDef="alertName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Alert Name
+      </th>
+      <td mat-cell *matCellDef="let element"> <b>{{element.alertName}}</b> </td>
+    </ng-container>
+
+    <!-- ACTION -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Action
+      </th>
+      <td mat-cell *matCellDef="let element"> {{element.action}} </td>
+    </ng-container>
+
+
+    <!-- LINKS -->
+    <ng-container matColumnDef="links">
+      <th mat-header-cell *matHeaderCellDef> Links </th>
+      <td mat-cell *matCellDef="let element">
+        <!-- TRADING VIEW -->
+        <a *ngIf="element.tvLink" [href]="element.tvLink" target="_blank">
+          <img src="assets/icons/tv.svg" alt="TradingView" class="round-image" />
+        </a>
+        <!-- COIN GLASS -->
+        <a *ngIf="element.cgLink" [href]="element.cgLink" target="_blank">
+          <img src="assets/icons/coinglass.svg" alt="Coinglass" class="round-image" />
+        </a>
+        <!-- BINANCE -->
+        <a *ngIf="element.exchBiLink" [href]="element.exchBiLink" target="_blank">
+          <img src="assets/icons/binance-black.svg" alt="Binance" class="round-image" />
+        </a>
+        <!-- BYBIT -->
+        <a *ngIf="element.exchByLink" [href]="element.exchByLink" target="_blank">
+          <img src="assets/icons/bybit.svg" alt="Bybit" class="round-image" />
+        </a>
+      </td>
+    </ng-container>
+
+    <!-- DESCRIPTION -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon (click)="onOpenDescriptionModalDialog(element)" class="clickable-icon">details</mat-icon>
+      </td>
+    </ng-container>
+
+    <!-- EDIT -->
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon (click)="onEdit(element)" class="clickable-icon" svgIcon="edit"></mat-icon>
+      </td>
+    </ng-container>
+
+    <!-- CHECKBOX-->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <!-- Select All Checkbox -->
+        <mat-checkbox [checked]="selection.hasValue() && isAllSelected()" (change)="toggleAll()"
+          [indeterminate]="selection.hasValue()&&!isAllSelected()"></mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <!-- Individual Row Checkbox -->
+        <mat-checkbox (change)="onDataToggled(element)" [checked]="selection.isSelected(element)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <div>
+    <mat-paginator [pageSizeOptions]="[10, 20, 30, 100]" showFirstLastButtons></mat-paginator>

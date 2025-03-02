@@ -2,3 +2,236 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.chart{
+  height: 450px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+}
+
+
+
+/* SNACKBAR CSS FOR ANGULAR 16 */
+.warning-snackbar {
+  --mdc-snackbar-container-color: #0000b3;
+  --mat-mdc-snack-bar-button-color: white;
+}
+
+/* SNACKBAR CSS FOR ANGULAR 16 */
+.error-snackbar {
+  --mdc-snackbar-container-color: rgb(168, 31, 31);
+  --mat-mdc-snack-bar-button-color: white;
+}
+
+/* SNACKBAR CSS FOR ANGULAR 16 */
+.info-snackbar {
+  --mdc-snackbar-container-color: green;
+  --mat-mdc-snack-bar-button-color: white;
+}
+
+/* ------------------------*/
+/* TRIGGERED ALERTS TABLE  */
+/*-------------------------*/
+.coin-table .mat-mdc-row:nth-child(even) {
+  background-color: #faf8f2!important;
+}
+
+.coin-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.coin-table .mat-mdc-header-row {
+  background-color: #f7f181 !important;
+  height: 45px;
+}
+.coin-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+
+/* ------------------------*/
+/* TRIGGERED ALERTS TABLE  */
+/*-------------------------*/
+.triggered-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #faf8f2!important;
+}
+
+.triggered-alerts-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.triggered-alerts-table .mat-mdc-header-row {
+  background-color: #f7f181 !important;
+  height: 45px;
+}
+.triggered-alerts-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+/* ----------------------*/
+/* ALERTS AT WORK        */
+/*---------------------- */
+.alerts-at-work-table .mat-mdc-row:nth-child(even) {
+  background-color: #e4f7df!important;
+}
+
+.alerts-at-work-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.alerts-at-work-table .mat-mdc-header-row {
+  background-color: #8dfccc !important;
+  height: 45px;
+}
+
+.alerts-at-work-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+/* ----------------------*/
+/* ARCHIVED ALERTS TABLE */
+/*---------------------- */
+.archived-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #e4f7df!important;
+}
+
+.archived-alerts-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.archived-alerts-table .mat-mdc-header-row {
+  background-color: #cbdff5 !important;
+  height: 45px;
+}
+
+.archived-alerts-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+
+/* ----------------------*/
+/* COINS TABLE */
+/*---------------------- */
+.coin-repo-table .mat-mdc-row:nth-child(even) {
+  background-color: #E8F5E9!important;
+
+}
+
+.coin-repo-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.coin-repo-table .mat-mdc-header-row {
+  background-color: #4CAF50 !important;
+  height: 45px;
+  color: white;
+}
+
+.coin-repo-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+/* ----------------------*/
+/* COIN-PROVIDER TABLE */
+/*---------------------- */
+.coin-provider-table .mat-mdc-row:nth-child(even) {
+  background-color: #FFF3E0!important;
+}
+
+.coin-provider-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.coin-provider-table .mat-mdc-header-row {
+  background-color: #F57C00 !important;
+  height: 45px;
+  color: white;
+}
+
+.coin-provider-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+/* ----------------------*/
+/* BLACK LIST TABLE */
+/*---------------------- */
+.coin-black-list-table .mat-mdc-row:nth-child(even) {
+  background-color: #e4f7df!important;
+}
+
+.coin-black-list-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.coin-black-list-table .mat-mdc-header-row {
+  background-color: #070708 !important;
+  color: white;
+  height: 45px;
+}
+
+.coin-black-list-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+/* ----------------------*/
+/* SORTER TABLE */
+/*---------------------- */
+.coin-sorter-table .mat-mdc-row:nth-child(even) {
+  background-color: #e4f7df!important;
+}
+
+.coin-sorter-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.coin-sorter-table .mat-mdc-header-row {
+  background-color: #7B1FA2 !important;
+  color: #F3E5F5;
+  height: 45px;
+}
+
+.coin-sorter-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+
+.mat-mdc-input-element{
+  height: 15px !important;
+}
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;    /* Firefox */
+  -webkit-appearance: none;    /* Chrome, Safari, and WebKit-based browsers */
+  appearance: none;            /* Standard property */
+}
+
+.checkbox-wrapper .mdc-checkbox {
+  background-color:   #ffccee ;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+
