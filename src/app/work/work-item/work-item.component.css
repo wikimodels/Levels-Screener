@@ -9,31 +9,29 @@
   cursor: pointer;
 }
 
-.card-container .logo img{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.card-container .logo img {
+  width: 24px;  /* ✅ Smaller coin image */
+  height: 24px;
+  object-fit: contain;
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
 }
 
-.card-container .symbol-name {
-  font-size: 16px;
+.symbol-name {
+  font-size: 14px;
   font-weight: bold;
   color: #333;
-  margin-right: 1px;
+  margin-right: 4px;
   white-space: nowrap;
 }
 
-.card-container .exchange-link img {
-  margin-top: 5px;
-  width: 28px;
-  height: 28px;
+/* ✅ FIXED: Separate class for exchange logos */
+.exchange-link img {
+  width: 20px; /* ✅ Properly sized exchange logos */
+  height: 20px;
+  object-fit: contain;
   border-radius: 50%;
-  cursor: pointer;
 }
 
- .selected {
+.selected {
   background-color: #e8ebee;
 }

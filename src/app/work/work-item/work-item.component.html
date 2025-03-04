@@ -1,17 +1,17 @@
 <div matRipple class="card-container mat-elevation-z4" (click)="toggleItem(coin)" [class.selected]="isSelected(coin)">
   <!-- LOGO -->
   <div class="logo">
-    <img [src]="coin.image_url ? coin.image_url : 'assets/img/noname.png'" alt="logo" />
+    <img [src]="coin.imageUrl ? coin.imageUrl : 'assets/img/noname.png'" alt="logo" />
   </div>
 
   <!-- SYMBOL -->
   <div class="symbol-name">{{ coin.symbol }}</div>
 
   <!-- EXCHANGES LINKS -->
-  <div style="display: inline-block;" *ngFor="let exchange of coin.exchanges">
+  <div class="exchange-link" *ngFor="let exchange of coin.exchanges">
     <a [href]="coinsLinksService.exchangeLink(coin.symbol, exchange)" target="_blank"
       (click)="$event.stopPropagation()">
-      <img [src]="coinsLinksService.exchangeLogoLink(exchange)" alt="Binance" class="round-image" />
+      <img [src]="coinsLinksService.exchangeLogoLink(exchange)" alt="Exchange Logo" />
     </a>
   </div>
 </div>

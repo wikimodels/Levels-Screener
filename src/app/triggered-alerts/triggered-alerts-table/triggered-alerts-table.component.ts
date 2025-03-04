@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DescriptionModalComponent } from '../../shared/description-modal/description-modal.component';
 
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
-import { AlertsCollections } from 'models/alerts/alerts-collections';
+import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Alert } from 'models/alerts/alert';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
@@ -57,7 +57,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.alertsService
-      .alerts$(AlertsCollections.TriggeredAlerts)
+      .alerts$(AlertsCollection.TriggeredAlerts)
       .subscribe((data: Alert[]) => {
         data.sort((a, b) => {
           if (a.activationTime === undefined) return 1; // Place undefined values last
@@ -71,7 +71,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   refreshDataTable() {
-    this.alertsService.getAllAlerts(AlertsCollections.TriggeredAlerts);
+    this.alertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
     this.isRotating = true;
     setTimeout(() => {
       this.isRotating = false;
@@ -117,7 +117,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
   onEdit(alert: Alert) {
     this.matDialog.open(EditAlertComponent, {
-      data: { collectionName: AlertsCollections.TriggeredAlerts, alert: alert },
+      data: { collectionName: AlertsCollection.TriggeredAlerts, alert: alert },
       enterAnimationDuration: 250,
       exitAnimationDuration: 250,
       width: '95vw',
@@ -128,7 +128,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   onDeleteSelected() {
     const alerts = this.selection.selected as Alert[];
     const ids = alerts.map((a) => a.id);
-    this.alertsService.deleteMany(AlertsCollections.TriggeredAlerts, ids);
+    this.alertsService.deleteMany(AlertsCollection.TriggeredAlerts, ids);
     this.selection.clear();
     this.buttonsDisabled = true;
   }
@@ -139,52 +139,46 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onMoveToWorkingCoins() {
-    const selectedAlerts = this.selection.selected as Alert[];
-    const selectedSymbols = selectedAlerts.map((a) => a.symbol);
-
-    // Get all coins from the CoinRepo collection
-    const coins = this.coinsService.getCoins();
-
-    // Filter out coins that match the selected symbols
-    let selectedCoins = coins.filter((coin) =>
-      selectedSymbols.includes(coin.symbol)
-    );
-
-    // Get coins that are already in CoinAtWork
-    const coinsAtWork = this.coinsService.getCoins().filter((c) => c.isAtWork);
-
-    // Filter out any coins from selectedCoins that are already in CoinAtWork
-    selectedCoins = selectedCoins.filter(
-      (coin) =>
-        !coinsAtWork.some((coinAtWork) => coinAtWork.symbol === coin.symbol)
-    );
-
-    // Remove duplicates in selectedCoins based on the symbol
-    selectedCoins = selectedCoins.filter(
-      (value, index, self) =>
-        index === self.findIndex((t) => t.symbol === value.symbol)
-    );
-
-    // Check if there are no new coins to add
-    if (selectedCoins.length === 0) {
-      this.snackbarService.showSnackBar(
-        'Some Coins already there',
-        '',
-        3000,
-        SnackbarType.Warning
-      );
-    } else {
-      console.log(selectedCoins);
-      const updateData: Array<CoinUpdateData> = selectedCoins.map((c) => {
-        return {
-          symbol: c.symbol,
-          propertiesToUpdate: { isAtWork: true },
-        };
-      });
-      this.coinsService.updateMany(updateData);
-    }
-    this.selection.clear();
-    this.buttonsDisabled = true;
+    // const selectedAlerts = this.selection.selected as Alert[];
+    // const selectedSymbols = selectedAlerts.map((a) => a.symbol);
+    // // Get all coins from the CoinRepo collection
+    // const coins = this.coinsService.getCoins();
+    // // Filter out coins that match the selected symbols
+    // let selectedCoins = coins.filter((coin) =>
+    //   selectedSymbols.includes(coin.symbol)
+    // );
+    // // Get coins that are already in CoinAtWork
+    // const coinsAtWork = this.coinsService.getCoins().filter((c) => c.isAtWork);
+    // // Filter out any coins from selectedCoins that are already in CoinAtWork
+    // selectedCoins = selectedCoins.filter(
+    //   (coin) =>
+    //     !coinsAtWork.some((coinAtWork) => coinAtWork.symbol === coin.symbol)
+    // );
+    // // Remove duplicates in selectedCoins based on the symbol
+    // selectedCoins = selectedCoins.filter(
+    //   (value, index, self) =>
+    //     index === self.findIndex((t) => t.symbol === value.symbol)
+    // );
+    // // Check if there are no new coins to add
+    // if (selectedCoins.length === 0) {
+    //   this.snackbarService.showSnackBar(
+    //     'Some Coins already there',
+    //     '',
+    //     3000,
+    //     SnackbarType.Warning
+    //   );
+    // } else {
+    //   console.log(selectedCoins);
+    //   const updateData: Array<CoinUpdateData> = selectedCoins.map((c) => {
+    //     return {
+    //       symbol: c.symbol,
+    //       propertiesToUpdate: { isAtWork: true },
+    //     };
+    //   });
+    //   //this.coinsService.updateMany(updateData);
+    // }
+    // this.selection.clear();
+    // this.buttonsDisabled = true;
   }
 
   ngOnDestroy(): void {

@@ -10,7 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
-import { AlertsCollections } from 'models/alerts/alerts-collections';
+import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Alert } from 'models/alerts/alert';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
 import { Subscription } from 'rxjs';
@@ -37,7 +37,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   dataSource!: any;
   buttonsDisabled = true;
   filterValue = '';
-  collectionName = AlertsCollections.WorkingAlerts;
+  collectionName = AlertsCollection.WorkingAlerts;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   searchKeywordFilter = new FormControl();
@@ -52,7 +52,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.alertsService
-      .alerts$(AlertsCollections.WorkingAlerts)
+      .alerts$(AlertsCollection.WorkingAlerts)
       .subscribe((data) => {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
@@ -109,7 +109,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   onDeleteSelected() {
     const alerts = this.selection.selected as Alert[];
     const ids = alerts.map((a) => a.id);
-    this.alertsService.deleteMany(AlertsCollections.WorkingAlerts, ids);
+    this.alertsService.deleteMany(AlertsCollection.WorkingAlerts, ids);
     this.selection.clear();
     this.buttonsDisabled = true;
   }
@@ -130,8 +130,8 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   onMoveToArchive() {
     const alerts = this.selection.selected as Alert[];
     this.alertsService.moveMany(
-      AlertsCollections.WorkingAlerts,
-      AlertsCollections.ArchivedAlerts,
+      AlertsCollection.WorkingAlerts,
+      AlertsCollection.ArchivedAlerts,
       alerts
     );
     this.selection.clear();

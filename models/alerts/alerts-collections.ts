@@ -1,5 +1,5 @@
-export enum AlertsCollections {
-  TriggeredAlerts = "triggeres-alerts",
-  ArchivedAlerts = "artchived-alerts",
-  WorkingAlerts = "working-alerts",
+export enum AlertsCollection {
+  TriggeredAlerts = 'triggered-alerts',
+  ArchivedAlerts = 'artchived-alerts',
+  WorkingAlerts = 'working-alerts',
 }

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NewAlertComponent } from '../alerts/new-alert/new-alert.component';
 
+
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -15,28 +16,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   onGetToWork() {
-    this.router.navigate([]);
-  }
-
-  onGoToCoin() {
-    this.router.navigate([]);
-  }
-
-  onGoToWs() {
-    this.router.navigate([]);
-  }
-
-  onGoToCoinProvider() {
-    this.router.navigate([]);
-  }
-
-  onGoToCoinBlackList() {
-    this.router.navigate([]);
-  }
-
-  onGoToAdminPanel() {
-    this.router.navigate([]);
-  }
+    this.router.navigate(["work"]);
+  }   
 
   onAddAlert() {
     this.modelDialog.open(NewAlertComponent, {

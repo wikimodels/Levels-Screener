@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertsCollections } from 'models/alerts/alerts-collections';
+import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Subscription } from 'rxjs';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
@@ -24,9 +24,9 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.alertsService.getAllAlerts(AlertsCollections.WorkingAlerts);
-    this.alertsService.getAllAlerts(AlertsCollections.ArchivedAlerts);
-    this.alertsService.getAllAlerts(AlertsCollections.TriggeredAlerts);
+    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
+    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
+    this.alertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
   }
 
   ngOnDestroy(): void {

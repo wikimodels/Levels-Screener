@@ -58,8 +58,8 @@ export class ValidationSummaryComponent implements OnInit, OnDestroy {
 
   generateErrorMessages(formGroup: FormGroup) {
     Object.keys(formGroup.controls).forEach((controlName) => {
-      if (controlName == 'tvImgUrls') {
-        const array = formGroup.controls['tvImgUrls'] as FormArray;
+      if (controlName == 'tvScreensUrls') {
+        const array = formGroup.controls['tvScreensUrls'] as FormArray;
 
         array.controls.forEach((c, index) => {
           if (c.errors?.['pattern'] && c.touched) {

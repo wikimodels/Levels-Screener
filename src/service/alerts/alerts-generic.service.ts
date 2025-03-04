@@ -54,6 +54,7 @@ export class AlertsGenericService {
   }
 
   public getAllAlerts(collectionName: string): void {
+    // HTTP request to add a Alert with query parameters
     const params = this.createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
@@ -72,7 +73,7 @@ export class AlertsGenericService {
     // HTTP request to add a Alert with query parameters
     const params = this.createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
-
+    console.log("Alert to add --> ", alert)
     this.http
       .post<InsertResult>(`${ALERTS_URLS.alertsAddOneUrl}`, alert, options)
       .subscribe({
@@ -97,7 +98,7 @@ export class AlertsGenericService {
       params: params,
       body: { ids },
     };
-
+    console.log(options)
     this.http
       .delete<DeleteResult>(`${ALERTS_URLS.alertsDeleteManyUrl}`, options)
       .subscribe({
@@ -120,7 +121,7 @@ export class AlertsGenericService {
     const options = { ...this.httpOptions, params };
 
     this.http
-      .post<ModifyResult>(
+      .put<ModifyResult>(
         `${ALERTS_URLS.alertsUpdateOneUrl}`,
         updatedData,
         options

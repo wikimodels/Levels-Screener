@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Alert } from 'models/alerts/alert';
-import { AlertsCollections } from 'models/alerts/alerts-collections';
+import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
@@ -44,7 +44,7 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.alertsService
-      .alerts$(AlertsCollections.ArchivedAlerts)
+      .alerts$(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
@@ -93,13 +93,13 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   onDeleteSelected() {
     const alerts = this.selection.selected as Alert[];
     const ids = alerts.map((a) => a.id);
-    this.alertsService.deleteMany(AlertsCollections.ArchivedAlerts, ids);
+    this.alertsService.deleteMany(AlertsCollection.ArchivedAlerts, ids);
     this.deleteDisabled = true;
   }
 
   onEdit(alert: Alert) {
     this.matDialog.open(EditAlertComponent, {
-      data: { collectionName: AlertsCollections.ArchivedAlerts, alert: alert },
+      data: { collectionName: AlertsCollection.ArchivedAlerts, alert: alert },
       enterAnimationDuration: 250,
       exitAnimationDuration: 250,
       width: '95vw',

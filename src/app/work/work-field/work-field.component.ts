@@ -5,6 +5,7 @@ import { Coin } from 'models/coin/coin';
 import { CoinsCollections } from 'models/coin/coins-collections';
 import { Subscription } from 'rxjs';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
+import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 
 @Component({
   selector: 'app-work-field',
@@ -12,14 +13,17 @@ import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
   styleUrls: ['./work-field.component.css'],
 })
 export class WorkFieldComponent implements OnInit, OnDestroy {
-  sub!: Subscription;
-  coins!: Coin[];
+  subscription: Subscription = new Subscription();
+  coinsAtWork!: Coin[];
   selection = new SelectionModel<any>(true, []);
-  constructor(private coinsService: CoinsGenericService) {}
+  constructor(private workingCoinsService: WorkingCoinsService) {}
   ngOnInit(): void {
-    this.sub = this.coinsService.coins$.subscribe((data: Coin[]) => {
-      this.coins = data.filter((c) => c.isAtWork);
-    });
+    // ✅ Subscribe to Working Coins
+    this.subscription.add(
+      this.workingCoinsService.coins$.subscribe((coins) => {
+        this.coinsAtWork = coins;
+      })
+    );
   }
 
   isAllSelected() {
@@ -33,8 +37,6 @@ export class WorkFieldComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 }

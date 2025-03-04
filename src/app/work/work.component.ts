@@ -2,12 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Coin } from 'models/coin/coin';
 import { CoinUpdateData } from 'models/coin/coin-update-data';
-import { CoinsCollections } from 'models/coin/coins-collections';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-
+import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { WorkSelectionService } from 'src/service/work.selection.service';
 
@@ -18,17 +17,18 @@ import { WorkSelectionService } from 'src/service/work.selection.service';
 })
 export class WorkComponent implements OnInit, OnDestroy {
   count = 0;
-  coins!: Coin[];
-  coinsAtWork!: Coin[];
-  symbols!: string[];
-  form!: FormGroup | null;
+  coins: Coin[] = [];
+  coinsAtWork: Coin[] = [];
+  symbols: string[] = [];
+  form!: FormGroup;
   filteredSymbols: string[] = [];
-  sub!: Subscription | null;
+  private subscription = new Subscription();
   defaultLink = 'https://www.tradingview.com/chart?symbol=BINANCE:BTCUSDT.P';
   private openedWindows: Window[] = [];
 
   constructor(
     private coinsService: CoinsGenericService,
+    private workingCoinsService: WorkingCoinsService,
     private coinsLinksService: CoinLinksService,
     private fb: FormBuilder,
     private snackbarService: SnackbarService,
@@ -36,142 +36,128 @@ export class WorkComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.coinsService.loadCoins(CoinsCollections.CoinRepo);
-    this.sub = this.coinsService.coins$.subscribe((data: Coin[]) => {
-      this.coins = data;
-      this.symbols = data.map((d) => d.symbol);
-      this.coinsAtWork = data.filter((c) => c.isAtWork);
-      this.count = this.coinsAtWork.length;
-      this.selectionService.clear();
-      console.log('symbols', this.symbols.length);
-    });
+    // ✅ Load all coins
+    this.subscription.add(
+      this.coinsService.loadCoins().subscribe((coins: Coin[]) => {
+        this.coins = coins;
+        this.symbols = coins.map((d) => d.symbol);
+      })
+    );
 
+    // ✅ Subscribe to Working Coins
+    this.subscription.add(
+      this.workingCoinsService.coins$.subscribe((coins) => {
+        console.log('WorkingCoins --->', coins);
+        this.coinsAtWork = coins;
+        this.count = coins.length;
+      })
+    );
+
+    // ✅ Fetch working coins once
+    this.workingCoinsService.getAllWorkingCoins();
+
+    this.selectionService.clear();
     this.form = this.fb.group({
       symbol: [''],
     });
   }
 
   filterSymbols(): void {
-    let inputValue = '';
-    if (this.form) {
-      inputValue = this.form.get('symbol')?.value.toLowerCase() || '';
-    }
-    if (this.symbols) {
-      this.filteredSymbols = this.symbols.filter((symbol) =>
-        symbol.toLowerCase().includes(inputValue)
-      );
-    }
+    const inputValue = this.form?.get('symbol')?.value?.toLowerCase() || '';
+    this.filteredSymbols = this.symbols.filter((symbol) =>
+      symbol.toLowerCase().includes(inputValue)
+    );
   }
 
-  onPutToWork() {
+  onPutToWork(): void {
     if (this.form?.valid) {
       const symbol = this.form.get('symbol')?.value;
-      const coin = this.coins.find((c) => c.symbol == symbol);
+      const coin = this.coins.find((c) => c.symbol === symbol);
 
-      const alreadyAdded = this.coinsAtWork.find(
-        (c) => coin?.symbol == c.symbol
-      );
-      if (coin && !alreadyAdded) {
-        const updateData: CoinUpdateData = {
-          symbol: coin.symbol,
-          propertiesToUpdate: {
-            isAtWork: true,
-          },
-        };
-        this.coinsService.updateOne(updateData);
-      }
-      if (coin && alreadyAdded) {
-        this.snackbarService.showSnackBar(
-          'Coin already in List',
-          '',
-          3000,
-          SnackbarType.Warning
+      if (coin) {
+        const alreadyAdded = this.coinsAtWork.some(
+          (c) => c.symbol === coin.symbol
         );
+        if (alreadyAdded) {
+          this.snackbarService.showSnackBar(
+            'Coin already in List',
+            '',
+            3000,
+            SnackbarType.Warning
+          );
+        } else {
+          // Remove from local state
+          this.coinsAtWork.push(coin);
+          this.coinsAtWork.sort((a, b) => a.symbol.localeCompare(b.symbol));
+          this.workingCoinsService.updateWorkingCoin(coin);
+        }
       }
     }
     this.form?.reset();
-    this.form?.markAsPristine();
   }
 
-  clearInput() {
+  clearInput(): void {
     this.filteredSymbols = [];
     this.form?.reset();
-    this.form?.markAsPristine();
   }
 
-  toggleAll() {
-    if (this.selectionService.isAllSelected(this.coinsAtWork)) {
-      this.selectionService.clear();
-    } else {
-      this.selectionService.select(this.coinsAtWork);
-    }
+  toggleAll(): void {
+    this.selectionService.isAllSelected(this.coinsAtWork)
+      ? this.selectionService.clear()
+      : this.selectionService.select(this.coinsAtWork);
   }
 
-  isAllSelected() {
+  isAllSelected(): boolean {
     return this.selectionService.isAllSelected(this.coinsAtWork);
   }
 
-  onOpenCoinglass() {
-    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) {
-          this.openedWindows.push(newWindow);
-        }
-      }, index * 1500);
-    });
+  onOpenCoinglass(): void {
+    this.openWindowsFromSelection();
   }
 
-  onOpenTradingview() {
-    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) {
-          this.openedWindows.push(newWindow);
-        }
-      }, index * 1500);
-    });
+  onOpenTradingview(): void {
+    this.openWindowsFromSelection();
   }
 
-  onOpenSingleTradingview() {
+  onOpenSingleTradingview(): void {
     const newWindow = window.open(this.defaultLink, '_blank');
-    if (newWindow) {
-      this.openedWindows.push(newWindow);
-    }
+    if (newWindow) this.openedWindows.push(newWindow);
   }
 
-  onCloseAllWindows() {
+  private openWindowsFromSelection(): void {
+    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+  }
+
+  onCloseAllWindows(): void {
     this.openedWindows.forEach((win) => win.close());
     this.openedWindows = [];
   }
 
-  onRemoveFromWork() {
-    const coins = this.selectionService.selectedValues() as Coin[];
+  onRemoveFromWork(): void {
+    const coinsToRemove = this.selectionService.selectedValues() as Coin[];
+    const symbolsToRemove = coinsToRemove.map((c) => c.symbol);
 
-    const currentCoins = this.coinsService.getCoins(); // Assuming you have a getter for the coins BehaviorSubject
-    const updatedCoins = currentCoins.filter(
-      (coin) => !coins.some((selected) => selected.symbol === coin.symbol)
+    // Remove from local state
+    this.coinsAtWork = this.coinsAtWork.filter(
+      (coin) => !symbolsToRemove.includes(coin.symbol)
     );
 
-    this.coinsService.setCoins(updatedCoins); // Update the BehaviorSubject with the filtered list
-    const updateData: Array<CoinUpdateData> = coins.map((c) => {
-      return {
-        symbol: c.symbol,
-        propertiesToUpdate: { isAtWork: false },
-      };
-    });
-    this.coinsService.updateMany(updateData);
+    // Remove from backend
+    this.workingCoinsService.deleteWorkingCoins(symbolsToRemove);
+
+    // Remove from selection
+    this.selectionService.clear();
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 }

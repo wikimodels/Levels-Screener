@@ -31,8 +31,8 @@ export class EditAlertComponent {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 
   ngOnInit(): void {
-    this.logoUrl = this.data.alert?.image_url
-      ? this.data.alert?.image_url
+    this.logoUrl = this.data.alert?.imageUrl
+      ? this.data.alert?.imageUrl
       : this.logoUrl;
     this.displayedSymbol = this.data.alert.symbol + ' ALERT EDIT';
     this.form = this.fb.group({
@@ -61,7 +61,7 @@ export class EditAlertComponent {
       imageLinks: [], // Add the Available form control
     });
     // Populate the FormArray for imageLinks
-    this.data.alert.tvImgUrls?.forEach((url: string) => {
+    this.data.alert.tvScreensUrls?.forEach((url: string) => {
       this.imageLinks.push(this.fb.control(url)); // Add each URL as a FormControl
     });
   }
@@ -106,7 +106,7 @@ export class EditAlertComponent {
     this.form?.updateValueAndValidity();
     if (this.form?.valid) {
       this.data.alert.description = this.form.get('description')?.value;
-      this.data.alert.tvImgUrls = this.imageLinks.value;
+      this.data.alert.tvScreensUrls = this.imageLinks.value;
       this.data.alert.isActive = this.form.get('isActive')?.value;
 
       this.alertService.updateOne(this.data.collectionName, this.data.alert);

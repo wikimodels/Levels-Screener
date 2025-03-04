@@ -1,7 +1,7 @@
 // snackbar.service.ts
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarType } from '../models/shared/snackbar-type';
+import { SnackbarType } from 'models/shared/snackbar-type';
 
 @Injectable({
   providedIn: 'root', // This makes the service available throughout the app

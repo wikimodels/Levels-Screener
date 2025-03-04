@@ -6,11 +6,12 @@ import { SymbolNameValidator } from 'src/functions/validators/symbol-name.valida
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { Subscription, take } from 'rxjs';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { CoinsCollections } from 'models/coin/coins-collections';
+import { v4 as uuidv4 } from 'uuid';
+
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
-import { AlertsCollections } from 'models/alerts/alerts-collections';
+import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Coin } from 'models/coin/coin';
-import { Alert } from 'models/alerts/alert';
+
 import { Status } from 'models/coin/status';
 
 @Component({
@@ -33,13 +34,18 @@ export class NewAlertComponent implements OnInit, OnDestroy {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 
   ngOnInit(): void {
-    this.coinsService.loadCoins('coin-repo');
-    this.sub = this.coinsService.coins$.subscribe((coins: Coin[]) => {
-      this.coins = coins;
-      this.symbols = coins.map((c) => c.symbol);
-      this.exchanges = coins.map((c) => c.exchanges);
-      console.log(' ---> ', this.symbols);
-      console.log(' ---> ', this.exchanges);
+    this.coinsService.loadCoins().subscribe({
+      next: (coins: any) => {
+        this.coins = coins;
+        this.symbols = this.coins.map((c) => c.symbol);
+        this.exchanges = this.coins.map((c) => c.exchanges);
+        console.log(' ---> ', this.symbols);
+        console.log(' ---> ', this.exchanges);
+        console.log('🔥 Coins updated in component:', this.coins);
+      },
+      error: (error) => {
+        console.error('❌ Error fetching coins:', error);
+      },
     });
 
     this.form = this.fb.group({
@@ -67,12 +73,12 @@ export class NewAlertComponent implements OnInit, OnDestroy {
       isActive: [true],
       action: ['', Validators.required],
       description: ['', Validators.required],
-      tvImgUrls: this.fb.array([this.createImageUrlControl()]),
+      tvScreensUrls: this.fb.array([this.createImageUrlControl()]),
     });
 
     this.form.get('symbol')?.valueChanges.subscribe((value: string) => {
       const coins = this.coins.find((c) => c.symbol == value);
-      this.logoUrl = coins?.image_url ? coins?.image_url : this.logoUrl;
+      this.logoUrl = coins?.imageUrl ? coins?.imageUrl : this.logoUrl;
       this.displayedSymol = coins?.symbol
         ? coins?.symbol + ' ALERT'
         : this.displayedSymol;
@@ -123,7 +129,7 @@ export class NewAlertComponent implements OnInit, OnDestroy {
   }
 
   get imgUrls() {
-    return this.form?.get('tvImgUrls') as FormArray;
+    return this.form?.get('tvScreensUrls') as FormArray;
   }
 
   addLink() {
@@ -149,24 +155,22 @@ export class NewAlertComponent implements OnInit, OnDestroy {
     if (this.form?.valid) {
       const alert = this.form.value;
       const coin = this.coins.find((c) => c.symbol == alert.symbol);
+      alert.id = uuidv4();
       alert.description = this.form.get('description')?.value;
-      alert.tvImgUrls = this.form.get('tvImgUrls')?.value;
+      alert.tvScreensUrls = this.form.get('tvScreensUrls')?.value;
       alert.alertName = this.form.get('alertName')?.value;
       alert.action = this.form.get('action')?.value;
       alert.price = this.form.get('price')?.value;
       alert.isActive = this.form.get('isActive')?.value;
-      alert.isTv = false;
+      alert.imageUrl = coin?.imageUrl || this.logoUrl;
       alert.isActive = true;
       alert.exchanges = coin?.exchanges;
       alert.category = coin?.category;
-      alert.status = coin?.status as Status;
-      alert.isInclined = false;
-      //alert.coinExchange = coin?.coinExchange;
-      alert.image_url = coin?.image_url;
+
       alert.creationTime = new Date().getTime();
-      console.log(alert);
+      console.log('Alert ---> ', alert);
       console.log('COIN ---> ', coin);
-      this.alertsService.addOne(AlertsCollections.WorkingAlerts, alert);
+      this.alertsService.addOne(AlertsCollection.WorkingAlerts, alert);
       this.dialogRef.close();
     }
   }

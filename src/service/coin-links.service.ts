@@ -4,8 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class CoinLinksService {
   coinglassLink(symbol: string, exchanges: string[]): string {
-    console.log('symbol', symbol);
-    console.log('exchanges', exchanges);
+    
     // Check if "Binance" is in exchanges
     if (exchanges.includes('Binance')) {
       return `https://www.coinglass.com/tv/Binance_${symbol}`;
@@ -32,8 +31,7 @@ export class CoinLinksService {
   }
 
   tradingViewLink(symbol: string, exchanges: string[]): string {
-    console.log('symbol', symbol);
-    console.log('exchanges', exchanges);
+   
     // Check if "Bybit" is in exchanges
     if (exchanges.includes('Bybit')) {
       return `https://www.tradingview.com/chart?symbol=BYBIT:${symbol}.P`;
