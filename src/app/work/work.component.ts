@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Coin } from 'models/coin/coin';
-import { CoinUpdateData } from 'models/coin/coin-update-data';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
@@ -36,13 +35,8 @@ export class WorkComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // ✅ Load all coins
-    this.subscription.add(
-      this.coinsService.loadCoins().subscribe((coins: Coin[]) => {
-        this.coins = coins;
-        this.symbols = coins.map((d) => d.symbol);
-      })
-    );
+    this.coins = this.coinsService.getCoins();
+    this.symbols = this.coins.map((d) => d.symbol);
 
     // ✅ Subscribe to Working Coins
     this.subscription.add(

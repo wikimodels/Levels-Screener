@@ -51,13 +51,39 @@ export class WorkingCoinsService {
 
     this.http
       .post<InsertResult>(
-        WORKING_COINS_URLS.addWorkingCoinsUrl,
+        WORKING_COINS_URLS.addWorkingCoinUrl,
         coin,
         this.httpOptions
       )
       .pipe(
         tap((response) => {
           const msg = `Document inserted: ${response.insertedCount}`;
+          this.snackbarService.showSnackBar(msg, '');
+        }),
+        catchError((error) => this.handleError(error))
+      )
+      .subscribe();
+  }
+
+  //---------------------------------------------
+  // ✅ ADD MULTIPLE WORKING COINS
+  //---------------------------------------------
+  public addWorkingCoins(coins: Coin[]): void {
+    if (!coins.length) return; // No coins to add
+
+    // Update in-memory state immediately
+    const currentCoins = this.coinsSubject.getValue();
+    this.coinsSubject.next([...currentCoins, ...coins]);
+
+    this.http
+      .post<InsertResult>(
+        WORKING_COINS_URLS.addWorkingCoinsUrl, // Ensure this URL is defined in your URL constants
+        coins,
+        this.httpOptions
+      )
+      .pipe(
+        tap((response) => {
+          const msg = `Documents inserted: ${response.insertedCount}`;
           this.snackbarService.showSnackBar(msg, '');
         }),
         catchError((error) => this.handleError(error))

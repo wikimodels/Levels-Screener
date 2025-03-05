@@ -24,6 +24,16 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.coinsService.loadCoins().subscribe({
+      next: (coins: any) => {
+        this.coinsService.setCoins(coins);
+        console.log('✅ Coins received:', this.coinsService.getCoins().length);
+      },
+      error: (error) => {
+        console.error('❌ Error fetching coins:', error);
+      },
+    });
+
     this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
     this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
     this.alertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);

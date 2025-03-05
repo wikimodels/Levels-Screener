@@ -33,7 +33,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     'edit',
     'select',
   ];
-  sub!: Subscription | null;
+  sub = new Subscription();
   dataSource!: any;
   buttonsDisabled = true;
   filterValue = '';
@@ -51,13 +51,15 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.sub = this.alertsService
-      .alerts$(AlertsCollection.WorkingAlerts)
-      .subscribe((data) => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
+    this.sub.add(
+      this.alertsService
+        .alerts$(AlertsCollection.WorkingAlerts)
+        .subscribe((data) => {
+          this.dataSource = new MatTableDataSource(data);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        })
+    );
   }
 
   // Filter function
@@ -145,8 +147,6 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+    this.sub.unsubscribe();
   }
 }

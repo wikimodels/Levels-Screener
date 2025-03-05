@@ -60,6 +60,9 @@ export class AlertsGenericService {
 
     this.http.get<Alert[]>(ALERTS_URLS.alertsUrl, options).subscribe({
       next: (alerts: Alert[]) => {
+        console.log('Fresh Alerts --> ', alerts);
+        // 🔹 Clear the local store before updating with new alerts
+        this.setAlerts(collectionName, []);
         this.setAlerts(collectionName, alerts);
       },
       error: (error) => this.handleError(error),

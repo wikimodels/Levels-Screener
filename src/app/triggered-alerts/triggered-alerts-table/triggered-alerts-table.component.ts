@@ -18,6 +18,8 @@ import { SnackbarType } from 'models/shared/snackbar-type';
 import { Subscription } from 'rxjs';
 import { CoinUpdateData } from 'models/coin/coin-update-data';
 import { CoinLinksService } from 'src/service/coin-links.service';
+import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
+import { Coin } from 'models/coin/coin';
 
 /**
  * @title Table with sorting
@@ -33,11 +35,13 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     'symbol',
     'alertName',
     'action',
+    'low',
     'price',
+    'high',
     'activationTimeStr',
     'links',
     'description',
-    'edit',
+    //'edit',
     'select',
   ];
   sub!: Subscription | null;
@@ -54,17 +58,20 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     private alertsService: AlertsGenericService,
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private coinsService: CoinsGenericService,
+    private workingCoinsService: WorkingCoinsService
   ) {}
 
   ngOnInit() {
+    this.workingCoinsService.getAllWorkingCoins();
     this.sub = this.alertsService
       .alerts$(AlertsCollection.TriggeredAlerts)
       .subscribe((data: Alert[]) => {
         data.sort((a, b) => {
           if (a.activationTime === undefined) return 1; // Place undefined values last
           if (b.activationTime === undefined) return -1; // Place undefined values last
-          return b.activationTime - a.activationTime; // Sort by activationTime in descending order
+          return Number(b.activationTime) - Number(a.activationTime); // Sort by activationTime in descending order
         });
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
@@ -141,46 +148,29 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onMoveToWorkingCoins() {
-    // const selectedAlerts = this.selection.selected as Alert[];
-    // const selectedSymbols = selectedAlerts.map((a) => a.symbol);
-    // // Get all coins from the CoinRepo collection
-    // const coins = this.coinsService.getCoins();
-    // // Filter out coins that match the selected symbols
-    // let selectedCoins = coins.filter((coin) =>
-    //   selectedSymbols.includes(coin.symbol)
-    // );
-    // // Get coins that are already in CoinAtWork
-    // const coinsAtWork = this.coinsService.getCoins().filter((c) => c.isAtWork);
-    // // Filter out any coins from selectedCoins that are already in CoinAtWork
-    // selectedCoins = selectedCoins.filter(
-    //   (coin) =>
-    //     !coinsAtWork.some((coinAtWork) => coinAtWork.symbol === coin.symbol)
-    // );
-    // // Remove duplicates in selectedCoins based on the symbol
-    // selectedCoins = selectedCoins.filter(
-    //   (value, index, self) =>
-    //     index === self.findIndex((t) => t.symbol === value.symbol)
-    // );
-    // // Check if there are no new coins to add
-    // if (selectedCoins.length === 0) {
-    //   this.snackbarService.showSnackBar(
-    //     'Some Coins already there',
-    //     '',
-    //     3000,
-    //     SnackbarType.Warning
-    //   );
-    // } else {
-    //   console.log(selectedCoins);
-    //   const updateData: Array<CoinUpdateData> = selectedCoins.map((c) => {
-    //     return {
-    //       symbol: c.symbol,
-    //       propertiesToUpdate: { isAtWork: true },
-    //     };
-    //   });
-    //   //this.coinsService.updateMany(updateData);
-    // }
-    // this.selection.clear();
-    // this.buttonsDisabled = true;
+    const selectedAlerts = this.selection.selected as Alert[];
+    const selectedSymbols = new Set(selectedAlerts.map((a) => a.symbol)); // Use a Set for efficiency
+    console.log(selectedSymbols);
+
+    const coins = this.coinsService.getCoins();
+    console.log('Coins', coins.length);
+    const workingCoins = new Set(
+      this.workingCoinsService.getCoins().map((c) => c.symbol)
+    ); // Convert to Set for fast lookup
+    console.log('WorkingCoins', this.workingCoinsService);
+
+    // 🔹 Find coins whose symbol is in selectedSymbols but NOT in workingCoins
+    const triggeredCoins = coins.filter(
+      (coin: Coin) =>
+        selectedSymbols.has(coin.symbol) && !workingCoins.has(coin.symbol)
+    );
+    if (triggeredCoins.length > 0) {
+      this.workingCoinsService.addWorkingCoin(triggeredCoins[0]);
+    }
+    console.log('Triggered Coins --> ', triggeredCoins);
+
+    this.selection.clear();
+    this.buttonsDisabled = true;
   }
 
   ngOnDestroy(): void {

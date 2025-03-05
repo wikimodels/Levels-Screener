@@ -1,11 +1,25 @@
 <mat-toolbar class="container">
-  <app-alert-menu></app-alert-menu>
+  <!-- <app-alert-menu></app-alert-menu> -->
   <span></span>
-  <button mat-icon-button (click)="onAddAlert()">
+  <button mat-icon-button matTooltip="Add Alert" (click)="onAddAlert()">
+    <mat-icon style="cursor: pointer;">add-circle</mat-icon>
+  </button>
+
+
+  <button mat-icon-button matTooltip="Alerts at Work" (click)="goToAlertsAtWork()">
     <mat-icon svgIcon="alarm" style="cursor: pointer;"></mat-icon>
   </button>
-   
-  <button mat-icon-button (click)="onGetToWork()">
+
+
+  <button mat-icon-button matTooltip="Triggered Alerts" (click)="goToTriggeredAlerts()">
+    <mat-icon style="cursor: pointer;" svgIcon="triggered-alarm"></mat-icon>
+  </button>
+
+  <button mat-icon-button matTooltip="Archived Alerts" (click)="goToArchivedAlerts()">
+    <mat-icon style="cursor: pointer;">history</mat-icon>
+  </button>
+
+  <button mat-icon-button matTooltip="Working Coins" (click)="onGetToWork()">
     <mat-icon style="cursor: pointer;">handyman</mat-icon>
-  </button>   
+  </button>
 </mat-toolbar>

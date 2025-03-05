@@ -30,7 +30,8 @@ export const COINS_URLS = {
 
 export const WORKING_COINS_URLS = {
   workingCoinsUrl: `${baseURL}/working-coins`,
-  addWorkingCoinsUrl: `${baseURL}/working-coins/add/one`,
+  addWorkingCoinUrl: `${baseURL}/working-coins/add/one`,
+  addWorkingCoinsUrl: `${baseURL}/working-coins/add/many`,
   updateWorkingCoinUrl: `${baseURL}/working-coins/update/one`,
   deleteWorkingCoinsUrl: `${baseURL}/working-coins/delete/many`,
 };

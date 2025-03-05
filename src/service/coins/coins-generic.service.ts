@@ -36,10 +36,9 @@ export class CoinsGenericService {
     return this.coinsSubject.value;
   }
 
-   public loadCoins(): Observable<Coin[]> {  
+  public loadCoins(): Observable<Coin[]> {
     return this.http.get<any>(COINS_URLS.coinsUrl, this.httpOptions).pipe(
       tap((coins) => {
-        console.log('✅ Coins received:', coins);
         this.setCoins(coins); // Update state
       }),
       catchError((error) => this.handleError(error)) // Handle errors properly

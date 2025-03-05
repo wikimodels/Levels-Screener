@@ -12,8 +12,6 @@ import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service'
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Coin } from 'models/coin/coin';
 
-import { Status } from 'models/coin/status';
-
 @Component({
   selector: 'app-new-alert',
   templateUrl: './new-alert.component.html',
@@ -34,19 +32,9 @@ export class NewAlertComponent implements OnInit, OnDestroy {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 
   ngOnInit(): void {
-    this.coinsService.loadCoins().subscribe({
-      next: (coins: any) => {
-        this.coins = coins;
-        this.symbols = this.coins.map((c) => c.symbol);
-        this.exchanges = this.coins.map((c) => c.exchanges);
-        console.log(' ---> ', this.symbols);
-        console.log(' ---> ', this.exchanges);
-        console.log('🔥 Coins updated in component:', this.coins);
-      },
-      error: (error) => {
-        console.error('❌ Error fetching coins:', error);
-      },
-    });
+    this.coins = this.coinsService.getCoins();
+    this.symbols = this.coins.map((c) => c.symbol);
+    this.exchanges = this.coins.map((c) => c.exchanges);
 
     this.form = this.fb.group({
       symbol: [
