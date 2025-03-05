@@ -109,7 +109,14 @@ export class EditAlertComponent {
       this.data.alert.tvScreensUrls = this.imageLinks.value;
       this.data.alert.isActive = this.form.get('isActive')?.value;
 
-      this.alertService.updateOne(this.data.collectionName, this.data.alert);
+      this.alertService.updateOne(
+        this.data.collectionName,
+        { id: this.data.alert.id },
+        {
+          isActive: this.data.alert.isActive,
+          description: this.data.alert.description,
+        }
+      );
 
       this.dialogRef.close();
     }

@@ -73,9 +73,9 @@ export class AlertsGenericService {
     // HTTP request to add a Alert with query parameters
     const params = this.createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
-    console.log("Alert to add --> ", alert)
+    console.log('Alert to add --> ', alert);
     this.http
-      .post<InsertResult>(`${ALERTS_URLS.alertsAddOneUrl}`, alert, options)
+      .post<InsertResult>(`${ALERTS_URLS.alertsAddOneUrl}`, { alert }, options)
       .subscribe({
         next: (response: InsertResult) => {
           const msg = `Document inserted ${response.insertedCount}`;
@@ -98,7 +98,7 @@ export class AlertsGenericService {
       params: params,
       body: { ids },
     };
-    console.log(options)
+    console.log(options);
     this.http
       .delete<DeleteResult>(`${ALERTS_URLS.alertsDeleteManyUrl}`, options)
       .subscribe({
@@ -110,52 +110,76 @@ export class AlertsGenericService {
       });
   }
 
-  public updateOne(collectionName: string, updatedData: Alert): void {
+  public updateOne(
+    collectionName: string,
+    filter: Partial<Alert>,
+    updatedData: Partial<Alert>
+  ): void {
+    // 🔹 Get current alerts
     const currentAlerts = this.getAlerts(collectionName);
+
+    // 🔹 Update alerts only if the filter matches
     const updatedAlerts = currentAlerts.map((alert) =>
-      alert.id === updatedData.id ? { ...alert, ...updatedData } : alert
+      alert.id === filter.id ? { ...alert, ...updatedData } : alert
     );
+
+    // 🔹 Update local state
     this.setAlerts(collectionName, updatedAlerts);
 
+    // 🔹 Prepare HTTP request
     const params = this.createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
+    // 🔹 Send update request to the server
     this.http
       .put<ModifyResult>(
         `${ALERTS_URLS.alertsUpdateOneUrl}`,
-        updatedData,
+        { filter, updatedData },
         options
       )
       .subscribe({
         next: (response: ModifyResult) => {
-          const msg = `Documents modified ${response.modifiedCount}`;
-          this.snackbarService.showSnackBar(msg, '');
+          if (response.modifiedCount > 0) {
+            this.snackbarService.showSnackBar(
+              `✅ Updated ${response.modifiedCount} document(s).`,
+              ''
+            );
+          } else {
+            this.snackbarService.showSnackBar(
+              `⚠️ No matching documents found.`,
+              ''
+            );
+          }
         },
-        error: (error) => this.handleError(error),
+        error: (error) => {
+          console.error('❌ Update failed:', error);
+          this.snackbarService.showSnackBar(
+            '❌ Error updating alert!',
+            'Close'
+          );
+        },
       });
   }
 
   public moveMany(
     sourceCollection: string,
     targetCollection: string,
-    alerts: Alert[]
+    ids: string[]
   ): void {
     const sourceAlerts = this.getAlerts(sourceCollection);
     const destinationAlerts = this.getAlerts(targetCollection);
-    const symbols = alerts.map((c) => c.symbol);
-    // Filter and separate Alerts to move
-    const alertsToMove = sourceAlerts.filter((alert) =>
-      symbols.includes(alert.symbol)
-    );
+
+    // ✅ Filter alerts to move based on provided IDs
+    const alertsToMove = sourceAlerts.filter((alert) => ids.includes(alert.id));
     const remainingSourceAlerts = sourceAlerts.filter(
-      (alert) => !symbols.includes(alert.symbol)
+      (alert) => !ids.includes(alert.id)
     );
 
-    // Update source and destination collections
+    // ✅ Update source and destination collections locally
     this.setAlerts(sourceCollection, remainingSourceAlerts);
     this.setAlerts(targetCollection, [...destinationAlerts, ...alertsToMove]);
 
-    // HTTP request to add a Alert with query parameters
+    // ✅ HTTP request to move alerts
     const params = this.createHttpParams({
       sourceCollection,
       targetCollection,
@@ -163,13 +187,13 @@ export class AlertsGenericService {
     const options = { ...this.httpOptions, params };
 
     this.http
-      .post<MoveResult>(`${ALERTS_URLS.alertsMoveManyUrl}`, alerts, options)
+      .post<MoveResult>(`${ALERTS_URLS.alertsMoveManyUrl}`, { ids }, options)
       .subscribe({
         next: (response: MoveResult) => {
           const msg = `Documents inserted: ${response.insertCount}, deleted: ${response.deleteCount}`;
           this.snackbarService.showSnackBar(msg, '');
         },
-        error: this.handleError,
+        error: (error) => this.handleError(error),
       });
   }
 

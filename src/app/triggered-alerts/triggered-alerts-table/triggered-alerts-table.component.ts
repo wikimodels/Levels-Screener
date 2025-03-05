@@ -17,6 +17,7 @@ import { SnackbarService } from 'src/service/snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { Subscription } from 'rxjs';
 import { CoinUpdateData } from 'models/coin/coin-update-data';
+import { CoinLinksService } from 'src/service/coin-links.service';
 
 /**
  * @title Table with sorting
@@ -32,6 +33,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     'symbol',
     'alertName',
     'action',
+    'price',
     'activationTimeStr',
     'links',
     'description',
@@ -50,8 +52,8 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
   constructor(
     private alertsService: AlertsGenericService,
-    private coinsService: CoinsGenericService,
     private matDialog: MatDialog,
+    public coinLinksService: CoinLinksService,
     private snackbarService: SnackbarService
   ) {}
 

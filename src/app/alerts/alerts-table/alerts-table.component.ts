@@ -129,10 +129,11 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
 
   onMoveToArchive() {
     const alerts = this.selection.selected as Alert[];
+    const ids = alerts.map((a) => a.id);
     this.alertsService.moveMany(
       AlertsCollection.WorkingAlerts,
       AlertsCollection.ArchivedAlerts,
-      alerts
+      ids
     );
     this.selection.clear();
     this.buttonsDisabled = true;
