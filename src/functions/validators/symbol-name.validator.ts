@@ -4,8 +4,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { Coin } from 'models/coin/coin';
-import { CoinsCollections } from 'models/coin/coins-collections';
-import { Observable, map, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
 export class SymbolNameValidator {

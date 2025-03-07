@@ -1,0 +1,21 @@
+.exchange-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px;
+}
+
+.exchange-column {
+  flex: 1;
+  min-width: 200px;
+}
+
+table {
+  width: 100%;
+}
+.exchange-column td {
+  font-size: 13px;
+
+}
+
+

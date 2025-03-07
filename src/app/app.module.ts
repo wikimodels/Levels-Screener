@@ -27,6 +27,8 @@ import { WorkFieldComponent } from './work/work-field/work-field.component';
 import { AlertMenuComponent } from './nav-bar/alert-menu/alert-menu.component';
 
 import { WorkItemComponent } from './work/work-item/work-item.component';
+import { ExchangesComponent } from './exchanges/exchanges.component';
+import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-table.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { WorkItemComponent } from './work/work-item/work-item.component';
     WorkFieldComponent,
     WorkItemComponent,
     AlertMenuComponent,
+    ExchangesComponent,
+    ExchangeTableComponent,
   ],
   imports: [
     FormsModule,

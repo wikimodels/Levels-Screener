@@ -2,9 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Coin } from 'models/coin/coin';
-import { CoinsCollections } from 'models/coin/coins-collections';
 import { Subscription } from 'rxjs';
-import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 
 @Component({

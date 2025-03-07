@@ -5,7 +5,14 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, throwError, tap, catchError } from 'rxjs';
+import {
+  Observable,
+  BehaviorSubject,
+  throwError,
+  tap,
+  catchError,
+  of,
+} from 'rxjs';
 import { Coin } from 'models/coin/coin';
 import { SnackbarService } from '../snackbar.service';
 import { COINS_URLS } from 'src/consts/url-consts';
@@ -34,6 +41,10 @@ export class CoinsGenericService {
 
   public getCoins(): Coin[] {
     return this.coinsSubject.value;
+  }
+
+  getAsyncCoins(): Observable<Coin[]> {
+    return of(this.coinsSubject.value);
   }
 
   public loadCoins(): Observable<Coin[]> {

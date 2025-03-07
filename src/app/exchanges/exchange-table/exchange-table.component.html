@@ -1,0 +1,46 @@
+<div class="exchange-container">
+  <!-- Loop through the exchanges and display each one -->
+  <div *ngFor="let exchange of objectKeys(exchanges)" class="exchange-column">
+    <!-- Search box for filtering -->
+    <div class="search-container">
+      <input type="text" [(ngModel)]="searchText[exchange]" placeholder="Search Coins..." class="search-input" />
+    </div>
+
+    <h3>
+      <img [src]="coinLinksService.exchangeLogoLink(exchange)" [alt]="exchange"
+        style="width: 25px; height: 25px; object-fit: contain; margin-top: 5px; vertical-align: middle;" />
+      <span style="position: relative; top: 3px;">
+        {{ exchange }} ({{ exchanges[exchange].length }})
+      </span>
+    </h3>
+
+    <!-- Table with filtering applied -->
+    <table mat-table [dataSource]="filterCoins(exchanges[exchange], searchText[exchange])" class="mat-elevation-z8">
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef> Symbol </th>
+        <td mat-cell *matCellDef="let coin">{{ coin.symbol }} ({{ coin.category }})</td>
+      </ng-container>
+
+      <ng-container matColumnDef="links">
+        <th mat-header-cell *matHeaderCellDef> Links </th>
+        <td mat-cell *matCellDef="let coin">
+          <!-- Links for TradingView, Coinglass, and Exchanges -->
+          <a [href]="coinLinksService.tradingViewLink(coin.symbol, coin.exchanges)" target="_blank">
+            <img src="assets/icons/tv.svg" alt="TradingView" class="exchanges-link" />
+          </a>
+          <a [href]="coinLinksService.coinglassLink(coin.symbol, coin.exchanges)" target="_blank">
+            <img src="assets/icons/coinglass.svg" alt="Coinglass" class="exchanges-link" />
+          </a>
+          <div style="display: inline-block;" *ngFor="let exchange of coin.exchanges">
+            <a [href]="coinLinksService.exchangeLink(coin.symbol, exchange)" target="_blank">
+              <img [src]="coinLinksService.exchangeLogoLink(exchange)" [alt]="exchange" class="exchanges-link" />
+            </a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['symbol', 'links']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['symbol', 'links'];"></tr>
+    </table>
+  </div>
+</div>

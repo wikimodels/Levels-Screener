@@ -212,6 +212,46 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height: 15px !important;
 }
 
+.exchange-table .mat-mdc-header-row {
+  background-color: #e6e6ec !important;
+  color: rgb(14, 13, 13);
+  height: 45px;
+}
+
+.exchange-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+.exchanges-link {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 50%;
+  margin-right: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Add styling for the search box */
+.search-container {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.search-input {
+  width: 80%;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+  display: block;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3f51b5;
+}
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

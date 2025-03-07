@@ -5,6 +5,7 @@ import { env } from 'environment/environment';
 export const TRIGGERED_ALERTS = AlertsCollection.TriggeredAlerts;
 export const ARCHIVED_ALERTS = AlertsCollection.ArchivedAlerts;
 export const ALERTS_AT_WORK = AlertsCollection.WorkingAlerts;
+export const EXCHANGES = 'exchanges';
 export const ADMIN = 'admin';
 export const WORK = 'work';
 

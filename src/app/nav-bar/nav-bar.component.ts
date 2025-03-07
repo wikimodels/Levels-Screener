@@ -6,6 +6,7 @@ import {
   ALERTS_AT_WORK,
   TRIGGERED_ALERTS,
   ARCHIVED_ALERTS,
+  EXCHANGES,
 } from 'src/consts/url-consts';
 
 @Component({
@@ -22,6 +23,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   onGetToWork() {
     this.router.navigate(['work']);
   }
+
   goToAlertsAtWork() {
     this.router.navigate([ALERTS_AT_WORK]);
   }
@@ -32,6 +34,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   goToArchivedAlerts() {
     this.router.navigate([ARCHIVED_ALERTS]);
+  }
+
+  goToExchanges() {
+    this.router.navigate([EXCHANGES]);
   }
 
   onAddAlert() {
