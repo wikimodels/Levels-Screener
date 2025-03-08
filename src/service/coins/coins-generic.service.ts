@@ -56,6 +56,23 @@ export class CoinsGenericService {
     );
   }
 
+  public refreshCoins(): Observable<Coin[]> {
+    return this.http
+      .get<any>(COINS_URLS.coinsRefreshUrl, this.httpOptions)
+      .pipe(
+        tap((coins) => {
+          this.setCoins(coins); // Update state
+          this.snackbarService.showSnackBar(
+            'Coins refreshed',
+            '',
+            3000,
+            SnackbarType.Info
+          );
+        }),
+        catchError((error) => this.handleError(error)) // Handle errors properly
+      );
+  }
+
   private createHttpParams(params?: { [key: string]: any }): HttpParams {
     let httpParams = new HttpParams();
     if (params) {

@@ -8,6 +8,7 @@ import {
   ARCHIVED_ALERTS,
   EXCHANGES,
 } from 'src/consts/url-consts';
+import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -15,7 +16,11 @@ import {
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit, OnDestroy {
-  constructor(private router: Router, private modelDialog: MatDialog) {}
+  constructor(
+    private router: Router,
+    private modelDialog: MatDialog,
+    private coinsService: CoinsGenericService
+  ) {}
 
   ngOnInit(): void {}
   ngOnDestroy(): void {}
@@ -38,6 +43,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   goToExchanges() {
     this.router.navigate([EXCHANGES]);
+  }
+
+  onRefreshCoins() {
+    this.coinsService.refreshCoins().subscribe();
   }
 
   onAddAlert() {

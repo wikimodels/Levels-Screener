@@ -27,6 +27,7 @@ export const ALERTS_URLS = {
 
 export const COINS_URLS = {
   coinsUrl: `${baseURL}/proxy-coins`,
+  coinsRefreshUrl: `${baseURL}/proxy-coins/refresh`,
 };
 
 export const WORKING_COINS_URLS = {
