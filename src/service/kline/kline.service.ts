@@ -108,7 +108,7 @@ export class KlineDataService {
 
     return {
       title: {
-        text: 'Kline Chart',
+        text: `${klineData[0].symbol}`,
         left: 'center',
         top: '1%', // move the title up a bit
       },
