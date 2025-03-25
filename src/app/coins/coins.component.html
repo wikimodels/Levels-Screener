@@ -1,0 +1,74 @@
+<div class="container">
+  <div style="display: flex; flex-direction: row; justify-content: space-between;">
+    <!-- GROUP-1 -->
+    <div style="display: flex; flex-direction: row; align-items: baseline; gap: 10px;">
+      <!-- FILTER INPUT -->
+      <div>
+        <form [formGroup]="form" *ngIf="form">
+          <!-- Symbol -->
+          <mat-form-field appearance="fill">
+            <mat-icon matPrefix>filter_list</mat-icon>
+            <mat-label>Filter</mat-label>
+            <input type="text" matInput formControlName="symbol" [matAutocomplete]="auto" (input)="filterSymbols()"
+              tabindex="-1" />
+            <button mat-icon-button matSuffix class="small-icon-button" (click)="clearInput()">
+              <mat-icon>close</mat-icon>
+            </button>
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let suggestion of filteredSymbols" [value]="suggestion">
+                {{ suggestion }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+
+      <!-- ADD BUTTON -->
+
+    </div>
+    <h1 style="margin-top: 10px;">Coins</h1>
+    <!-- GROUP-2 -->
+    <div style="display: flex; flex-direction: row; align-items: baseline; gap: 10px; margin-top: 10px;">
+      <!-- SELECT CHECKBOX -->
+      <button mat-raised-button class="panel-button">
+        <mat-checkbox [checked]="selectionService.hasValue() && isAllSelected()" (change)="toggleAll()"
+          [indeterminate]="selectionService.hasValue()&& !isAllSelected()"></mat-checkbox>
+        <mat-icon svgIcon="check"></mat-icon>
+      </button>
+
+      <!-- OPEN IN TV BUTTON -->
+      <button mat-raised-button class="panel-button" (click)="onOpenTradingview()" matTooltip="Open in TV"
+        matTooltipPosition="above">
+        <mat-icon svgIcon="tv" style="margin-left: 6px;"></mat-icon>
+      </button>
+
+      <!-- OPEN IN COINGLASS BUTTON -->
+      <button mat-raised-button class="panel-button" (click)="onOpenCoinglass()" matTooltip="Open in Coinglass"
+        matTooltipPosition="above">
+        <mat-icon svgIcon="coinglass" style="margin-left: 6px;"></mat-icon>
+      </button>
+
+      <!-- TV BUTTON -->
+      <button mat-raised-button class="panel-button" (click)="onOpenSingleTradingview()" matTooltip="BTC in TV"
+        matTooltipPosition="above">
+        <mat-icon svgIcon="tv-white" style="margin-left: 6px;"></mat-icon>
+      </button>
+
+      <!-- CLOSE ALL WINDOWS -->
+      <button mat-raised-button class="panel-button" (click)="onCloseAllWindows()" matTooltip="Close Windows"
+        matTooltipPosition="above">
+        <mat-icon svgIcon="close" style="margin-left: 6px;"></mat-icon>
+      </button>
+
+      <!-- GO to CHART -->
+      <button mat-raised-button class="panel-button" (click)="onGoToCharts()" matTooltip="Go to Chart"
+        matTooltipPosition="above">
+        <mat-icon style="margin-left: 6px; font-size: 25px;">bar_chart</mat-icon>
+      </button>
+
+    </div>
+  </div>
+
+
+  <app-coins-field [coins]="coins"></app-coins-field>
+</div>

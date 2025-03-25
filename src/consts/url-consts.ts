@@ -5,9 +5,12 @@ import { env } from 'environment/environment';
 export const TRIGGERED_ALERTS = AlertsCollection.TriggeredAlerts;
 export const ARCHIVED_ALERTS = AlertsCollection.ArchivedAlerts;
 export const ALERTS_AT_WORK = AlertsCollection.WorkingAlerts;
+export const VWAP = 'vwap';
 export const EXCHANGES = 'exchanges';
+export const COINS = 'coins';
 export const ADMIN = 'admin';
 export const WORK = 'work';
+export const KLINE_CHART = 'kline-chart';
 
 //URLS
 const baseURL = env.baseURL;
@@ -28,6 +31,10 @@ export const ALERTS_URLS = {
 export const COINS_URLS = {
   coinsUrl: `${baseURL}/proxy-coins`,
   coinsRefreshUrl: `${baseURL}/proxy-coins/refresh`,
+};
+
+export const KLINE_URLS = {
+  proxyKlineUrl: `${baseURL}/proxy-kline`,
 };
 
 export const WORKING_COINS_URLS = {

@@ -40,6 +40,8 @@ export class CoinsGenericService {
   }
 
   public getCoins(): Coin[] {
+    //TODO
+    console.log('getCoins()');
     return this.coinsSubject.value;
   }
 

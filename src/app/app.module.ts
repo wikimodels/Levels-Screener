@@ -1,3 +1,19 @@
+import { CanvasRenderer } from 'echarts/renderers';
+import * as echarts from 'echarts/core';
+import Marcaron from './marcaron';
+import { BarChart, CandlestickChart, LineChart } from 'echarts/charts';
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DataZoomComponent,
+  DataZoomInsideComponent,
+  DataZoomSliderComponent,
+  LegendComponent,
+  ToolboxComponent,
+} from 'echarts/components';
+import { NgxEchartsModule } from 'ngx-echarts';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -29,17 +45,36 @@ import { AlertMenuComponent } from './nav-bar/alert-menu/alert-menu.component';
 import { WorkItemComponent } from './work/work-item/work-item.component';
 import { ExchangesComponent } from './exchanges/exchanges.component';
 import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-table.component';
-
+import { VwapComponent } from './vwap/vwap.component';
+import { CoinsComponent } from './coins/coins.component';
+import { CoinsFieldComponent } from './coins/coins-field/coins-field.component';
+import { KlineChartComponent } from './kline-chart/kline-chart.component';
+import { ChartComponent } from './kline-chart/chart/chart.component';
+echarts.use([
+  LegendComponent,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  LineChart,
+  CanvasRenderer,
+  BarChart,
+  CandlestickChart,
+  DataZoomComponent,
+  DataZoomInsideComponent,
+  DataZoomSliderComponent,
+  ToolboxComponent,
+]);
+echarts.registerTheme('macarons', Marcaron);
 @NgModule({
   declarations: [
-    AppComponent, // ✅ Added
+    AppComponent,
     AlertsTableComponent,
     ImageModalComponent,
     NewAlertComponent,
     AlertsComponent,
     ArchivedAlertsComponent,
     ArchivedTableComponent,
-    NavBarComponent, // ✅ Duplicate removed
+    NavBarComponent,
     CarouselComponent,
     DescriptionModalComponent,
     EditAlertComponent,
@@ -55,6 +90,11 @@ import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-tabl
     AlertMenuComponent,
     ExchangesComponent,
     ExchangeTableComponent,
+    VwapComponent,
+    CoinsComponent,
+    CoinsFieldComponent,
+    KlineChartComponent,
+    ChartComponent,
   ],
   imports: [
     FormsModule,
@@ -64,6 +104,7 @@ import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-tabl
     AppMaterialModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    NgxEchartsModule.forRoot({ echarts }),
   ],
   providers: [],
   bootstrap: [AppComponent],

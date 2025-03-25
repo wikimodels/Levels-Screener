@@ -7,6 +7,7 @@ import {
   TRIGGERED_ALERTS,
   ARCHIVED_ALERTS,
   EXCHANGES,
+  COINS,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
@@ -43,6 +44,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   goToExchanges() {
     this.router.navigate([EXCHANGES]);
+  }
+
+  goToCoinss() {
+    this.router.navigate([COINS]);
   }
 
   onRefreshCoins() {
