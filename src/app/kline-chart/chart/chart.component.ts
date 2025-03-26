@@ -82,14 +82,15 @@ export class ChartComponent implements OnDestroy {
       return;
     }
 
-    const vwapData = this.calculateVwap(this.klineData.slice(startIndex));
-
+    const vwapData = this.vwapService.calculateVwap(
+      this.klineData.slice(startIndex)
+    );
     if (!vwapData.length) {
       console.error('VWAP data is empty!');
       return;
     }
 
-    const vwapSeries = this.createVwapSeries(openTime, vwapData);
+    const vwapSeries = this.vwapService.createVwapSeries(openTime, vwapData);
 
     this.vwapLines[openTime] = vwapSeries;
 
@@ -107,43 +108,6 @@ export class ChartComponent implements OnDestroy {
     } else {
       console.error('Chart is not initialized!');
     }
-  }
-
-  // Helper methods for calculating and creating VWAP series (same as before)
-  calculateVwap(klines: KlineData[]): [number, number][] {
-    let cumulativeVolume = 0;
-    let cumulativeVWAP = 0;
-    const vwapData: [number, number][] = [];
-
-    klines.forEach((kline) => {
-      const {
-        openTime,
-        openPrice,
-        closePrice,
-        lowPrice,
-        highPrice,
-        baseVolume,
-      } = kline;
-      const typicalPrice = (highPrice + lowPrice + closePrice) / 3; // Average price
-      cumulativeVolume += baseVolume;
-      cumulativeVWAP += typicalPrice * baseVolume;
-
-      const vwap = cumulativeVWAP / cumulativeVolume;
-      vwapData.push([openTime, vwap]);
-    });
-
-    return vwapData;
-  }
-
-  createVwapSeries(openTime: number, vwapData: [number, number][]): any {
-    return {
-      name: `VWAP-${openTime}`,
-      type: 'line',
-      data: vwapData,
-      smooth: true,
-      lineStyle: { color: 'orange', width: 2 },
-      showSymbol: false,
-    };
   }
 
   ngOnDestroy(): void {

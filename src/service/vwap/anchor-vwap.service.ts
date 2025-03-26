@@ -7,6 +7,7 @@ import { ANCHORED_VWAP_URLS } from 'src/consts/url-consts';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { KlineDataService } from '../kline/kline.service';
 import { AnchorPoint } from 'models/vwap/anchor-point';
+import { KlineData } from 'models/kline/kline-data';
 
 @Injectable({
   providedIn: 'root',
@@ -14,26 +15,8 @@ import { AnchorPoint } from 'models/vwap/anchor-point';
 export class AnchoredVwapService {
   constructor(
     private http: HttpClient,
-    private snackBarService: SnackbarService,
-    private klineDataService: KlineDataService
+    private snackBarService: SnackbarService
   ) {}
-
-  // Unified error handler with snackbar notifications
-  private handleError(error: any, userMessage: string): Observable<never> {
-    const errorMessage =
-      error.error instanceof ErrorEvent
-        ? `Error: ${error.error.message}`
-        : `Error Code: ${error.status}\nMessage: ${error.message}`;
-
-    console.error(errorMessage);
-    this.snackBarService.showSnackBar(
-      userMessage,
-      '',
-      3000,
-      SnackbarType.Error
-    );
-    return throwError(() => new Error(errorMessage));
-  }
 
   // Centralized method to show success snackbars
   private showSuccessMessage(message: string): void {
@@ -62,8 +45,8 @@ export class AnchoredVwapService {
         openTime,
       })
       .pipe(
-        tap((remainingData) => {
-          if (remainingData.length === 0) {
+        tap((result) => {
+          if (result.deletedCount === 0) {
             this.showSuccessMessage('No VWAP data found to delete.');
           } else {
             this.showSuccessMessage('VWAP data deleted successfully');
@@ -76,57 +59,56 @@ export class AnchoredVwapService {
       );
   }
 
-  getVwap(
-    symbol: string,
-    openTime: number
-  ): Observable<{ time: number; vwap: number }[]> {
-    return new Observable((observer) => {
-      const klineData = this.klineDataService.getKlineData(symbol);
+  calculateVwap(klines: KlineData[]): [number, number][] {
+    let cumulativeVolume = 0;
+    let cumulativeVWAP = 0;
+    const vwapData: [number, number][] = [];
 
-      if (!klineData || klineData.length === 0) {
-        this.snackBarService.showSnackBar(
-          `No Kline data available for ${symbol}`,
-          '',
-          4000,
-          SnackbarType.Warning
-        );
-        observer.error(new Error(`No Kline data available for ${symbol}`));
-        return;
-      }
+    klines.forEach((kline) => {
+      const {
+        openTime,
+        openPrice,
+        closePrice,
+        lowPrice,
+        highPrice,
+        baseVolume,
+      } = kline;
+      const typicalPrice = (highPrice + lowPrice + closePrice) / 3; // Average price
+      cumulativeVolume += baseVolume;
+      cumulativeVWAP += typicalPrice * baseVolume;
 
-      let cumulativePV = 0;
-      let cumulativeVolume = 0;
-      const vwapData: { time: number; vwap: number }[] = [];
-
-      for (const candle of klineData) {
-        if (candle.openTime >= openTime) break; // Stop at future candles
-
-        const typicalPrice =
-          (candle.highPrice + candle.lowPrice + candle.closePrice) / 3;
-        cumulativePV += typicalPrice * candle.baseVolume;
-        cumulativeVolume += candle.baseVolume;
-
-        if (cumulativeVolume > 0) {
-          vwapData.push({
-            time: candle.openTime, // Make sure this matches x-axis time format
-            vwap: cumulativePV / cumulativeVolume,
-          });
-        }
-      }
-
-      if (vwapData.length === 0) {
-        this.snackBarService.showSnackBar(
-          `No historical VWAP data available.`,
-          '',
-          4000,
-          SnackbarType.Warning
-        );
-        observer.error(new Error('No historical VWAP data available.'));
-        return;
-      }
-
-      observer.next(vwapData);
-      observer.complete();
+      const vwap = cumulativeVWAP / cumulativeVolume;
+      vwapData.push([openTime, vwap]);
     });
+
+    return vwapData;
+  }
+
+  createVwapSeries(openTime: number, vwapData: [number, number][]): any {
+    return {
+      name: `VWAP-${openTime}`,
+      type: 'line',
+      data: vwapData,
+      smooth: true,
+      lineStyle: { color: 'orange', width: 2 },
+      showSymbol: false,
+    };
+  }
+
+  // Unified error handler with snackbar notifications
+  private handleError(error: any, userMessage: string): Observable<never> {
+    const errorMessage =
+      error.error instanceof ErrorEvent
+        ? `Error: ${error.error.message}`
+        : `Error Code: ${error.status}\nMessage: ${error.message}`;
+
+    console.error(errorMessage);
+    this.snackBarService.showSnackBar(
+      userMessage,
+      '',
+      3000,
+      SnackbarType.Error
+    );
+    return throwError(() => new Error(errorMessage));
   }
 }

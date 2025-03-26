@@ -138,13 +138,32 @@ export class KlineDataService {
 
     console.log(`📊 Processing Kline and VWAP data for ${symbol}`);
 
-    const candlestickData = klineData.map((k) => [
-      k.openTime,
-      k.openPrice,
-      k.closePrice,
-      k.lowPrice,
-      k.highPrice,
-    ]);
+    // Add 7-8 hours of dummy data (just time intervals without price data)
+    // Get the last openTime from klineData
+    const lastKlineTime = klineData.length
+      ? klineData[klineData.length - 1].openTime
+      : Date.now();
+
+    // Add 8 hours of dummy data (15-minute intervals) from the last kline's openTime
+    const dummyData: [number, number, number, number, number][] = [];
+    const startTime = lastKlineTime + 15 * 60 * 1000; // Add 15 minutes to the last Kline's openTime
+    for (let i = 0; i < (8 * 60) / 15; i++) {
+      // 15-minute intervals (8 hours)
+      const timestamp = startTime + i * 15 * 60 * 1000; // 15-minute interval
+      dummyData.push([timestamp, NaN, NaN, NaN, NaN]); // Dummy price data (0s)
+    }
+
+    // Combine the dummy data with the actual candlestick data
+    const candlestickData = [
+      ...klineData.map((k) => [
+        k.openTime,
+        k.openPrice,
+        k.closePrice,
+        k.lowPrice,
+        k.highPrice,
+      ]),
+      ...dummyData, // Add the dummy data
+    ];
 
     const vwapSeries = anchorPoints.map((anchorPoint) => {
       const anchorTime = anchorPoint.anchorTime;
@@ -200,7 +219,17 @@ export class KlineDataService {
         },
       ],
       series: [
-        { name: 'Candlestick', type: 'candlestick', data: candlestickData },
+        {
+          name: 'Candlestick',
+          type: 'candlestick',
+          itemStyle: {
+            color: '#00da3c', //green
+            color0: '#ec0000', //red
+            borderColor: '#00da3c',
+            borderColor0: '#ec0000',
+          },
+          data: candlestickData,
+        },
         ...vwapSeries,
       ],
     };
