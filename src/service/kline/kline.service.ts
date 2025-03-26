@@ -1,122 +1,190 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, forkJoin } from 'rxjs';
 
-import { KLINE_URLS } from 'src/consts/url-consts';
+import { ANCHORED_VWAP_URLS, KLINE_URLS } from 'src/consts/url-consts';
 import { SnackbarService } from '../snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { KlineData } from 'models/kline/kline-data';
+import { AnchorPoint } from 'models/vwap/anchor-point';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class KlineDataService {
   private klineChartOptionsSubject = new BehaviorSubject<any>(null);
   public klineChartOptions$ = this.klineChartOptionsSubject.asObservable();
+
+  private klineDataMap = new Map<string, KlineData[]>();
+  private anchorPointsMap = new Map<string, AnchorPoint[]>();
 
   constructor(
     private http: HttpClient,
     private snackBarService: SnackbarService
   ) {}
 
-  fetchKlineData(
+  /**
+   * Fetches Kline data and anchored VWAP points from API.
+   * Stores data and updates chart options.
+   */
+  fetchKlineAndAnchors(
     symbol: string,
     timeframe: string,
     limit: number
   ): Observable<any> {
-    const params = new HttpParams()
+    console.log(
+      `🔄 [fetchKlineAndAnchors] Fetching data for: ${symbol}, TF: ${timeframe}, Limit: ${limit}`
+    );
+
+    const klineParams = new HttpParams()
       .set('symbol', symbol)
       .set('timeframe', timeframe)
       .set('limit', limit.toString());
 
-    return this.http
-      .get<{ timeframe: string; symbol: string; data: KlineData[] }>(
-        KLINE_URLS.proxyKlineUrl,
-        { params }
+    console.log(
+      `🌍 Kline API Request: ${KLINE_URLS.proxyKlineUrl} | Params:`,
+      klineParams.toString()
+    );
+
+    const klineRequest = this.http
+      .get<{ data: KlineData[] }>(KLINE_URLS.proxyKlineUrl, {
+        params: klineParams,
+      })
+      .pipe(
+        tap((response) => console.log('✅ Kline API Response:', response)),
+        map((response) => response.data),
+        catchError((error) =>
+          this.handleError(error, 'Error fetching Kline data')
+        )
+      );
+
+    console.log(
+      `🌍 Anchor Points API Request: ${ANCHORED_VWAP_URLS.anchoredPointsUrl}?symbol=${symbol}`
+    );
+
+    const anchorRequest = this.http
+      .get<AnchorPoint[]>(
+        `${ANCHORED_VWAP_URLS.anchoredPointsUrl}?symbol=${symbol}`
       )
       .pipe(
-        tap((response) => {
-          console.log('KlineData', response);
-        }),
-        map((response) => response.data),
-        map((data) => this.generateKlineChartOptions(data)),
-        tap((chartOptions) => {
-          this.klineChartOptionsSubject.next(chartOptions);
-          this.snackBarService.showSnackBar(
-            'Kline chart options generated successfully',
-            '',
-            3000,
-            SnackbarType.Info
-          );
-        }),
-        catchError((error) => {
-          console.error('Error fetching kline data:', error);
-          this.snackBarService.showSnackBar(
-            'Error fetching kline data',
-            '',
-            4000,
-            SnackbarType.Error
-          );
-          return throwError(() => error);
-        })
+        tap((response) =>
+          console.log('✅ Anchor Points API Response:', response)
+        ),
+        catchError((error) =>
+          this.handleError(error, 'Error fetching anchor points')
+        )
       );
+
+    return forkJoin([klineRequest, anchorRequest]).pipe(
+      tap(([klineData, anchorPoints]) => {
+        console.log('🛠 Storing Kline Data:', klineData);
+        console.log('🛠 Storing Anchor Points:', anchorPoints);
+      }),
+      map(([klineData, anchorPoints]) => {
+        if (!klineData || !anchorPoints) {
+          console.warn('⚠️ Missing data in API response:', {
+            klineData,
+            anchorPoints,
+          });
+          return {};
+        }
+
+        this.klineDataMap.set(symbol, klineData);
+        this.anchorPointsMap.set(symbol, anchorPoints);
+
+        console.log('📊 Generating chart options...');
+        const options = this.generateKlineChartOptions(
+          symbol,
+          klineData,
+          anchorPoints
+        );
+        console.log('📈 Generated Chart Options:', options);
+        return options;
+      }),
+      tap((options) => this.klineChartOptionsSubject.next(options))
+    );
   }
 
-  clearKlineData(): void {
-    this.klineChartOptionsSubject.next(null);
+  /**
+   * Retrieves stored Kline data for a given symbol.
+   */
+  getKlineData(symbol: string): KlineData[] | undefined {
+    console.log(`📦 Retrieving stored Kline data for: ${symbol}`);
+    return this.klineDataMap.get(symbol);
   }
 
-  private calculateMA(data: number[], dayCount: number): (number | string)[] {
-    const result: (number | string)[] = [];
-    for (let i = 0; i < data.length; i++) {
-      if (i < dayCount - 1) {
-        result.push('-');
-      } else {
-        const sum = data
-          .slice(i - dayCount + 1, i + 1)
-          .reduce((acc, curr) => acc + curr, 0);
-        result.push(sum / dayCount);
-      }
+  /**
+   * Retrieves stored anchor points for a given symbol.
+   */
+  getAnchorPoints(symbol: string): AnchorPoint[] | undefined {
+    console.log(`📦 Retrieving stored anchor points for: ${symbol}`);
+    return this.anchorPointsMap.get(symbol);
+  }
+
+  /**
+   * Generates chart options for Kline data and VWAP visualization.
+   */
+  private generateKlineChartOptions(
+    symbol: string,
+    klineData: KlineData[],
+    anchorPoints: AnchorPoint[]
+  ): any {
+    if (!Array.isArray(klineData) || !Array.isArray(anchorPoints)) {
+      console.error('❌ Invalid data for chart generation', {
+        klineData,
+        anchorPoints,
+      });
+      return {};
     }
-    return result;
-  }
 
-  private generateKlineChartOptions(klineData: KlineData[]): any {
-    const candlestickData = klineData.map((item) => [
-      item.openTime,
-      item.openPrice,
-      item.closePrice,
-      item.lowPrice,
-      item.highPrice,
+    console.log(`📊 Processing Kline and VWAP data for ${symbol}`);
+
+    const candlestickData = klineData.map((k) => [
+      k.openTime,
+      k.openPrice,
+      k.closePrice,
+      k.lowPrice,
+      k.highPrice,
     ]);
 
-    // Add future dummy data points
-    const lastTime = klineData[klineData.length - 1]?.openTime || Date.now();
-    const interval = 15 * 60 * 1000; // 15 minutes in ms
-    const futurePointsCount = 28; // ~7 hours forward
-    for (let i = 1; i <= futurePointsCount; i++) {
-      const futureTime = lastTime + i * interval;
-      candlestickData.push([futureTime, NaN, NaN, NaN, NaN]);
-    }
+    const vwapSeries = anchorPoints.map((anchorPoint) => {
+      const anchorTime = anchorPoint.anchorTime;
+      const relevantKlines = klineData.filter((k) => k.openTime >= anchorTime);
 
-    const closePrices = klineData.map((item) => item.closePrice);
+      let cumulativeVolume = 0;
+      let cumulativeVWAP = 0;
+      const vwapData: [number, number][] = [];
 
-    const maFast = this.calculateMA(closePrices, 50);
-    const maMedium = this.calculateMA(closePrices, 100);
-    const maSlow = this.calculateMA(closePrices, 150);
+      relevantKlines.forEach((k) => {
+        const typicalPrice = (k.highPrice + k.lowPrice + k.closePrice) / 3;
+        cumulativeVolume += k.baseVolume;
+        cumulativeVWAP += typicalPrice * k.baseVolume;
+        vwapData.push([k.openTime, cumulativeVWAP / cumulativeVolume]);
+      });
+
+      return {
+        name: `VWAP (${new Date(anchorTime).toLocaleTimeString()})`,
+        type: 'line',
+        data: vwapData,
+        smooth: true,
+        lineStyle: { color: 'orange', width: 2 },
+        showSymbol: false,
+      };
+    });
 
     return {
-      title: {
-        text: `${klineData[0].symbol}`,
-        left: 'center',
-        top: '1%', // move the title up a bit
-      },
+      title: { text: `${symbol}`, left: 'center', top: '1%' },
       legend: {
-        data: ['Candlestick', 'MA50', 'MA100', 'MA150'],
-        top: '6%', // move legend down below the title
+        data: ['Candlestick', ...vwapSeries.map((s) => s.name)],
+        top: '6%',
         left: 'center',
       },
+      xAxis: {
+        type: 'time',
+        boundaryGap: false,
+        min: 'dataMin',
+        max: 'dataMax',
+      },
+      yAxis: { scale: true, splitArea: { show: true } },
       dataZoom: [
         {
           type: 'inside',
@@ -131,76 +199,19 @@ export class KlineDataService {
           end: 100,
         },
       ],
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: { type: 'cross' },
-        formatter: (params: any[]) => {
-          const candle = params.find((p) => p.seriesType === 'candlestick');
-          if (candle) {
-            const [time, open, close, low, high] = candle.data;
-            const date = new Date(time).toLocaleString();
-            return `
-              <b>${date}</b><br/>
-              Open: ${open}<br/>
-              Close: ${close}<br/>
-              Low: ${low}<br/>
-              High: ${high}
-            `;
-          }
-          return '';
-        },
-      },
-
-      grid: { left: '10%', right: '10%', bottom: '15%' },
-      xAxis: {
-        type: 'time',
-        boundaryGap: false,
-        axisLine: { onZero: false },
-        splitLine: { show: false },
-        min: 'dataMin',
-        max: 'dataMax',
-      },
-      yAxis: { scale: true, splitArea: { show: true } },
       series: [
-        {
-          name: 'Candlestick',
-          type: 'candlestick',
-          data: candlestickData,
-          itemStyle: {
-            color: '#ec0000',
-            color0: '#00da3c',
-            borderColor: '#8A0000',
-            borderColor0: '#008F28',
-          },
-        },
-        {
-          name: 'MA50',
-          type: 'line',
-          data: klineData.map((item, index) => [item.openTime, maFast[index]]),
-          smooth: true,
-          lineStyle: { opacity: 0.7, width: 1.5 },
-          showSymbol: false,
-        },
-        {
-          name: 'MA100',
-          type: 'line',
-          data: klineData.map((item, index) => [
-            item.openTime,
-            maMedium[index],
-          ]),
-          smooth: true,
-          lineStyle: { opacity: 0.7, width: 1.5 },
-          showSymbol: false,
-        },
-        {
-          name: 'MA150',
-          type: 'line',
-          data: klineData.map((item, index) => [item.openTime, maSlow[index]]),
-          smooth: true,
-          lineStyle: { opacity: 0.7, width: 1.5 },
-          showSymbol: false,
-        },
+        { name: 'Candlestick', type: 'candlestick', data: candlestickData },
+        ...vwapSeries,
       ],
     };
+  }
+
+  /**
+   * Handles errors and displays a snackbar notification.
+   */
+  private handleError(error: any, message: string) {
+    console.error(`❌ ${message}`, error);
+    this.snackBarService.showSnackBar(message, '', 4000, SnackbarType.Error);
+    return throwError(() => error);
   }
 }

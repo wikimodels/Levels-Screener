@@ -44,3 +44,9 @@ export const WORKING_COINS_URLS = {
   updateWorkingCoinUrl: `${baseURL}/working-coins/update/one`,
   deleteWorkingCoinsUrl: `${baseURL}/working-coins/delete/many`,
 };
+
+export const ANCHORED_VWAP_URLS = {
+  anchoredPointsUrl: `${baseURL}/anchor-point`,
+  anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
+  anchoredVwapDeleteUrl: `${baseURL}/anchored-vwap/delete`,
+};
