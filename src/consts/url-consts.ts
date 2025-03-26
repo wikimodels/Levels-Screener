@@ -48,5 +48,5 @@ export const WORKING_COINS_URLS = {
 export const ANCHORED_VWAP_URLS = {
   anchoredPointsUrl: `${baseURL}/anchor-point`,
   anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
-  anchoredVwapDeleteUrl: `${baseURL}/anchored-vwap/delete`,
+  anchoredVwapDeleteUrl: `${baseURL}/anchor-point/delete`,
 };

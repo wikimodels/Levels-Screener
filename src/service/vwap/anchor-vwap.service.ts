@@ -55,9 +55,9 @@ export class AnchoredVwapService {
   deleteAnchorPoint(
     symbol: string,
     openTime: number
-  ): Observable<AnchorPoint[]> {
+  ): Observable<{ deletedCount: number }> {
     return this.http
-      .post<AnchorPoint[]>(`${ANCHORED_VWAP_URLS.anchoredPointAddUrl}`, {
+      .post<any>(`${ANCHORED_VWAP_URLS.anchoredVwapDeleteUrl}`, {
         symbol,
         openTime,
       })
