@@ -58,12 +58,12 @@ export class KlineDataService {
       );
 
     console.log(
-      `🌍 Anchor Points API Request: ${ANCHORED_VWAP_URLS.anchoredPointsUrl}?symbol=${symbol}`
+      `🌍 Anchor Points API Request: ${ANCHORED_VWAP_URLS.anchoredPointsBySymbolUrl}?symbol=${symbol}`
     );
 
     const anchorRequest = this.http
       .get<AnchorPoint[]>(
-        `${ANCHORED_VWAP_URLS.anchoredPointsUrl}?symbol=${symbol}`
+        `${ANCHORED_VWAP_URLS.anchoredPointsBySymbolUrl}?symbol=${symbol}`
       )
       .pipe(
         tap((response) =>

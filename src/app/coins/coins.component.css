@@ -1,29 +1,20 @@
-.container{
-  width: 97%;                /* Set the width to 97% */
-  min-width: 97%;            /* Ensure the width is at least 97% */
-  margin: 3em auto;
+.panel-container {
+  padding-top: 180px;
+  width: 98%;
+  min-width: 98%;
 }
 
-.small-icon-button {
-  width: 30px;   /* Adjust the width */
-  height: 30px;  /* Adjust the height */
-  padding: 0;    /* Adjust padding */
-  font-size: 12px; /* Adjust the icon size */
-  margin-right: 5px;
-}
+.fixed-panel {
+  position: fixed;
+  top: 60px;
 
-.panel-button {
+  width: 98%;
+  background: white;
+  z-index: 1000;
   display: flex;
-  align-items: center;
-  gap: 1px; /* Adjusts space between icon and text */
-  font-size: 16px; /* Adjusts font size of text */
-  padding: 8px 16px; /* Adjusts padding if needed */
-}
-
-.panel-button mat-icon {
-  width: 24px; /* Adjust icon width */
-  height: 24px; /* Adjust icon height */
-  fill: currentColor; /* Ensures the icon color matches text color */
-  display: inline-block; /* Keeps the icon in-line with text */
-  vertical-align: middle; /* Aligns icon with text */
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }

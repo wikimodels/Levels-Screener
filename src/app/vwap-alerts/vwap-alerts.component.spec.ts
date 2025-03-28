@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VwapComponent } from './vwap.component';
+import { AlertsComponent } from './vwap-alerts.component';
 
-describe('VwapComponent', () => {
-  let component: VwapComponent;
-  let fixture: ComponentFixture<VwapComponent>;
+describe('AlertsComponent', () => {
+  let component: AlertsComponent;
+  let fixture: ComponentFixture<AlertsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [VwapComponent]
+      declarations: [AlertsComponent],
     });
-    fixture = TestBed.createComponent(VwapComponent);
+    fixture = TestBed.createComponent(AlertsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

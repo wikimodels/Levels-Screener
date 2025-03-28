@@ -5,6 +5,7 @@ import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Subscription } from 'rxjs';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
+import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
     private alertsService: AlertsGenericService,
+    private vwapAlertsService: VwapAlertsGenericService,
     private coinsService: CoinsGenericService
   ) {
     this.registerIcons();
@@ -37,6 +39,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
     this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
     this.alertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
+    this.vwapAlertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
+    this.vwapAlertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
+    this.vwapAlertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
   }
 
   ngOnDestroy(): void {

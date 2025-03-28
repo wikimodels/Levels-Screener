@@ -8,6 +8,7 @@ import {
   ARCHIVED_ALERTS,
   EXCHANGES,
   COINS,
+  VWAP_ALERTS_AT_WORK,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
@@ -46,8 +47,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.router.navigate([EXCHANGES]);
   }
 
-  goToCoinss() {
+  goToCoins() {
     this.router.navigate([COINS]);
+  }
+
+  goToVwapAlerts() {
+    this.router.navigate([VWAP_ALERTS_AT_WORK]);
   }
 
   onRefreshCoins() {

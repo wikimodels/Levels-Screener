@@ -5,12 +5,16 @@ import { env } from 'environment/environment';
 export const TRIGGERED_ALERTS = AlertsCollection.TriggeredAlerts;
 export const ARCHIVED_ALERTS = AlertsCollection.ArchivedAlerts;
 export const ALERTS_AT_WORK = AlertsCollection.WorkingAlerts;
-export const VWAP = 'vwap';
+
 export const EXCHANGES = 'exchanges';
 export const COINS = 'coins';
 export const ADMIN = 'admin';
 export const WORK = 'work';
 export const KLINE_CHART = 'kline-chart';
+
+export const VWAP_TRIGGERED_ALERTS = 'vwap-' + AlertsCollection.TriggeredAlerts;
+export const VWAP_ARCHIVED_ALERTS = 'vwap-' + AlertsCollection.ArchivedAlerts;
+export const VWAP_ALERTS_AT_WORK = 'vwap-' + AlertsCollection.WorkingAlerts;
 
 //URLS
 const baseURL = env.baseURL;
@@ -46,7 +50,17 @@ export const WORKING_COINS_URLS = {
 };
 
 export const ANCHORED_VWAP_URLS = {
-  anchoredPointsUrl: `${baseURL}/anchor-point`,
+  anchoredPointsBySymbolUrl: `${baseURL}/anchor-point/symbol`,
+  anchoredPointsAllUrl: `${baseURL}/anchor-point/all`,
   anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
   anchoredVwapDeleteUrl: `${baseURL}/anchor-point/delete`,
+};
+
+export const VWAP_ALERTS_URLS = {
+  vwapAlertsUrl: `${baseURL}/vwap-alerts`,
+  vwapAlertsAddOneUrl: `${baseURL}/vwap-alerts/add/one`,
+  vwapAlertsUpdateOneUrl: `${baseURL}/vwap-alerts/update/one`,
+  vwapAlertsMoveManyUrl: `${baseURL}/vwap-alerts/move/many`,
+  vwapAlertsDeleteManyUrl: `${baseURL}/vwap-alerts/delete/many`,
+  vwapAlertsDeleteOneUrl: `${baseURL}/vwap-alerts/delete/one`,
 };

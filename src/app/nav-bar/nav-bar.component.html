@@ -1,4 +1,5 @@
-<mat-toolbar class="container">
+<mat-toolbar class="container"
+  style="position: fixed; top: 0; left: 0; right: 0; z-index: 1100; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
   <!-- <app-alert-menu></app-alert-menu> -->
   <span></span>
   <button mat-icon-button matTooltip="Add Alert" (click)="onAddAlert()">
@@ -30,7 +31,10 @@
   <button mat-icon-button matTooltip="Refresh Coins" (click)="onRefreshCoins()">
     <mat-icon style="cursor: pointer;">update</mat-icon>
   </button>
-  <button mat-icon-button matTooltip="Coins" (click)="goToCoinss()">
+  <button mat-icon-button matTooltip="Coins" (click)="goToCoins()">
     <mat-icon style="cursor: pointer;">local_atm</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Vwap Alerts" (click)="goToVwapAlerts()">
+    <mat-icon style="cursor: pointer;">candlestick_chart</mat-icon>
   </button>
 </mat-toolbar>

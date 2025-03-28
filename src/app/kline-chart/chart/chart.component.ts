@@ -3,7 +3,7 @@ import { EChartsOption } from 'echarts';
 import { EChartsType } from 'echarts/core';
 import { KlineData } from 'models/kline/kline-data';
 import { KlineDataService } from 'src/service/kline/kline.service';
-import { AnchoredVwapService } from 'src/service/vwap/anchor-vwap.service';
+import { VwapChartService } from 'src/service/vwap-alerts/vwap-chart.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -23,7 +23,7 @@ export class ChartComponent implements OnDestroy {
   private subscriptions: Subscription[] = []; // Array to hold subscriptions
 
   constructor(
-    private vwapService: AnchoredVwapService,
+    private vwapService: VwapChartService,
     private klineDataService: KlineDataService
   ) {}
 

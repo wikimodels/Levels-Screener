@@ -120,6 +120,18 @@ export class CoinsComponent {
   private openWindowsFromSelection(): void {
     this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
       setTimeout(() => {
+        const newWindow = window.open(
+          this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+  }
+
+  private openVwapChartsFromSelection(): void {
+    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
+      setTimeout(() => {
         const urlTree = this.router.createUrlTree([KLINE_CHART], {
           queryParams: { symbol: v.symbol },
         });
@@ -138,6 +150,6 @@ export class CoinsComponent {
   }
 
   onGoToCharts(): void {
-    this.openWindowsFromSelection();
+    this.openVwapChartsFromSelection();
   }
 }

@@ -45,11 +45,13 @@ import { AlertMenuComponent } from './nav-bar/alert-menu/alert-menu.component';
 import { WorkItemComponent } from './work/work-item/work-item.component';
 import { ExchangesComponent } from './exchanges/exchanges.component';
 import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-table.component';
-import { VwapComponent } from './vwap/vwap.component';
 import { CoinsComponent } from './coins/coins.component';
 import { CoinsFieldComponent } from './coins/coins-field/coins-field.component';
 import { KlineChartComponent } from './kline-chart/kline-chart.component';
 import { ChartComponent } from './kline-chart/chart/chart.component';
+import { VwapAlertsComponent } from './vwap-alerts/vwap-alerts.component';
+
+import { VwapAlertsTableComponent } from './vwap-alerts/vwap-alerts-table/vwap-alerts-table.component';
 echarts.use([
   LegendComponent,
   TitleComponent,
@@ -90,11 +92,14 @@ echarts.registerTheme('macarons', Marcaron);
     AlertMenuComponent,
     ExchangesComponent,
     ExchangeTableComponent,
-    VwapComponent,
+
     CoinsComponent,
     CoinsFieldComponent,
     KlineChartComponent,
     ChartComponent,
+    AlertsTableComponent,
+    VwapAlertsComponent,
+    VwapAlertsTableComponent,
   ],
   imports: [
     FormsModule,
