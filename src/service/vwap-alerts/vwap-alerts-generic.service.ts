@@ -82,7 +82,11 @@ export class VwapAlertsGenericService {
     const options = { ...this.httpOptions, params };
     console.log('VwapAlert to add --> ', alert);
     this.http
-      .post<InsertResult>(`${ALERTS_URLS.alertsAddOneUrl}`, { alert }, options)
+      .post<InsertResult>(
+        `${VWAP_ALERTS_URLS.vwapAlertsAddOneUrl}`,
+        { alert },
+        options
+      )
       .subscribe({
         next: (response: InsertResult) => {
           const msg = `Document inserted ${response.insertedCount}`;
@@ -143,7 +147,7 @@ export class VwapAlertsGenericService {
     // 🔹 Send update request to the server
     this.http
       .put<ModifyResult>(
-        `${ALERTS_URLS.alertsUpdateOneUrl}`,
+        `${VWAP_ALERTS_URLS.vwapAlertsUpdateOneUrl}`,
         { filter, updatedData },
         options
       )
@@ -199,7 +203,11 @@ export class VwapAlertsGenericService {
     const options = { ...this.httpOptions, params };
 
     this.http
-      .post<MoveResult>(`${ALERTS_URLS.alertsMoveManyUrl}`, { ids }, options)
+      .post<MoveResult>(
+        `${VWAP_ALERTS_URLS.vwapAlertsMoveManyUrl}`,
+        { ids },
+        options
+      )
       .subscribe({
         next: (response: MoveResult) => {
           const msg = `Documents inserted: ${response.insertCount}, deleted: ${response.deleteCount}`;

@@ -10,6 +10,8 @@ import {
   COINS,
   KLINE_CHART,
   VWAP_ALERTS_AT_WORK,
+  VWAP_ARCHIVED_ALERTS,
+  VWAP_TRIGGERED_ALERTS,
 } from 'src/consts/url-consts';
 import { TriggeredAlertsComponent } from './triggered-alerts/triggered-alerts.component';
 import { ArchivedAlertsComponent } from './archived-alerts/archived-alerts.component';
@@ -20,12 +22,16 @@ import { CoinsComponent } from './coins/coins.component';
 import { KlineChartComponent } from './kline-chart/kline-chart.component';
 
 import { VwapAlertsComponent } from './vwap-alerts/vwap-alerts.component';
+import { VwapArchivedAlertsComponent } from './vwap-archived-alerts/vwap-archived-alerts.component';
+import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-triggered-alerts.component';
 
 const routes: Routes = [
   { path: '', component: AlertsComponent },
   { path: KLINE_CHART, component: KlineChartComponent },
   { path: COINS, component: CoinsComponent },
 
+  { path: VWAP_TRIGGERED_ALERTS, component: VwapTriggeredAlertsComponent },
+  { path: VWAP_ARCHIVED_ALERTS, component: VwapArchivedAlertsComponent },
   { path: VWAP_ALERTS_AT_WORK, component: VwapAlertsComponent },
   { path: EXCHANGES, component: ExchangesComponent },
   { path: ALERTS_AT_WORK, component: AlertsComponent },

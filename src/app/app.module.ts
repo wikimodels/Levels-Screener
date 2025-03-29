@@ -52,6 +52,11 @@ import { ChartComponent } from './kline-chart/chart/chart.component';
 import { VwapAlertsComponent } from './vwap-alerts/vwap-alerts.component';
 
 import { VwapAlertsTableComponent } from './vwap-alerts/vwap-alerts-table/vwap-alerts-table.component';
+import { VwapArchivedAlertsComponent } from './vwap-archived-alerts/vwap-archived-alerts.component';
+import { VwapArchivedTableComponent } from './vwap-archived-alerts/vwap-archived-table/vwap-archived-table.component';
+import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-triggered-alerts.component';
+import { VwapTriggeredAlertsTableComponent } from './vwap-triggered-alerts/vwap-triggered-alerts-table/vwap-triggered-alerts-table.component';
+import { VwapAlertMenuComponent } from './nav-bar/vwap-alert-menu/vwap-alert-menu.component';
 echarts.use([
   LegendComponent,
   TitleComponent,
@@ -100,6 +105,12 @@ echarts.registerTheme('macarons', Marcaron);
     AlertsTableComponent,
     VwapAlertsComponent,
     VwapAlertsTableComponent,
+
+    VwapArchivedAlertsComponent,
+    VwapArchivedTableComponent,
+    VwapTriggeredAlertsComponent,
+    VwapTriggeredAlertsTableComponent,
+    VwapAlertMenuComponent,
   ],
   imports: [
     FormsModule,

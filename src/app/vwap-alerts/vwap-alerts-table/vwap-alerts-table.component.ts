@@ -25,24 +25,6 @@ import { KLINE_CHART } from 'src/consts/url-consts';
   styleUrls: ['./vwap-alerts-table.component.css'],
 })
 export class VwapAlertsTableComponent implements OnInit, OnDestroy {
-  // id: string;
-  // creationTime?: number;
-  // activationTime?: number;
-  // activationTimeStr?: string;
-  // price?: number;
-  // high?: number;
-  // low?: number;
-  // tvScreensUrls?: string[];
-  // isActive: boolean;
-  // symbol: string;
-  // category?: string;
-  // tvLink?: string;
-  // cgLink?: string;
-  // exchanges?: string[];
-  // imageUrl?: string;
-  // anchorTime?: number;
-  // anchorPrice?: number;
-  // anchorTimeStr?: string;
   displayedColumns: string[] = [
     'symbol',
     'anchorTimeStr',
