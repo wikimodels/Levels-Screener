@@ -13,7 +13,7 @@ export class SnackbarService {
   showSnackBar(
     message: string,
     action: string = '',
-    duration: number = 3000,
+    duration: number = 2000,
     snackbarType: SnackbarType = SnackbarType.Info
   ) {
     // SNACKBAR CSS CLASSES

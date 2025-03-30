@@ -3,24 +3,26 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs';
-import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
+
 import { Alert } from 'models/alerts/alert';
+import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
+import { VwapAlert } from 'models/vwap/vwap-alert';
 
 @Component({
-  selector: 'app-edit-alert',
-  templateUrl: './edit-alert.component.html',
-  styleUrls: ['./edit-alert.component.css'],
+  selector: 'app-vwap-edit-alert',
+  templateUrl: './edit-vwap-alert.component.html',
+  styleUrls: ['./edit-vwap-alert.component.css'],
 })
-export class EditAlertComponent {
+export class EditVwapAlertComponent {
   logoUrl = 'assets/img/noname.png';
   displayedSymbol!: string;
 
   constructor(
     private fb: FormBuilder,
-    private alertService: AlertsGenericService,
-    public dialogRef: MatDialogRef<EditAlertComponent>,
+    private alertService: VwapAlertsGenericService,
+    public dialogRef: MatDialogRef<EditVwapAlertComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { collectionName: string; alert: Alert },
+    public data: { collectionName: string; alert: VwapAlert },
     private _ngZone: NgZone
   ) {}
 
@@ -34,13 +36,11 @@ export class EditAlertComponent {
     this.logoUrl = this.data.alert?.imageUrl
       ? this.data.alert?.imageUrl
       : this.logoUrl;
-    this.displayedSymbol = this.data.alert.symbol + ' ALERT EDIT';
+    this.displayedSymbol = this.data.alert.symbol + ' VWAP ALERT EDIT';
     this.form = this.fb.group({
       symbol: [{ value: '', disabled: true }],
       isActive: [''],
-      keyLevelName: [{ value: '', disabled: true }],
-      price: [{ value: '', disabled: true }],
-      action: [{ value: '', disabled: true }],
+      anchorTimeStr: [{ value: '', disabled: true }],
       description: ['', Validators.required],
       imageLinks: this.fb.array([]),
     });
@@ -53,10 +53,8 @@ export class EditAlertComponent {
     this.imageLinks.clear();
     this.form?.setValue({
       symbol: this.data.alert.symbol,
+      anchorTimeStr: this.data.alert.anchorTimeStr,
       isActive: this.data.alert.isActive,
-      action: this.data.alert.action,
-      keyLevelName: this.data.alert.alertName,
-      price: this.data.alert.price,
       description: this.data.alert.description || 'Nothing to say yet',
       imageLinks: [], // Add the Available form control
     });
@@ -115,6 +113,7 @@ export class EditAlertComponent {
         {
           isActive: this.data.alert.isActive,
           description: this.data.alert.description,
+          tvScreensUrls: this.data.alert.tvScreensUrls,
         }
       );
 

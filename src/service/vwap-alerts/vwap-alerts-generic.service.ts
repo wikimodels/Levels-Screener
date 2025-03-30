@@ -9,9 +9,8 @@ import {
   MoveResult,
 } from 'models/mongodb/operations';
 import { SnackbarType } from 'models/shared/snackbar-type';
-
-import { ALERTS_URLS, VWAP_ALERTS_URLS } from 'src/consts/url-consts';
 import { VwapAlert } from 'models/vwap/vwap-alert';
+import { VWAP_ALERTS_URLS } from 'src/consts/url-consts';
 
 @Injectable({ providedIn: 'root' })
 export class VwapAlertsGenericService {
@@ -111,13 +110,10 @@ export class VwapAlertsGenericService {
     };
     console.log(options);
     this.http
-      .delete<DeleteResult>(
-        `${VWAP_ALERTS_URLS.vwapAlertsDeleteManyUrl}`,
-        options
-      )
+      .delete<boolean>(`${VWAP_ALERTS_URLS.vwapAlertsDeleteManyUrl}`, options)
       .subscribe({
-        next: (response: DeleteResult) => {
-          const msg = `Documents deleted ${response.deletedCount}`;
+        next: (response: boolean) => {
+          const msg = `Documents deleted successfully`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),
@@ -146,18 +142,15 @@ export class VwapAlertsGenericService {
 
     // 🔹 Send update request to the server
     this.http
-      .put<ModifyResult>(
+      .put<boolean>(
         `${VWAP_ALERTS_URLS.vwapAlertsUpdateOneUrl}`,
         { filter, updatedData },
         options
       )
       .subscribe({
-        next: (response: ModifyResult) => {
-          if (response.modifiedCount > 0) {
-            this.snackbarService.showSnackBar(
-              `✅ Updated ${response.modifiedCount} document(s).`,
-              ''
-            );
+        next: (response: boolean) => {
+          if (response) {
+            this.snackbarService.showSnackBar(`✅ Update successful`, '');
           } else {
             this.snackbarService.showSnackBar(
               `⚠️ No matching documents found.`,

@@ -81,6 +81,7 @@ tr.element-row:not(.expanded-row):active {
   justify-content: space-between; /* Align search box to the left and delete button to the right */
   align-items: center; /* Vertically align the items */
   margin-bottom: 10px; /* Space between the header-actions and the table */
+    /* Space between the header-actions and the table */
 }
 
 .small-icon-button {

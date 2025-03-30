@@ -18,6 +18,7 @@ import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-ge
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Route, Router } from '@angular/router';
 import { KLINE_CHART } from 'src/consts/url-consts';
+import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
 
 @Component({
   selector: 'app-vwap-alerts-table',
@@ -118,10 +119,10 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
     this.buttonsDisabled = true;
   }
 
-  onEdit(alert: Alert) {
-    console.log('ALERTS TBL ---> ', alert);
+  onEdit(alert: VwapAlert) {
+    console.log('VwapAlert TBL ---> ', alert);
     if (alert) {
-      this.modelDialog.open(EditAlertComponent, {
+      this.modelDialog.open(EditVwapAlertComponent, {
         data: { collectionName: this.collectionName, alert: alert },
         enterAnimationDuration: 250,
         exitAnimationDuration: 250,

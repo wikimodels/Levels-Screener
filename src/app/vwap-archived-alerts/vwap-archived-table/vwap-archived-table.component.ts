@@ -5,15 +5,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Route, Router } from '@angular/router';
-import { Alert } from 'models/alerts/alert';
+import { Router } from '@angular/router';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
-import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
+
+import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
 import { KLINE_CHART } from 'src/consts/url-consts';
-import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
+
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
 
@@ -105,7 +105,7 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   }
 
   onEdit(alert: VwapAlert) {
-    this.matDialog.open(EditAlertComponent, {
+    this.matDialog.open(EditVwapAlertComponent, {
       data: { collectionName: AlertsCollection.ArchivedAlerts, alert: alert },
       enterAnimationDuration: 250,
       exitAnimationDuration: 250,

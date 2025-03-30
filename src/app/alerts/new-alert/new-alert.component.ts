@@ -60,7 +60,7 @@ export class NewAlertComponent implements OnInit, OnDestroy {
       ],
       isActive: [true],
       action: ['', Validators.required],
-      description: ['', Validators.required],
+      description: ['Nothing to say yet', Validators.required],
       tvScreensUrls: this.fb.array([this.createImageUrlControl()]),
     });
 

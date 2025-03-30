@@ -6,6 +6,7 @@ export interface VwapAlert {
   price?: number;
   high?: number;
   low?: number;
+  description?: string;
   tvScreensUrls?: string[];
   isActive: boolean;
   symbol: string;

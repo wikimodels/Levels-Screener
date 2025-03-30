@@ -75,6 +75,27 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
 
+/* ------------------------*/
+/* TRIGGERED VWAP ALERTS TABLE  */
+/*-------------------------*/
+.triggered-vwap-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #faf8f2!important;
+}
+
+.triggered-vwap-alerts-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.triggered-vwap-alerts-table .mat-mdc-header-row {
+  background-color: #f7f181 !important;
+  height: 45px;
+}
+.triggered-vwap-alerts-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+
 /* ----------------------*/
 /* ALERTS AT WORK        */
 /*---------------------- */
@@ -279,7 +300,7 @@ input[type=number] {
   justify-content:   space-evenly;
   position: fixed; top: 0;
   left: 0; right: 0;
-  z-index: 10;
+  z-index: 1000;
   background: gray;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
