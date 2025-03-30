@@ -30,7 +30,10 @@ const routes: Routes = [
   { path: KLINE_CHART, component: KlineChartComponent },
   { path: COINS, component: CoinsComponent },
 
-  { path: VWAP_TRIGGERED_ALERTS, component: VwapTriggeredAlertsComponent },
+  {
+    path: VWAP_TRIGGERED_ALERTS,
+    component: VwapTriggeredAlertsComponent,
+  },
   { path: VWAP_ARCHIVED_ALERTS, component: VwapArchivedAlertsComponent },
   { path: VWAP_ALERTS_AT_WORK, component: VwapAlertsComponent },
   { path: EXCHANGES, component: ExchangesComponent },
@@ -42,7 +45,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

@@ -133,7 +133,7 @@ tr.element-row:not(.expanded-row):active {
 
 .refresh-icon {
   cursor: pointer;
-  margin-top: 4px;
+  margin-bottom: 12px;
 }
 
 .button-group {

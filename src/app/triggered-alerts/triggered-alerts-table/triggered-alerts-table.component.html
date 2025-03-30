@@ -1,4 +1,5 @@
-<div class="controls-container">
+<div class="controls-container fixed-panel" id="header">
+
   <div>
     <!-- FILTER BOX -->
     <mat-form-field appearance="outline" class="filter-box">
@@ -10,13 +11,12 @@
       </button>
     </mat-form-field>
   </div>
-  <div style="display: flex; align-items: start center;">
-    <h1 style="margin-right: 5px;">Triggered Alerts</h1>
-    <mat-icon style="cursor: pointer; margin-top: 4px;" class="rotate" (click)="refreshDataTable()"
-      [ngClass]="{ 'rotate': isRotating }">sync</mat-icon>
+  <div class="header-title-container">
+    <h1 class="header-title-margin">Triggered Alerts</h1>
+    <mat-icon class="refresh-icon" (click)="refreshDataTable()" [ngClass]="{ 'rotate': isRotating }">sync</mat-icon>
   </div>
 
-  <div style="display: flex; flex-direction: row; gap: 10px">
+  <div class="button-group">
     <!-- MOVE COINS TO WORKING COINS TABLE -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onMoveToWorkingCoins()"
       matTooltip="Add Coin to Work" matTooltipPosition="above" color="primary">
@@ -31,8 +31,8 @@
   </div>
 </div>
 
-<div>
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 triggered-alerts-table">
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 triggered-alerts-table table-margin">
 
     <!-- SYMBOL -->
     <ng-container matColumnDef="symbol">

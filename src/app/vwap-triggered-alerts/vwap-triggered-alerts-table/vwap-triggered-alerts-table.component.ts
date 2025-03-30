@@ -65,6 +65,7 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.workingCoinsService.getAllWorkingCoins();
+    this.refreshDataTable();
     this.sub = this.alertsService
       .alerts$(AlertsCollection.TriggeredAlerts)
       .subscribe((data: VwapAlert[]) => {

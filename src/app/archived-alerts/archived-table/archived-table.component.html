@@ -1,4 +1,4 @@
-<div class="controls-container">
+<div class="controls-container fixed-panel" id="header">
   <div>
     <!-- FILTER BOX -->
     <mat-form-field appearance="outline" class="filter-box">
@@ -10,17 +10,17 @@
       </button>
     </mat-form-field>
   </div>
-  <div>
-    <h1>Archived Alerts</h1>
+  <div class="header-title-container">
+    <h1 class="header-title-margin">Archived Alerts</h1>
   </div>
-  <div>
+  <div class="button-group">
     <button mat-raised-button [disabled]="deleteDisabled" (click)="onDeleteSelected()" color="warn" matTooltip="Delete"
       matTooltipPosition="above"><mat-icon style="margin-left: 5px;" svgIcon="delete"></mat-icon></button>
   </div>
 </div>
 
-<div>
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 archived-alerts-table">
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 archived-alerts-table table-margin">
 
     <!-- SYMBOL -->
     <ng-container matColumnDef="symbol">
