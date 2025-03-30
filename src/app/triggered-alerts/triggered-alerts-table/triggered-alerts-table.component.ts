@@ -25,7 +25,11 @@ import { Coin } from 'models/coin/coin';
 @Component({
   selector: 'app-triggered-alerts-table',
   templateUrl: './triggered-alerts-table.component.html',
-  styleUrls: ['./triggered-alerts-table.component.css'],
+  styleUrls: [
+    './triggered-alerts-table.component.css',
+    './../../../styles-alerts.css',
+    './../../../styles-plain-tables.css',
+  ],
 })
 export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [

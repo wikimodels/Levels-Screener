@@ -1,4 +1,4 @@
-<div class="controls-container">
+<div class="controls-container fixed-panel" id="header">
 
   <!-- FILTER BOX -->
   <div>
@@ -12,33 +12,26 @@
     </mat-form-field>
   </div>
 
-  <div>
-    <h1>VWAP Alerts at Work</h1>
+  <div class="header-title-container">
+    <h1 class="header-title-margin">VWAP Alerts at Work</h1>
   </div>
-  <div style="display: flex; flex-direction: row; gap: 10px">
-
-    <!-- ADD ALERT  -->
-    <!-- <button mat-raised-button (click)="onAddAlert()" color="primary" matTooltip="Add new Alert"
-      matTooltipPosition="above">
-      <mat-icon style="margin-left: 5px;" svgIcon="add"></mat-icon>
-    </button> -->
-
+  <div class="button-group">
     <!-- MOVE ALERT TO ARCHIVE -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onMoveToArchive()" matTooltip="Move to Archive"
       matTooltipPosition="above" color="accent">
-      <mat-icon style="margin-left: 5px;" svgIcon="black-list"></mat-icon>
+      <mat-icon class="button-icon-margin" svgIcon="black-list"></mat-icon>
     </button>
 
     <!-- DELETE ALERTS -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onDeleteSelected()" matTooltip="Delete"
       matTooltipPosition="above" color="warn">
-      <mat-icon style="margin-left: 5px;" svgIcon="delete"></mat-icon>
+      <mat-icon class="button-icon-margin" svgIcon="delete"></mat-icon>
     </button>
   </div>
 </div>
 
-<div>
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 vwap-alerts-at-work-table">
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z12 working-vwap-alerts-table table-margin">
 
     <!-- SYMBOL -->
     <ng-container matColumnDef="symbol">

@@ -15,7 +15,11 @@ import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service'
 @Component({
   selector: 'app-archived-table',
   templateUrl: './archived-table.component.html',
-  styleUrls: ['./archived-table.component.css'],
+  styleUrls: [
+    './archived-table.component.css',
+    './../../../styles-alerts.css',
+    './../../../styles-plain-tables.css',
+  ],
 })
 export class ArchivedTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [

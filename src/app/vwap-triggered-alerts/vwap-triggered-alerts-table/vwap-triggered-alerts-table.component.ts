@@ -27,7 +27,11 @@ import { VwapAlert } from 'models/vwap/vwap-alert';
 @Component({
   selector: 'app-vwap-triggered-alerts-table',
   templateUrl: './vwap-triggered-alerts-table.component.html',
-  styleUrls: ['./vwap-triggered-alerts-table.component.css'],
+  styleUrls: [
+    './vwap-triggered-alerts-table.component.css',
+    './../../../styles-alerts.css',
+    './../../../styles-vwap-tables.css',
+  ],
 })
 export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [

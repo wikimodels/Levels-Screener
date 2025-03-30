@@ -1,0 +1,63 @@
+/* ----------------------*/
+/* WORKING ALERTS        */
+/*---------------------- */
+.working-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #e4f7df!important;
+}
+
+.working-alerts-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.working-alerts-table .mat-mdc-header-row {
+  background-color: #8dfccc !important;
+  height: 45px;
+}
+
+.working-alerts-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+
+/* ----------------------*/
+/* ARCHIVED ALERTS        */
+/*---------------------- */
+.archived-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #e4f7df!important;
+}
+
+.archived-alerts-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.archived-alerts-table .mat-mdc-header-row {
+  background-color: #cbdff5 !important;
+  height: 45px;
+}
+
+.archived-alerts-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}
+
+/* ------------------------*/
+/* TRIGGERED ALERTS TABLE  */
+/*-------------------------*/
+.triggered-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #faf8f2!important;
+}
+
+.triggered-alerts-table .mat-mdc-row {
+  height: 35px!important;
+}
+
+.triggered-alerts-table .mat-mdc-header-row {
+  background-color: #f7f181 !important;
+  height: 45px;
+}
+
+.triggered-alerts-table .mat-mdc-row:hover {
+  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}

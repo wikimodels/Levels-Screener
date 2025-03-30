@@ -19,7 +19,11 @@ import { CoinLinksService } from 'src/service/coin-links.service';
 @Component({
   selector: 'app-alerts-table',
   templateUrl: './alerts-table.component.html',
-  styleUrls: ['./alerts-table.component.css'],
+  styleUrls: [
+    './alerts-table.component.css',
+    './../../../styles-alerts.css',
+    './../../../styles-plain-tables.css',
+  ],
 })
 export class AlertsTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [

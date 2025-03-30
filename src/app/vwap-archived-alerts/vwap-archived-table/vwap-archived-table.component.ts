@@ -20,7 +20,11 @@ import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-ge
 @Component({
   selector: 'app-vwap-archived-table',
   templateUrl: './vwap-archived-table.component.html',
-  styleUrls: ['./vwap-archived-table.component.css'],
+  styleUrls: [
+    './vwap-archived-table.component.css',
+    './../../../styles-alerts.css',
+    './../../../styles-vwap-tables.css',
+  ],
 })
 export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
@@ -52,6 +56,7 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
     this.sub = this.alertsService
       .alerts$(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
+        console.log('ARCHIVED shit', data);
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
