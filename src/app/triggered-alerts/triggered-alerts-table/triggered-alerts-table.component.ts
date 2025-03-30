@@ -66,6 +66,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.workingCoinsService.getAllWorkingCoins();
+    this.refreshDataTable();
     this.sub = this.alertsService
       .alerts$(AlertsCollection.TriggeredAlerts)
       .subscribe((data: Alert[]) => {
