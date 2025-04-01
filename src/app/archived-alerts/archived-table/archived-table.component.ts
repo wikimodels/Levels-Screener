@@ -35,7 +35,7 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   dataSource!: any;
   deleteDisabled = true;
   filterValue = '';
-
+  isRotating = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   searchKeywordFilter = new FormControl();
@@ -47,6 +47,7 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
     this.sub = this.alertsService
       .alerts$(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
@@ -114,6 +115,14 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   clearInput() {
     this.filterValue = '';
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
+  }
+
+  refreshDataTable() {
+    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
+    this.isRotating = true;
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {

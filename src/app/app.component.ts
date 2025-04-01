@@ -1,11 +1,8 @@
+import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { Subscription } from 'rxjs';
-import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
 
 @Component({
   selector: 'app-root',
@@ -13,47 +10,21 @@ import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-ge
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  private dataSubscription1: Subscription | null = null;
-  private dataSubscription2: Subscription | null = null;
+  subscription = new Subscription();
   constructor(
+    private coinsService: CoinsGenericService,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer,
-    private alertsService: AlertsGenericService,
-    private vwapAlertsService: VwapAlertsGenericService,
-    private coinsService: CoinsGenericService
+    private domSanitizer: DomSanitizer
   ) {
     this.registerIcons();
   }
-
   ngOnInit(): void {
-    this.coinsService.loadCoins().subscribe({
-      next: (coins: any) => {
+    this.subscription.add(
+      this.coinsService.loadCoins().subscribe((coins) => {
         this.coinsService.setCoins(coins);
-        console.log('✅ Coins received:', this.coinsService.getCoins().length);
-      },
-      error: (error) => {
-        console.error('❌ Error fetching coins:', error);
-      },
-    });
-
-    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
-    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
-    this.alertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
-    this.vwapAlertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
-    this.vwapAlertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
-    this.vwapAlertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
+      })
+    );
   }
-
-  ngOnDestroy(): void {
-    if (this.dataSubscription1) {
-      this.dataSubscription1.unsubscribe();
-    }
-
-    if (this.dataSubscription2) {
-      this.dataSubscription2.unsubscribe();
-    }
-  }
-
   registerIcons(): void {
     const icons: { name: string; url: string }[] = [
       { name: 'bingx-sf', url: 'assets/icons/bingx-sf.svg' },
@@ -87,6 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
       { name: 'info', url: 'assets/icons/info.svg' },
       { name: 'flare', url: 'assets/icons/flare.svg' },
       { name: '_arrow_forward', url: 'assets/icons/arrow-forward.svg' },
+      { name: 'reset_focus', url: 'assets/icons/reset_focus.svg' },
       { name: '_arrow_back', url: 'assets/icons/arrow-back.svg' },
       { name: 'twitter', url: 'assets/icons/twitter.svg' },
       { name: 'reddit', url: 'assets/icons/reddit.svg' },
@@ -104,5 +76,9 @@ export class AppComponent implements OnInit, OnDestroy {
         this.domSanitizer.bypassSecurityTrustResourceUrl(icon.url)
       );
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

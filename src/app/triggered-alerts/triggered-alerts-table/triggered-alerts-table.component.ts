@@ -59,7 +59,6 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     private alertsService: AlertsGenericService,
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
-    private snackbarService: SnackbarService,
     private coinsService: CoinsGenericService,
     private workingCoinsService: WorkingCoinsService
   ) {}

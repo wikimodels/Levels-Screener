@@ -1,17 +1,18 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, NgZone, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { EChartsType } from 'echarts/core';
 import { KlineData } from 'models/kline/kline-data';
 import { KlineDataService } from 'src/service/kline/kline.service';
 import { VwapChartService } from 'src/service/vwap-alerts/vwap-chart.service';
 import { Subscription } from 'rxjs';
+import { ChartRefreshService } from 'src/service/kline/chart-refresh.service';
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.css'],
 })
-export class ChartComponent implements OnDestroy {
+export class ChartComponent implements OnInit, OnDestroy {
   @Input() chartOptions: EChartsOption = {};
   @Input() symbol = '';
   @Input() timeframe = 'm15';
@@ -24,8 +25,18 @@ export class ChartComponent implements OnDestroy {
 
   constructor(
     private vwapService: VwapChartService,
-    private klineDataService: KlineDataService
+    private klineDataService: KlineDataService,
+    private chartRefreshService: ChartRefreshService
   ) {}
+
+  ngOnInit(): void {
+    const subscription = this.chartRefreshService.refreshChart$.subscribe(
+      () => {
+        this.redrawChart();
+      }
+    );
+    this.subscriptions.push(subscription);
+  }
 
   onChartInit(chartInstance: EChartsType): void {
     this.chart = chartInstance;
@@ -41,9 +52,10 @@ export class ChartComponent implements OnDestroy {
 
   toggleVwapLine(openTime: number): void {
     const subscription = this.vwapService
-      .deleteAnchorPoint(this.symbol, openTime)
+      .saveAnchorPoint(this.symbol, openTime)
       .subscribe((result) => {
-        result.deletedCount === 0 ? this.addVwap(openTime) : this.redrawChart();
+        this.addVwap(openTime);
+        // result.deletedCount === 0 ? this.addVwap(openTime) : this.//redrawChart();
       });
     this.subscriptions.push(subscription); // Store subscription
   }
@@ -56,7 +68,7 @@ export class ChartComponent implements OnDestroy {
     }
   }
 
-  fetchAndUpdateChart(): void {
+  public fetchAndUpdateChart(): void {
     const subscription = this.klineDataService
       .fetchKlineAndAnchors(this.symbol, this.timeframe, this.limit)
       .subscribe((options: EChartsOption) => {

@@ -7,14 +7,13 @@ import { Subscription } from 'rxjs';
 import { KLINE_CHART } from 'src/consts/url-consts';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
-import { SnackbarService } from 'src/service/snackbar.service';
+
 import { WorkSelectionService } from 'src/service/work.selection.service';
 
 @Component({
   selector: 'app-coins',
   templateUrl: './coins.component.html',
-  styleUrls: ['./coins.component.css'],
+  styleUrls: ['./coins.component.css', './../../styles-alerts.css'],
 })
 export class CoinsComponent {
   // Properties
@@ -25,13 +24,14 @@ export class CoinsComponent {
   form!: FormGroup;
   filteredSymbols: string[] = [];
   private subscription = new Subscription();
+  private sortState: 'romanAsc' | 'romanDesc' | 'alphaAsc' | 'alphaDesc' =
+    'alphaAsc';
   defaultLink = 'https://www.tradingview.com/chart?symbol=BINANCE:BTCUSDT.P';
   private openedWindows: Window[] = [];
 
   // Constructor
   constructor(
     private coinsService: CoinsGenericService,
-
     private coinsLinksService: CoinLinksService,
     private fb: FormBuilder,
     private router: Router,
@@ -51,13 +51,20 @@ export class CoinsComponent {
 
   // Initialization Methods
   private initializeData(): void {
-    this.coins = this.coinsService
-      .getCoins()
-      .sort((a, b) => a.symbol.localeCompare(b.symbol));
-
-    this.symbols = this.coins.map((d) => d.symbol);
-
-    this.selectionService.clear();
+    this.subscription.add(
+      this.coinsService.loadCoins().subscribe((coins) => {
+        this.coins = coins
+          .filter(
+            (coin) =>
+              coin.exchanges.includes('Bybit') ||
+              coin.exchanges.includes('BingX PF')
+          )
+          .sort((a, b) => a.symbol.localeCompare(b.symbol));
+        console.log('Coins fethed: ', this.coins.length);
+        this.symbols = this.coins.map((d) => d.symbol);
+        this.selectionService.clear();
+      })
+    );
   }
 
   private initializeForm(): void {
@@ -151,5 +158,49 @@ export class CoinsComponent {
 
   onGoToCharts(): void {
     this.openVwapChartsFromSelection();
+  }
+
+  onSortByCategory() {}
+
+  toggleSort(): void {
+    switch (this.sortState) {
+      case 'romanAsc':
+        this.sortRomanNumerals('desc');
+        this.sortState = 'romanDesc';
+        break;
+      case 'romanDesc':
+        this.sortAlphabetically('asc');
+        this.sortState = 'alphaAsc';
+        break;
+      case 'alphaAsc':
+        this.sortAlphabetically('desc');
+        this.sortState = 'alphaDesc';
+        break;
+      case 'alphaDesc':
+        this.sortRomanNumerals('asc');
+        this.sortState = 'romanAsc';
+        break;
+    }
+    console.log(`Sorted Coins (${this.sortState}):`, this.coins);
+  }
+
+  /**
+   * Sorts the coins array by Roman numeral order.
+   * @param order - 'asc' for ascending, 'desc' for descending
+   */
+  private sortRomanNumerals(order: 'asc' | 'desc'): void {
+    const romanOrder = ['I', 'II', 'III', 'IV', 'V', 'VI']; // Define the Roman numeral order
+    this.coins.sort((a, b) => {
+      const indexA = romanOrder.indexOf(a.category);
+      const indexB = romanOrder.indexOf(b.category);
+      return order === 'asc' ? indexA - indexB : indexB - indexA;
+    });
+  }
+
+  private sortAlphabetically(order: 'asc' | 'desc'): void {
+    this.coins.sort((a, b) => {
+      const comparison = a.category.localeCompare(b.category);
+      return order === 'asc' ? comparison : -comparison;
+    });
   }
 }

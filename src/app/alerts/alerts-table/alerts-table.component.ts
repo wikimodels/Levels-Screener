@@ -41,6 +41,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   dataSource!: any;
   buttonsDisabled = true;
   filterValue = '';
+  isRotating = false;
   collectionName = AlertsCollection.WorkingAlerts;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -55,6 +56,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
     this.sub.add(
       this.alertsService
         .alerts$(AlertsCollection.WorkingAlerts)
@@ -148,6 +150,14 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   clearInput() {
     this.filterValue = '';
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
+  }
+
+  refreshDataTable() {
+    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
+    this.isRotating = true;
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {

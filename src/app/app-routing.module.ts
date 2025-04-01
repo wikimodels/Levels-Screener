@@ -29,7 +29,6 @@ const routes: Routes = [
   { path: '', component: AlertsComponent },
   { path: KLINE_CHART, component: KlineChartComponent },
   { path: COINS, component: CoinsComponent },
-
   {
     path: VWAP_TRIGGERED_ALERTS,
     component: VwapTriggeredAlertsComponent,

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NewAlertComponent } from '../alerts/new-alert/new-alert.component';
@@ -8,11 +8,11 @@ import {
   ARCHIVED_ALERTS,
   EXCHANGES,
   COINS,
-  VWAP_ALERTS_AT_WORK,
-  VWAP_TRIGGERED_ALERTS,
   VWAP_ARCHIVED_ALERTS,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
+import { ChartComponent } from '../kline-chart/chart/chart.component';
+import { ChartRefreshService } from 'src/service/kline/chart-refresh.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -23,7 +23,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modelDialog: MatDialog,
-    private coinsService: CoinsGenericService
+    private coinsService: CoinsGenericService,
+    private chartRefreshService: ChartRefreshService
   ) {}
 
   ngOnInit(): void {}
@@ -39,6 +40,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   goToTriggeredAlerts() {
     this.router.navigate([TRIGGERED_ALERTS]);
+  }
+
+  onRefreshChart() {
+    this.chartRefreshService.triggerRefresh();
   }
 
   goToArchivedAlerts() {

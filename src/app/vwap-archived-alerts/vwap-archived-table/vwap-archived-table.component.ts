@@ -39,7 +39,7 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   dataSource!: any;
   deleteDisabled = true;
   filterValue = '';
-
+  isRotating = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   searchKeywordFilter = new FormControl();
@@ -53,6 +53,7 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
     this.sub = this.alertsService
       .alerts$(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
@@ -130,6 +131,14 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
     });
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank');
+  }
+
+  refreshDataTable() {
+    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
+    this.isRotating = true;
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {

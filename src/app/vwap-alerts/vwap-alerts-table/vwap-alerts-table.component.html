@@ -14,6 +14,7 @@
 
   <div class="header-title-container">
     <h1 class="header-title-margin">VWAP Alerts at Work</h1>
+    <mat-icon class="refresh-icon" (click)="refreshDataTable()" [ngClass]="{ 'rotate': isRotating }">sync</mat-icon>
   </div>
   <div class="button-group">
     <!-- MOVE ALERT TO ARCHIVE -->

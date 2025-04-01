@@ -41,7 +41,7 @@ export class VwapChartService {
       .pipe(
         tap({
           next: () => {
-            this.vwapService.getAllAlerts(AlertsCollection.WorkingAlerts);
+            //this.vwapService.getAllAlerts(AlertsCollection.WorkingAlerts);
           },
           error: (error) => {
             this.handleError(error, 'Failed to refresh alerts after saving');
