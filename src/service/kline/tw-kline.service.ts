@@ -54,7 +54,7 @@ export class TWKlineService {
     klineData: KlineData[]
   ): CandlestickData[] {
     return klineData.map((kline) => ({
-      time: Math.floor(kline.openTime / 1000) as UTCTimestamp,
+      time: (Math.floor(kline.openTime / 1000) + 3 * 60 * 60) as UTCTimestamp, // Add 3 hours (10800 seconds)
       open: kline.openPrice,
       high: kline.highPrice,
       low: kline.lowPrice,

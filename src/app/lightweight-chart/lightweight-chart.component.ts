@@ -27,7 +27,6 @@ export class LightweightChartComponent implements OnInit {
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
   private highlightedCandleTime: UTCTimestamp | null = null;
   private candleData: SafeCandleData[] = [];
-  private isZoomed = false;
 
   constructor(private klineService: TWKlineService) {}
 
@@ -42,7 +41,7 @@ export class LightweightChartComponent implements OnInit {
   private initChart(): void {
     this.chart = createChart(this.chartContainer.nativeElement, {
       width: 1200,
-      height: 450,
+      height: 460,
       layout: {
         background: { color: '#222' },
         textColor: '#DDD',
@@ -133,40 +132,36 @@ export class LightweightChartComponent implements OnInit {
 
       if (!clickedCandle) return;
 
-      // Toggle zoom effect
-      this.isZoomed = !this.isZoomed;
-
-      // Log candle details with formatted time
-      console.log('Clicked Candle Details:', {
-        time: new Date(clickedCandle.time * 1000).toLocaleString(undefined, {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-        }),
-        open: clickedCandle.open.toFixed(4),
-        high: clickedCandle.high.toFixed(4),
-        low: clickedCandle.low.toFixed(4),
-        close: clickedCandle.close.toFixed(4),
-        bodySize: Math.abs(clickedCandle.close - clickedCandle.open).toFixed(4),
-        direction: clickedCandle.close > clickedCandle.open ? 'UP' : 'DOWN',
-      });
-
-      // Toggle highlight if same candle clicked
+      // Toggle highlight on click
       if (this.highlightedCandleTime === clickedTime) {
         this.resetHighlight();
-        return;
+      } else {
+        this.highlightCandle(clickedTime);
+        console.log('Clicked Candle Details:', {
+          time: new Date(clickedCandle.time * 1000).toLocaleString(undefined, {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          }),
+          open: clickedCandle.open.toFixed(4),
+          high: clickedCandle.high.toFixed(4),
+          low: clickedCandle.low.toFixed(4),
+          close: clickedCandle.close.toFixed(4),
+          bodySize: Math.abs(clickedCandle.close - clickedCandle.open).toFixed(
+            4
+          ),
+          direction: clickedCandle.close > clickedCandle.open ? 'UP' : 'DOWN',
+        });
       }
-
-      // Highlight new candle with zoom effect
-      this.highlightCandle(clickedTime);
     });
   }
 
   private highlightCandle(time: UTCTimestamp): void {
     this.highlightedCandleTime = time;
 
+    // Create new array with highlighted candle
     const highlightedData = this.candleData.map((candle) => {
       if (candle.time === time) {
         return {
@@ -174,8 +169,6 @@ export class LightweightChartComponent implements OnInit {
           color: '#FFA500',
           wickColor: '#FFA500',
           borderColor: '#FFA500',
-          borderVisible: this.isZoomed,
-          borderWidth: this.isZoomed ? 2 : 0,
         };
       }
       return candle;
@@ -186,7 +179,14 @@ export class LightweightChartComponent implements OnInit {
 
   private resetHighlight(): void {
     this.highlightedCandleTime = null;
-    this.isZoomed = false;
+    this.candlestickSeries.applyOptions({
+      upColor: '#26a69a',
+      downColor: '#ef5350',
+      borderUpColor: '#26a69a',
+      borderDownColor: '#ef5350',
+      wickUpColor: '#26a69a',
+      wickDownColor: '#ef5350',
+    });
     this.candlestickSeries.setData(this.candleData);
   }
 }
