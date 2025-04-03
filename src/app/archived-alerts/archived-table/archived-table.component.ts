@@ -47,6 +47,7 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    window.scrollTo(0, 0);
     this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
     this.sub = this.alertsService
       .alerts$(AlertsCollection.ArchivedAlerts)

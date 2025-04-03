@@ -54,7 +54,7 @@ export const ANCHORED_VWAP_URLS = {
   anchoredPointsBySymbolUrl: `${baseURL}/anchor-point/symbol`,
   anchoredPointsAllUrl: `${baseURL}/anchor-point/all`,
   anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
-  anchoredVwapDeleteUrl: `${baseURL}/anchor-point/delete`,
+  anchoredPointDeleteUrl: `${baseURL}/anchor-point/delete`,
 };
 
 export const VWAP_ALERTS_URLS = {

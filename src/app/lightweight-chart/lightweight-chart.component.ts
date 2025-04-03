@@ -6,7 +6,9 @@ import {
   CandlestickData,
   UTCTimestamp,
 } from 'lightweight-charts';
-import { TWKlineService } from '../../service/kline/tw-kline.service';
+import { TWKlineService } from 'src/service/kline/tw-kline.service';
+import { SnackbarService } from 'src/service/snackbar.service';
+import { SnackbarType } from 'models/shared/snackbar-type';
 
 interface SafeCandleData {
   time: UTCTimestamp;
@@ -27,7 +29,7 @@ export class LightweightChartComponent implements OnInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   private chart!: IChartApi;
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
-  private highlightedCandleTime: UTCTimestamp | null = null;
+  private symbol = 'BTCUSDT';
   private candleData: SafeCandleData[] = [];
   private vwapLines: Map<
     UTCTimestamp,
@@ -37,7 +39,10 @@ export class LightweightChartComponent implements OnInit {
     }
   > = new Map();
 
-  constructor(private klineService: TWKlineService) {}
+  constructor(
+    private klineService: TWKlineService,
+    private snackBarService: SnackbarService
+  ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
@@ -102,11 +107,91 @@ export class LightweightChartComponent implements OnInit {
 
   private loadChartData(): void {
     this.klineService
-      .fetchKlineAndAnchors('BTCUSDT', 'm15', 400)
-      .subscribe((data: CandlestickData[]) => {
-        this.candleData = data as SafeCandleData[];
+      .fetchCombinedChartData(this.symbol, 'm15', 400)
+      .subscribe(({ candlestick, vwapLines }) => {
+        // Clear existing data
+        this.candleData = (candlestick as SafeCandleData[]).filter(
+          (c) => !isNaN(c.time) && c.time > 0
+        );
+        this.clearAllVWAPs();
+
+        if (this.candleData.length === 0) {
+          console.error('No valid candle data available - detailed debug:');
+          console.log('Raw API response:', { candlestick, vwapLines });
+          // Handle both string and number timestamps
+          const toValidTimestamp = (t: any): UTCTimestamp | null => {
+            if (typeof t === 'number' && !isNaN(t) && t > 0)
+              return t as UTCTimestamp;
+            if (typeof t === 'string') {
+              const num = Number(t);
+              return !isNaN(num) && num > 0 ? (num as UTCTimestamp) : null;
+            }
+            return null;
+          };
+
+          console.log(
+            'Filtered candlestick data:',
+            candlestick.filter((c) => toValidTimestamp(c.time) !== null)
+          );
+          console.log(
+            'First 5 invalid items:',
+            candlestick.slice(0, 5).map((c) => ({
+              time: c.time,
+              type: typeof c.time,
+              valid: toValidTimestamp(c.time) !== null,
+            }))
+          );
+
+          this.snackBarService.showSnackBar(
+            `No valid chart data (${candlestick.length} items, all invalid)`,
+            'Check console for details',
+            6000,
+            SnackbarType.Error
+          );
+          return;
+        }
+
+        // Verify data is ordered by time
+        const isOrdered = this.candleData.every(
+          (c, i, arr) => i === 0 || c.time > arr[i - 1].time
+        );
+
+        if (!isOrdered) {
+          console.error('Candle data is not properly ordered by time');
+          this.candleData.sort((a, b) => a.time - b.time);
+        }
+
+        // Set candlestick data
         this.candlestickSeries.setData(this.candleData);
+
+        //Add all VWAP lines
+        vwapLines.forEach(
+          (vwapData: { time: UTCTimestamp; value: number }[]) => {
+            if (vwapData.length > 1) {
+              const color = this.getRandomVWAPColor();
+              const series = this.chart.addLineSeries({
+                color,
+                lineWidth: 2,
+                crosshairMarkerVisible: true,
+              });
+              series.setData(vwapData);
+
+              // Store reference to the series and its data
+              this.vwapLines.set(vwapData[0].time, {
+                series,
+                data: vwapData,
+              });
+            }
+          }
+        );
+
+        this.chart.timeScale().fitContent();
       });
+  }
+
+  private clearAllVWAPs(): void {
+    this.vwapLines.forEach(({ series }) => this.chart.removeSeries(series));
+    this.vwapLines.clear();
   }
 
   private setupHoverHandler(): void {
@@ -197,15 +282,28 @@ export class LightweightChartComponent implements OnInit {
       if (clickedIndex < 0) return;
 
       if (this.vwapLines.has(clickedTime)) {
-        // Remove existing VWAP line
+        // Remove existing VWAP line and delete anchor
         const vwapLine = this.vwapLines.get(clickedTime);
         if (vwapLine) {
           this.chart.removeSeries(vwapLine.series);
           this.vwapLines.delete(clickedTime);
-          console.log('Removed VWAP for candle:', clickedTime);
+
+          // Call delete service
+          this.klineService
+            .deleteAnchorPoint(this.symbol, clickedTime)
+            .subscribe({
+              next: () => {
+                console.log('Anchor deleted successfully');
+                // Optional: Add notification
+              },
+              error: (err) => {
+                console.error('Delete failed:', err);
+                // Optional: Show error
+              },
+            });
         }
       } else {
-        // Add new VWAP line
+        // Add new VWAP line and save anchor
         const vwapData = this.calculateVWAP(clickedIndex);
         if (vwapData.length > 1) {
           const color = this.getRandomVWAPColor();
@@ -214,49 +312,34 @@ export class LightweightChartComponent implements OnInit {
             lineWidth: 2,
             crosshairMarkerVisible: true,
           });
+
           series.setData(vwapData);
           this.vwapLines.set(clickedTime, { series, data: vwapData });
-          console.log('Added VWAP for candle:', clickedTime);
+
+          // Call save service
+          this.klineService
+            .saveAnchorPoint(this.symbol, clickedTime)
+            .subscribe({
+              next: (response) => {
+                console.log('Anchor saved successfully:', response);
+                // Optional: Add success notification
+              },
+              error: (err) => {
+                console.error('Error saving anchor:', err);
+                // Optional: Add error notification
+              },
+            });
         }
       }
     });
   }
 
-  private highlightCandle(time: UTCTimestamp): void {
-    this.highlightedCandleTime = time;
-
-    const highlightedData = this.candleData.map((candle) => {
-      if (candle.time === time) {
-        return {
-          ...candle,
-          color: '#FFA500',
-          wickColor: '#FFA500',
-          borderColor: '#FFA500',
-        };
-      }
-      return candle;
-    });
-
-    this.candlestickSeries.setData(highlightedData);
-
-    // Reset highlight after a short delay
-    setTimeout(() => {
-      this.candlestickSeries.setData(this.candleData);
-    }, 500);
-  }
-
   private getRandomVWAPColor(): string {
     const colors = [
-      '#FF0000',
-      '#00FF00',
-      '#0000FF',
-      '#FFFF00',
-      '#FF00FF',
-      '#00FFFF',
-      '#FFA500',
-      '#800080',
-      '#008000',
-      '#000080',
+      '#FF0000', // Red
+      '#00FF00', // Lime
+      '#FFFF00', // Yellow
+      '#FFA500', // Orange
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   }

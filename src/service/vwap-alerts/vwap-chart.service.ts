@@ -13,6 +13,7 @@ import { formatToUTCString } from 'src/utils/fortmat-to-utc-str';
 import { v4 as uuidv4 } from 'uuid';
 import { VwapAlertsGenericService } from './vwap-alerts-generic.service';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
+import { createVwapAlert } from 'src/functions/create-vwap-alert';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,9 @@ export class VwapChartService {
   }
   // Save anchor point
   saveAnchorPoint(symbol: string, openTime: number): Observable<any> {
-    const alert = this.createVwapAlert(symbol, openTime);
+    const coins = this.coinsService.getCoins();
+    const coin = coins.find((coin: Coin) => coin.symbol === symbol);
+    const alert = createVwapAlert(symbol, openTime, coin);
     return this.http
       .post(`${ANCHORED_VWAP_URLS.anchoredPointAddUrl}`, alert)
       .pipe(
@@ -58,7 +61,7 @@ export class VwapChartService {
     openTime: number
   ): Observable<{ deletedCount: number }> {
     return this.http
-      .post<any>(`${ANCHORED_VWAP_URLS.anchoredVwapDeleteUrl}`, {
+      .post<any>(`${ANCHORED_VWAP_URLS.anchoredPointDeleteUrl}`, {
         symbol,
         openTime,
       })
@@ -140,24 +143,6 @@ export class VwapChartService {
       SnackbarType.Error
     );
     return throwError(() => new Error(errorMessage));
-  }
-
-  private createVwapAlert(symbol: string, openTime: number) {
-    const coins = this.coinsService.getCoins();
-    const coin = coins.find((coin: Coin) => coin.symbol === symbol);
-    const alert: VwapAlert = {
-      id: uuidv4(),
-      isActive: true,
-      symbol: symbol,
-      category: coin?.category || '',
-      anchorTime: openTime,
-      anchorTimeStr: formatToUTCString(openTime, 3), // +3 hours for local time
-      creationTime: Date.now(),
-      exchanges: coin?.exchanges,
-      imageUrl: coin?.imageUrl,
-      tvScreensUrls: [],
-    };
-    return alert;
   }
 
   // Centralized method to show success snackbars
