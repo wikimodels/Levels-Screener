@@ -71,6 +71,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.router.navigate([VWAP_ARCHIVED_ALERTS]);
   }
 
+  goToLightweightChart() {
+    this.router.navigate([LIGHTWEIGHT_CHART]);
+  }
+
   onRefreshCoins() {
     this.coinsService.refreshCoins().subscribe();
   }
@@ -82,9 +86,5 @@ export class NavBarComponent implements OnInit, OnDestroy {
       width: '100vw',
       height: '100vh',
     });
-  }
-
-  goToLightweightChart() {
-    this.router.navigate([LIGHTWEIGHT_CHART]);
   }
 }
