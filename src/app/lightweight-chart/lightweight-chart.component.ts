@@ -14,6 +14,8 @@ interface SafeCandleData {
   high: number;
   low: number;
   close: number;
+  baseVolume: number;
+  quoteVolume: number;
 }
 
 @Component({
@@ -27,6 +29,11 @@ export class LightweightChartComponent implements OnInit {
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
   private highlightedCandleTime: UTCTimestamp | null = null;
   private candleData: SafeCandleData[] = [];
+  private vwapSeries: ISeriesApi<'Line'> | null = null;
+  private activeVWAPs: Map<
+    UTCTimestamp,
+    { time: UTCTimestamp; value: number }[]
+  > = new Map();
 
   constructor(private klineService: TWKlineService) {}
 
@@ -88,6 +95,12 @@ export class LightweightChartComponent implements OnInit {
       wickDownColor: '#ef5350',
     });
 
+    // Create single VWAP series
+    this.vwapSeries = this.chart.addLineSeries({
+      color: '#FF00FF',
+      lineWidth: 2,
+      crosshairMarkerVisible: true,
+    });
     this.chart.timeScale().fitContent();
   }
 
@@ -123,6 +136,82 @@ export class LightweightChartComponent implements OnInit {
     });
   }
 
+  private calculateVWAP(
+    startIndex: number
+  ): { time: UTCTimestamp; value: number }[] {
+    console.log('[VWAP] Starting calculation from index:', startIndex);
+    console.log('[VWAP] Total candles:', this.candleData.length);
+
+    // Validate data exists and is valid
+    if (!this.candleData || this.candleData.length === 0) {
+      console.error('[VWAP] No candle data available');
+      return [];
+    }
+    if (startIndex < 0 || startIndex >= this.candleData.length) {
+      console.error('[VWAP] Invalid startIndex:', startIndex);
+      return [];
+    }
+
+    let cumulativeVolume = 0;
+    let cumulativePV = 0;
+    const vwapData = [];
+    console.log('[VWAP] First candle:', this.candleData[startIndex]);
+
+    for (let i = startIndex; i < this.candleData.length; i++) {
+      const candle = this.candleData[i];
+      const typicalPrice = (candle.high + candle.low + candle.close) / 3;
+      let volume = 0;
+
+      // First try quoteVolume (price * quantity)
+      if (
+        typeof candle.quoteVolume === 'number' &&
+        !isNaN(candle.quoteVolume)
+      ) {
+        volume = candle.quoteVolume;
+      }
+      // Fallback to baseVolume * typicalPrice if quoteVolume is invalid
+      else if (
+        typeof candle.baseVolume === 'number' &&
+        !isNaN(candle.baseVolume)
+      ) {
+        volume = candle.baseVolume * typicalPrice;
+      }
+      // Final fallback to typicalPrice if both volumes are invalid
+      else {
+        volume = typicalPrice;
+        console.warn(`[VWAP] Using fallback volume for candle ${i}`);
+      }
+
+      console.log(`[VWAP] Candle ${i}:
+        Time: ${new Date(candle.time * 1000).toISOString()}
+        TP: ${typicalPrice.toFixed(4)}
+        Vol: ${volume.toFixed(4)}
+        O: ${candle.open.toFixed(4)}
+        H: ${candle.high.toFixed(4)}
+        L: ${candle.low.toFixed(4)}
+        C: ${candle.close.toFixed(4)}`);
+
+      if (volume > 0) {
+        cumulativePV += typicalPrice * volume;
+        cumulativeVolume += volume;
+        const currentVWAP = cumulativePV / cumulativeVolume;
+
+        console.log(`[VWAP] Cumulative PV: ${cumulativePV.toFixed(4)}
+          Cumulative Vol: ${cumulativeVolume.toFixed(4)}
+          Current VWAP: ${currentVWAP.toFixed(4)}`);
+
+        vwapData.push({
+          time: candle.time,
+          value: currentVWAP,
+        });
+      }
+    }
+
+    console.log('[VWAP] Calculation complete. Points:', vwapData.length);
+    console.log('[VWAP] Sample points:', vwapData.slice(0, 3));
+    return vwapData;
+  }
+
   private setupClickHandler(): void {
     this.chart.subscribeClick((param) => {
       if (!param.time) return;
@@ -132,30 +221,64 @@ export class LightweightChartComponent implements OnInit {
 
       if (!clickedCandle) return;
 
-      // Toggle highlight on click
+      // Toggle highlight
       if (this.highlightedCandleTime === clickedTime) {
         this.resetHighlight();
-      } else {
-        this.highlightCandle(clickedTime);
-        console.log('Clicked Candle Details:', {
-          time: new Date(clickedCandle.time * 1000).toLocaleString(undefined, {
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }),
-          open: clickedCandle.open.toFixed(4),
-          high: clickedCandle.high.toFixed(4),
-          low: clickedCandle.low.toFixed(4),
-          close: clickedCandle.close.toFixed(4),
-          bodySize: Math.abs(clickedCandle.close - clickedCandle.open).toFixed(
-            4
-          ),
-          direction: clickedCandle.close > clickedCandle.open ? 'UP' : 'DOWN',
-        });
+        return;
+      }
+      this.highlightCandle(clickedTime);
+
+      // Handle VWAP
+      const clickedIndex = this.candleData.findIndex(
+        (c) => c.time === clickedTime
+      );
+      if (clickedIndex >= 0 && this.vwapSeries) {
+        // Toggle VWAP for clicked candle
+        if (this.activeVWAPs.has(clickedTime)) {
+          // Remove VWAP if already exists
+          this.activeVWAPs.delete(clickedTime);
+          console.log('Removed VWAP for candle:', clickedTime);
+        } else {
+          // Add new VWAP
+          const vwapData = this.calculateVWAP(clickedIndex);
+          if (vwapData.length > 1) {
+            // Need at least 2 points
+            this.activeVWAPs.set(clickedTime, vwapData);
+            console.log('Added VWAP for candle:', clickedTime);
+          }
+        }
+
+        // Update chart with all active VWAPs
+        this.updateVWAPSeries();
       }
     });
+  }
+
+  private updateVWAPSeries(): void {
+    if (!this.vwapSeries) return;
+
+    // Combine, sort and deduplicate all VWAP points
+    const allVWAPs = Array.from(this.activeVWAPs.values())
+      .flat()
+      .sort((a, b) => a.time - b.time)
+      .filter((point, index, array) => {
+        return (
+          index === 0 ||
+          (point.time > array[index - 1].time &&
+            point.time !== array[index - 1].time)
+        );
+      });
+
+    try {
+      if (allVWAPs.length > 1) {
+        this.vwapSeries.setData(allVWAPs);
+      } else {
+        this.vwapSeries.setData([]);
+      }
+    } catch (error) {
+      console.error('Error updating VWAP:', error);
+      this.vwapSeries.setData([]);
+    }
   }
 
   private highlightCandle(time: UTCTimestamp): void {
@@ -179,14 +302,28 @@ export class LightweightChartComponent implements OnInit {
 
   private resetHighlight(): void {
     this.highlightedCandleTime = null;
-    this.candlestickSeries.applyOptions({
-      upColor: '#26a69a',
-      downColor: '#ef5350',
-      borderUpColor: '#26a69a',
-      borderDownColor: '#ef5350',
-      wickUpColor: '#26a69a',
-      wickDownColor: '#ef5350',
-    });
     this.candlestickSeries.setData(this.candleData);
+
+    // Clear all VWAPs
+    if (this.vwapSeries) {
+      this.vwapSeries.setData([]);
+    }
+    this.activeVWAPs.clear();
+  }
+
+  private getRandomVWAPColor(): string {
+    const colors = [
+      '#FF0000',
+      '#00FF00',
+      '#0000FF',
+      '#FFFF00',
+      '#FF00FF',
+      '#00FFFF',
+      '#FFA500',
+      '#800080',
+      '#008000',
+      '#000080',
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
   }
 }

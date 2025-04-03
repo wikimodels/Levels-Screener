@@ -8,6 +8,7 @@ https://openrouter.ai/deepseek/deepseek-chat-v3-0324:free/providers
 c-r3
 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
 
+cr.books
+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
 
-go to vwap-triggered-alerts-table.component.html
-remove style data for html tags into vwap-triggered-alerts-table.component.css replacing them with css classes. Give meaningful names to those classes
+
