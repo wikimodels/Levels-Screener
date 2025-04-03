@@ -9,6 +9,7 @@ import {
 import { TWKlineService } from 'src/service/kline/tw-kline.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
+import { KlineData } from 'models/kline/kline-data';
 
 interface SafeCandleData {
   time: UTCTimestamp;
@@ -28,6 +29,7 @@ interface SafeCandleData {
 export class LightweightChartComponent implements OnInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   private chart!: IChartApi;
+  private klineData: KlineData[] = [];
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
   private symbol = 'BTCUSDT';
   private candleData: SafeCandleData[] = [];
@@ -108,8 +110,9 @@ export class LightweightChartComponent implements OnInit {
   private loadChartData(): void {
     this.klineService
       .fetchCombinedChartData(this.symbol, 'm15', 400)
-      .subscribe(({ candlestick, vwapLines }) => {
+      .subscribe(({ candlestick, vwapLines, klineData }) => {
         // Clear existing data
+        this.klineData = klineData;
         this.candleData = (candlestick as SafeCandleData[]).filter(
           (c) => !isNaN(c.time) && c.time > 0
         );
@@ -131,11 +134,13 @@ export class LightweightChartComponent implements OnInit {
 
           console.log(
             'Filtered candlestick data:',
-            candlestick.filter((c) => toValidTimestamp(c.time) !== null)
+            candlestick.filter(
+              (c: CandlestickData) => toValidTimestamp(c.time) !== null
+            )
           );
           console.log(
             'First 5 invalid items:',
-            candlestick.slice(0, 5).map((c) => ({
+            candlestick.slice(0, 5).map((c: CandlestickData) => ({
               time: c.time,
               type: typeof c.time,
               valid: toValidTimestamp(c.time) !== null,
@@ -173,6 +178,8 @@ export class LightweightChartComponent implements OnInit {
                 color,
                 lineWidth: 2,
                 crosshairMarkerVisible: true,
+                priceLineVisible: false, // Disable price labels on the scale
+                lastValueVisible: false, // Disable last value display
               });
               series.setData(vwapData);
 
@@ -274,12 +281,15 @@ export class LightweightChartComponent implements OnInit {
     this.chart.subscribeClick((param) => {
       if (!param.time) return;
 
-      const clickedTime = param.time as UTCTimestamp;
+      const clickedTime = param.time as UTCTimestamp; // This is in milliseconds
       const clickedIndex = this.candleData.findIndex(
         (c) => c.time === clickedTime
       );
-
+      console.log('Clicked index:', clickedIndex);
       if (clickedIndex < 0) return;
+
+      // Convert clickedTime to Unix timestamp (in seconds)
+      const unixTimestamp = this.klineData[clickedIndex].openTime;
 
       if (this.vwapLines.has(clickedTime)) {
         // Remove existing VWAP line and delete anchor
@@ -288,9 +298,9 @@ export class LightweightChartComponent implements OnInit {
           this.chart.removeSeries(vwapLine.series);
           this.vwapLines.delete(clickedTime);
 
-          // Call delete service
+          // Call delete service with Unix timestamp
           this.klineService
-            .deleteAnchorPoint(this.symbol, clickedTime)
+            .deleteAnchorPoint(this.symbol, unixTimestamp)
             .subscribe({
               next: () => {
                 console.log('Anchor deleted successfully');
@@ -311,14 +321,16 @@ export class LightweightChartComponent implements OnInit {
             color,
             lineWidth: 2,
             crosshairMarkerVisible: true,
+            priceLineVisible: false, // Disable price labels on the scale
+            lastValueVisible: false, // Disable last value display
           });
 
           series.setData(vwapData);
           this.vwapLines.set(clickedTime, { series, data: vwapData });
 
-          // Call save service
+          // Call save service with Unix timestamp
           this.klineService
-            .saveAnchorPoint(this.symbol, clickedTime)
+            .saveAnchorPoint(this.symbol, unixTimestamp)
             .subscribe({
               next: (response) => {
                 console.log('Anchor saved successfully:', response);
