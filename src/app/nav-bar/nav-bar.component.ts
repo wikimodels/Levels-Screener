@@ -9,6 +9,7 @@ import {
   EXCHANGES,
   COINS,
   VWAP_ARCHIVED_ALERTS,
+  LIGHTWEIGHT_CHART,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { ChartComponent } from '../kline-chart/chart/chart.component';
@@ -81,5 +82,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
       width: '100vw',
       height: '100vh',
     });
+  }
+
+  goToLightweightChart() {
+    this.router.navigate([LIGHTWEIGHT_CHART]);
   }
 }

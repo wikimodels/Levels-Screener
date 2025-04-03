@@ -11,6 +11,7 @@ export const COINS = 'coins';
 export const ADMIN = 'admin';
 export const WORK = 'work';
 export const KLINE_CHART = 'kline-chart';
+export const LIGHTWEIGHT_CHART = 'lightweight-chart';
 
 export const VWAP_TRIGGERED_ALERTS = 'vwap-' + AlertsCollection.TriggeredAlerts;
 export const VWAP_ARCHIVED_ALERTS = 'vwap-' + AlertsCollection.ArchivedAlerts;
