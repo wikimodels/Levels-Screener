@@ -47,8 +47,7 @@ import { ExchangesComponent } from './exchanges/exchanges.component';
 import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-table.component';
 import { CoinsComponent } from './coins/coins.component';
 import { CoinsFieldComponent } from './coins/coins-field/coins-field.component';
-import { KlineChartComponent } from './kline-chart/kline-chart.component';
-import { ChartComponent } from './kline-chart/chart/chart.component';
+
 import { VwapAlertsComponent } from './vwap-alerts/vwap-alerts.component';
 
 import { VwapAlertsTableComponent } from './vwap-alerts/vwap-alerts-table/vwap-alerts-table.component';
@@ -100,11 +99,9 @@ echarts.registerTheme('macarons', Marcaron);
     AlertMenuComponent,
     ExchangesComponent,
     ExchangeTableComponent,
-
     CoinsComponent,
     CoinsFieldComponent,
-    KlineChartComponent,
-    ChartComponent,
+
     AlertsTableComponent,
     VwapAlertsComponent,
     VwapAlertsTableComponent,

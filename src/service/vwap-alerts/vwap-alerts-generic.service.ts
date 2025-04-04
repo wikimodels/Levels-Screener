@@ -11,6 +11,7 @@ import {
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { VWAP_ALERTS_URLS } from 'src/consts/url-consts';
+import { createHttpParams } from 'src/functions/create-params';
 
 @Injectable({ providedIn: 'root' })
 export class VwapAlertsGenericService {
@@ -56,7 +57,7 @@ export class VwapAlertsGenericService {
 
   public getAllAlerts(collectionName: string): void {
     // HTTP request to add a VwapAlert with query parameters
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
     this.http
@@ -77,7 +78,7 @@ export class VwapAlertsGenericService {
     this.setAlerts(collectionName, [...currentAlerts, alert]);
 
     // HTTP request to add a VwapAlert with query parameters
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
     console.log('VwapAlert to add --> ', alert);
     this.http
@@ -101,7 +102,7 @@ export class VwapAlertsGenericService {
       (alert) => !ids.includes(alert.id)
     );
     this.setAlerts(collectionName, remainingAlerts);
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
 
     const options = {
       ...this.httpOptions,
@@ -137,7 +138,7 @@ export class VwapAlertsGenericService {
     this.setAlerts(collectionName, updatedAlerts);
 
     // 🔹 Prepare HTTP request
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
     // 🔹 Send update request to the server
@@ -189,7 +190,7 @@ export class VwapAlertsGenericService {
     this.setAlerts(targetCollection, [...destinationAlerts, ...alertsToMove]);
 
     // ✅ HTTP request to move alerts
-    const params = this.createHttpParams({
+    const params = createHttpParams({
       sourceCollection,
       targetCollection,
     });
@@ -208,16 +209,6 @@ export class VwapAlertsGenericService {
         },
         error: (error) => this.handleError(error),
       });
-  }
-
-  private createHttpParams(params?: { [key: string]: any }): HttpParams {
-    let httpParams = new HttpParams();
-    if (params) {
-      for (const key of Object.keys(params)) {
-        httpParams = httpParams.set(key, params[key]);
-      }
-    }
-    return httpParams;
   }
 
   //---------------------------------------------

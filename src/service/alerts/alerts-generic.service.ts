@@ -11,6 +11,7 @@ import {
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { Alert } from 'models/alerts/alert';
 import { ALERTS_URLS } from 'src/consts/url-consts';
+import { createHttpParams } from 'src/functions/create-params';
 
 @Injectable({ providedIn: 'root' })
 export class AlertsGenericService {
@@ -55,7 +56,7 @@ export class AlertsGenericService {
 
   public getAllAlerts(collectionName: string): void {
     // HTTP request to add a Alert with query parameters
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
     this.http.get<Alert[]>(ALERTS_URLS.alertsUrl, options).subscribe({
@@ -74,7 +75,7 @@ export class AlertsGenericService {
     this.setAlerts(collectionName, [...currentAlerts, alert]);
 
     // HTTP request to add a Alert with query parameters
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
     console.log('Alert to add --> ', alert);
     this.http
@@ -94,7 +95,7 @@ export class AlertsGenericService {
       (alert) => !ids.includes(alert.id)
     );
     this.setAlerts(collectionName, remainingAlerts);
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
 
     const options = {
       ...this.httpOptions,
@@ -130,7 +131,7 @@ export class AlertsGenericService {
     this.setAlerts(collectionName, updatedAlerts);
 
     // 🔹 Prepare HTTP request
-    const params = this.createHttpParams({ collectionName });
+    const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
     // 🔹 Send update request to the server
@@ -183,7 +184,7 @@ export class AlertsGenericService {
     this.setAlerts(targetCollection, [...destinationAlerts, ...alertsToMove]);
 
     // ✅ HTTP request to move alerts
-    const params = this.createHttpParams({
+    const params = createHttpParams({
       sourceCollection,
       targetCollection,
     });
@@ -198,16 +199,6 @@ export class AlertsGenericService {
         },
         error: (error) => this.handleError(error),
       });
-  }
-
-  private createHttpParams(params?: { [key: string]: any }): HttpParams {
-    let httpParams = new HttpParams();
-    if (params) {
-      for (const key of Object.keys(params)) {
-        httpParams = httpParams.set(key, params[key]);
-      }
-    }
-    return httpParams;
   }
 
   //---------------------------------------------

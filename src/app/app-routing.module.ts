@@ -21,9 +21,6 @@ import { ExchangesComponent } from './exchanges/exchanges.component';
 import { CoinsComponent } from './coins/coins.component';
 import { LightweightChartComponent } from './lightweight-chart/lightweight-chart.component';
 // Import other components as needed
-
-import { KlineChartComponent } from './kline-chart/kline-chart.component';
-
 import { VwapAlertsComponent } from './vwap-alerts/vwap-alerts.component';
 import { VwapArchivedAlertsComponent } from './vwap-archived-alerts/vwap-archived-alerts.component';
 import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-triggered-alerts.component';
@@ -31,7 +28,6 @@ import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-trigg
 
 const routes: Routes = [
   { path: '', component: AlertsComponent },
-  { path: KLINE_CHART, component: KlineChartComponent },
   { path: COINS, component: CoinsComponent },
   {
     path: VWAP_TRIGGERED_ALERTS,

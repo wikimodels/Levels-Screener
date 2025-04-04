@@ -45,12 +45,12 @@ export const WORKING_COINS_URLS = {
   deleteWorkingCoinsUrl: `${baseURL}/working-coins/delete/many`,
 };
 
-export const ANCHORED_VWAP_URLS = {
-  anchoredPointsBySymbolUrl: `${baseURL}/anchor-point/symbol`,
-  anchoredPointsAllUrl: `${baseURL}/anchor-point/all`,
-  anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
-  anchoredPointDeleteUrl: `${baseURL}/anchor-point/delete`,
-};
+// export const ANCHORED_VWAP_URLS = {
+//   anchoredPointsBySymbolUrl: `${baseURL}/anchor-point/symbol`,
+//   anchoredPointsAllUrl: `${baseURL}/anchor-point/all`,
+//   anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
+//   anchoredPointDeleteUrl: `${baseURL}/anchor-point/delete`,
+// };
 
 export const VWAP_ALERTS_URLS = {
   vwapAlertsUrl: `${baseURL}/vwap-alerts`,
@@ -59,4 +59,6 @@ export const VWAP_ALERTS_URLS = {
   vwapAlertsMoveManyUrl: `${baseURL}/vwap-alerts/move/many`,
   vwapAlertsDeleteManyUrl: `${baseURL}/vwap-alerts/delete/many`,
   vwapAlertsDeleteOneUrl: `${baseURL}/vwap-alerts/delete/one`,
+  vwapAlertsBySymbolUrl: `${baseURL}/vwap-alerts/symbol`,
+  vwapAlertDeleteBySymbolAndOpenTimeUrl: `${baseURL}/vwap-alerts/delete/symbol/openTime`,
 };

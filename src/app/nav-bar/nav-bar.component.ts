@@ -12,8 +12,6 @@ import {
   LIGHTWEIGHT_CHART,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { ChartComponent } from '../kline-chart/chart/chart.component';
-import { ChartRefreshService } from 'src/service/kline/chart-refresh.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -24,8 +22,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modelDialog: MatDialog,
-    private coinsService: CoinsGenericService,
-    private chartRefreshService: ChartRefreshService
+    private coinsService: CoinsGenericService
   ) {}
 
   ngOnInit(): void {}
@@ -43,9 +40,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.router.navigate([TRIGGERED_ALERTS]);
   }
 
-  onRefreshChart() {
-    this.chartRefreshService.triggerRefresh();
-  }
+  onRefreshChart() {}
 
   goToArchivedAlerts() {
     this.router.navigate([ARCHIVED_ALERTS]);

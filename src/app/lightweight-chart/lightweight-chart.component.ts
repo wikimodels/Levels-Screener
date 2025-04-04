@@ -6,7 +6,7 @@ import {
   CandlestickData,
   UTCTimestamp,
 } from 'lightweight-charts';
-import { TWKlineService } from 'src/service/kline/tw-kline.service';
+import { TWKlineService } from 'src/service/tw-chart/tw-kline.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { KlineData } from 'models/kline/kline-data';
@@ -308,13 +308,13 @@ export class LightweightChartComponent implements OnInit {
 
           // Call delete service with Unix timestamp
           this.klineService
-            .deleteAnchorPoint(this.symbol, unixTimestamp)
+            .deleteVwapBySymbolAndOpenTime(this.symbol, unixTimestamp)
             .subscribe({
               next: () => {
                 console.log('Anchor deleted successfully');
                 // Optional: Add notification
               },
-              error: (err) => {
+              error: (err: any) => {
                 console.error('Delete failed:', err);
                 // Optional: Show error
               },
