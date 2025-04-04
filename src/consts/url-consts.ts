@@ -20,11 +20,6 @@ export const VWAP_ALERTS_AT_WORK = 'vwap-' + AlertsCollection.WorkingAlerts;
 //URLS
 const baseURL = env.baseURL;
 
-export const SANTIMENT_URLS = {
-  echartsUrl: `${baseURL}/santiment/echarts`,
-  dataMissingUrl: `${baseURL}/santiment/coins/data-missing`,
-};
-
 export const ALERTS_URLS = {
   alertsUrl: `${baseURL}/alerts`,
   alertsAddOneUrl: `${baseURL}/alerts/add/one`,
