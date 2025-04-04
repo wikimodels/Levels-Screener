@@ -1,4 +1,10 @@
 <div class="chart-container">
-  <h2>TradingView Lightweight Chart</h2>
+  <div class="title-container">
+    <img [src]="imageUrl" alt="logo" class="round-image" />
+    {{symbol}} ({{category}})
+    <mat-icon class="refresh" (click)="refreshChartData()" [ngClass]="{ 'rotate': isRotating }">
+      sync
+    </mat-icon>
+  </div>
   <div #chartContainer class="chart"></div>
 </div>

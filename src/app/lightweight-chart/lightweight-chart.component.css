@@ -1,34 +1,31 @@
 .chart-container {
-    max-width: 1200px;
-    margin: 100px auto 0;
-    padding: 0 20px;
-    width: 100%;
-    margin-top: 90px;
-    box-sizing: border-box;
+  max-width: 1200px;
+  margin: 20px auto 0; /* Reduced top margin [[3]] */
+  padding: 0 20px;
+  width: 100%;
+  margin-top: 80px;
+  box-sizing: border-box;
 }
 
-.chart {
-    width: 100%;
-    height: 600px;
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Add consistent spacing between elements [[4]] */
+  margin-bottom: 8px; /* Reduced space below title [[1]] */
 }
 
-/* Enhanced candle effects with transitions */
-.highlighted-candle {
-    stroke-width: 2px;
-    stroke: #FFA500;
-    transition:
-        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        border-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.header-title-margin {
+  margin: 0; /* Remove default h1 margin [[3]] */
+  font-size: 20px; /* Adjust font size for compactness */
 }
 
-.zoomed-candle {
-    transform: scale(1.4);
-    z-index: 10;
-    transition:
-        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        border-width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-        color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.refresh-icon1{
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+.refresh  {
+  cursor: pointer;
+  margin-left: 0; /* Remove left margin [[2]] */
+  margin-top: 0px; /* Remove bottom margin [[2]] */
+   /* Smaller icon size */
 }

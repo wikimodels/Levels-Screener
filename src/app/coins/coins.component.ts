@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Coin } from 'models/coin/coin';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { Subscription } from 'rxjs';
-import { KLINE_CHART } from 'src/consts/url-consts';
+import { KLINE_CHART, LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
@@ -139,8 +139,12 @@ export class CoinsComponent {
   private openVwapChartsFromSelection(): void {
     this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
       setTimeout(() => {
-        const urlTree = this.router.createUrlTree([KLINE_CHART], {
-          queryParams: { symbol: v.symbol },
+        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+          queryParams: {
+            symbol: v.symbol,
+            category: v.category,
+            imageUrl: v.imageUrl,
+          },
         });
         const url = this.router.serializeUrl(urlTree);
         const newWindow = window.open(url, '_blank');

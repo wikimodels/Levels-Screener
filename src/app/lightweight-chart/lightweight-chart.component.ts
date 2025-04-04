@@ -10,28 +10,23 @@ import { TWKlineService } from 'src/service/kline/tw-kline.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { KlineData } from 'models/kline/kline-data';
-
-interface SafeCandleData {
-  time: UTCTimestamp;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  baseVolume: number;
-  quoteVolume: number;
-}
+import { ActivatedRoute } from '@angular/router';
+import { SafeCandleData } from 'models/chart/safe-candle-data';
 
 @Component({
   selector: 'app-lightweight-chart',
   templateUrl: './lightweight-chart.component.html',
-  styleUrls: ['./lightweight-chart.component.css'],
+  styleUrls: ['./lightweight-chart.component.css', './../../styles-alerts.css'],
 })
 export class LightweightChartComponent implements OnInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
+  isRotating = false;
+  symbol!: string;
+  imageUrl!: string;
+  category!: string;
   private chart!: IChartApi;
   private klineData: KlineData[] = [];
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
-  private symbol = 'BTCUSDT';
   private candleData: SafeCandleData[] = [];
   private vwapLines: Map<
     UTCTimestamp,
@@ -42,12 +37,18 @@ export class LightweightChartComponent implements OnInit {
   > = new Map();
 
   constructor(
+    private route: ActivatedRoute,
     private klineService: TWKlineService,
     private snackBarService: SnackbarService
   ) {}
 
   ngOnInit(): void {
     window.scrollTo(0, 0);
+    const params = this.route.snapshot.queryParams;
+    this.symbol = params['symbol'];
+    this.imageUrl = params['imageUrl'];
+    this.category = params['category'];
+
     this.initChart();
     this.loadChartData();
     this.setupClickHandler();
@@ -59,26 +60,26 @@ export class LightweightChartComponent implements OnInit {
       width: 1200,
       height: 460,
       layout: {
-        background: { color: '#222' },
-        textColor: '#DDD',
+        background: { color: '#F5F5F5' }, // Light gray background [[1]][[8]]
+        textColor: '#333333', // Dark gray text for contrast [[6]][[8]]
       },
       grid: {
-        vertLines: { color: '#444' },
-        horzLines: { color: '#444' },
+        vertLines: { color: '#E0E0E0' }, // Light gray vertical grid lines [[3]][[7]]
+        horzLines: { color: '#E0E0E0' }, // Light gray horizontal grid lines [[3]][[7]]
       },
       crosshair: {
         mode: 1, // Normal crosshair mode
         vertLine: {
           width: 1,
-          color: 'rgba(255, 255, 255, 0.5)',
+          color: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black crosshair [[1]][[8]]
           style: 0,
-          labelBackgroundColor: '#333',
+          labelBackgroundColor: '#555555', // Darker gray label background [[3]]
         },
         horzLine: {
           width: 1,
-          color: 'rgba(255, 255, 255, 0.5)',
+          color: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black crosshair [[1]][[8]]
           style: 0,
-          labelBackgroundColor: '#333',
+          labelBackgroundColor: '#555555', // Darker gray label background [[3]]
         },
       },
       timeScale: {
@@ -97,21 +98,28 @@ export class LightweightChartComponent implements OnInit {
     });
 
     this.candlestickSeries = this.chart.addCandlestickSeries({
-      upColor: '#26a69a',
-      downColor: '#ef5350',
-      borderVisible: false,
-      wickUpColor: '#26a69a',
-      wickDownColor: '#ef5350',
+      upColor: '#FFFFFF', // White for bullish candles [[8]]
+      downColor: '#000000', // Black for bearish candles [[8]]
+      borderVisible: true, // Show borders [[8]]
+      borderColor: '#000000', // Black borders [[8]]
+      wickUpColor: '#000000', // Black wicks for up candles [[8]]
+      wickDownColor: '#000000', // Black wicks for down candles [[8]]
     });
 
     this.chart.timeScale().fitContent();
   }
 
+  refreshChartData() {
+    this.loadChartData();
+  }
+
   private loadChartData(): void {
+    this.isRotating = true;
     this.klineService
       .fetchCombinedChartData(this.symbol, 'm15', 400)
       .subscribe(({ candlestick, vwapLines, klineData }) => {
         // Clear existing data
+        this.isRotating = false;
         this.klineData = klineData;
         this.candleData = (candlestick as SafeCandleData[]).filter(
           (c) => !isNaN(c.time) && c.time > 0
