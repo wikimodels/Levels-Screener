@@ -15,7 +15,7 @@ import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Router } from '@angular/router';
-import { KLINE_CHART, LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
 
 @Component({
@@ -59,7 +59,7 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     window.scrollTo(0, 0);
-    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
+    this.refreshDataTable();
     this.sub.add(
       this.alertsService
         .alerts$(AlertsCollection.WorkingAlerts)
@@ -159,11 +159,13 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   refreshDataTable() {
-    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
     this.isRotating = true;
-    setTimeout(() => {
-      this.isRotating = false;
-    }, 1000);
+    this.alertsService
+      .getAllAlerts(AlertsCollection.WorkingAlerts)
+      .subscribe((data) => {
+        console.log('Vwap Working Alerts data', data);
+        this.isRotating = false;
+      });
   }
 
   ngOnDestroy(): void {

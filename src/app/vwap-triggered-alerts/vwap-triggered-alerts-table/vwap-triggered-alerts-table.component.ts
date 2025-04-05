@@ -77,15 +77,13 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   refreshDataTable() {
+    this.isRotating = true;
     this.alertsService
       .getAllAlerts(AlertsCollection.TriggeredAlerts)
       .subscribe((data) => {
-        console.log('TriggeredAlerts', data);
+        console.log('Vwap Triggered Alerts data', data);
+        this.isRotating = false;
       });
-    this.isRotating = true;
-    setTimeout(() => {
-      this.isRotating = false;
-    }, 1000);
   }
 
   // Filter function

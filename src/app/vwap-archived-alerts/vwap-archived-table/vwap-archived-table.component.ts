@@ -54,7 +54,7 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     window.scrollTo(0, 0);
-    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
+    this.refreshDataTable();
     this.sub = this.alertsService
       .alerts$(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
@@ -135,11 +135,13 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   }
 
   refreshDataTable() {
-    this.alertsService.getAllAlerts(AlertsCollection.ArchivedAlerts);
     this.isRotating = true;
-    setTimeout(() => {
-      this.isRotating = false;
-    }, 1000);
+    this.alertsService
+      .getAllAlerts(AlertsCollection.ArchivedAlerts)
+      .subscribe((data) => {
+        console.log('Vwap Archived Alerts data', data);
+        this.isRotating = false;
+      });
   }
 
   ngOnDestroy(): void {

@@ -13,7 +13,7 @@ import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service'
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Alert } from 'models/alerts/alert';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 
 @Component({
@@ -57,7 +57,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     window.scrollTo(0, 0);
-    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
+    this.refreshDataTable();
     this.sub.add(
       this.alertsService
         .alerts$(AlertsCollection.WorkingAlerts)
@@ -154,8 +154,8 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   }
 
   refreshDataTable() {
-    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
     this.isRotating = true;
+    this.alertsService.getAllAlerts(AlertsCollection.WorkingAlerts);
     setTimeout(() => {
       this.isRotating = false;
     }, 1000);
