@@ -70,11 +70,6 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
     this.sub = this.alertsService
       .alerts$(AlertsCollection.TriggeredAlerts)
       .subscribe((data: VwapAlert[]) => {
-        data.sort((a, b) => {
-          if (a.activationTime === undefined) return 1; // Place undefined values last
-          if (b.activationTime === undefined) return -1; // Place undefined values last
-          return Number(b.activationTime) - Number(a.activationTime); // Sort by activationTime in descending order
-        });
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -82,7 +77,11 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   refreshDataTable() {
-    this.alertsService.getAllAlerts(AlertsCollection.TriggeredAlerts);
+    this.alertsService
+      .getAllAlerts(AlertsCollection.TriggeredAlerts)
+      .subscribe((data) => {
+        console.log('TriggeredAlerts', data);
+      });
     this.isRotating = true;
     setTimeout(() => {
       this.isRotating = false;

@@ -12,6 +12,7 @@ import { SnackbarType } from 'models/shared/snackbar-type';
 import { Alert } from 'models/alerts/alert';
 import { ALERTS_URLS } from 'src/consts/url-consts';
 import { createHttpParams } from 'src/functions/create-params';
+import { GeneralService } from '../general/general.service';
 
 @Injectable({ providedIn: 'root' })
 export class AlertsGenericService {

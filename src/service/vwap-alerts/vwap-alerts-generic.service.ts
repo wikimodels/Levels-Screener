@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 import { SnackbarService } from '../snackbar.service';
 import {
   DeleteResult,
@@ -55,22 +56,36 @@ export class VwapAlertsGenericService {
     return this.getOrCreateCollection(collectionName).value;
   }
 
-  public getAllAlerts(collectionName: string): void {
+  public getAllAlerts(collectionName: string): Observable<VwapAlert[]> {
     // HTTP request to add a VwapAlert with query parameters
     const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
-
-    this.http
+    return this.http
       .get<VwapAlert[]>(VWAP_ALERTS_URLS.vwapAlertsUrl, options)
-      .subscribe({
-        next: (alerts: VwapAlert[]) => {
-          console.log('Fresh VWPA Alerts --> ', alerts);
-          // 🔹 Clear the local store before updating with new alerts
+      .pipe(
+        // Sort alerts by activationTime in descending order
+        map((data) => {
+          return data.sort((a, b) => {
+            if (a.activationTime === undefined) return 1; // Place undefined values last
+            if (b.activationTime === undefined) return -1; // Place undefined values last
+            return Number(b.activationTime) - Number(a.activationTime); // Descending order
+          });
+        }),
+        tap((sortedAlerts) => {
           this.setAlerts(collectionName, []);
-          this.setAlerts(collectionName, alerts);
-        },
-        error: (error) => this.handleError(error),
-      });
+          this.setAlerts(collectionName, sortedAlerts);
+          console.log(
+            `Brought from server --> CollectionName: ${collectionName}`,
+            sortedAlerts
+          );
+        }),
+        catchError((error) => {
+          this.handleError(error); // Centralized error handling
+          return throwError(
+            () => new Error(`Failed to fetch alerts: ${error.message}`)
+          );
+        })
+      );
   }
 
   public addOne(collectionName: string, alert: VwapAlert): void {

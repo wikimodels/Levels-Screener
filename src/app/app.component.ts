@@ -61,6 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
       { name: 'reset_focus', url: 'assets/icons/reset_focus.svg' },
       { name: '_arrow_back', url: 'assets/icons/arrow-back.svg' },
       { name: 'twitter', url: 'assets/icons/twitter.svg' },
+      { name: 'cloud_sync', url: 'assets/icons/cloud_sync.svg' },
       { name: 'reddit', url: 'assets/icons/reddit.svg' },
       { name: 'telegram', url: 'assets/icons/telegram.svg' },
       { name: 'github', url: 'assets/icons/github.svg' },

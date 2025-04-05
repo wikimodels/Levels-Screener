@@ -12,6 +12,7 @@ import {
   LIGHTWEIGHT_CHART,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
+import { GeneralService } from 'src/service/general/general.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -22,7 +23,8 @@ export class NavBarComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private modelDialog: MatDialog,
-    private coinsService: CoinsGenericService
+    private coinsService: CoinsGenericService,
+    private generalService: GeneralService
   ) {}
 
   ngOnInit(): void {}
@@ -56,13 +58,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.router.navigate([COINS]);
   }
 
-  // goToVwapAlerts() {
-  //   this.router.navigate([VWAP_ALERTS_AT_WORK]);
-  // }
-
-  // goToVwapTriggeredAlerts() {
-  //   this.router.navigate([VWAP_TRIGGERED_ALERTS]);
-  // }
+  onRefreshRepos() {
+    this.generalService.refreshRepos();
+  }
 
   goToVwapArchivedAlerts() {
     this.router.navigate([VWAP_ARCHIVED_ALERTS]);

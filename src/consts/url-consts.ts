@@ -52,6 +52,10 @@ export const WORKING_COINS_URLS = {
 //   anchoredPointDeleteUrl: `${baseURL}/anchor-point/delete`,
 // };
 
+export const GENERAL_URLS = {
+  refreshReposUrl: `${baseURL}/refresh-repos`,
+};
+
 export const VWAP_ALERTS_URLS = {
   vwapAlertsUrl: `${baseURL}/vwap-alerts`,
   vwapAlertsAddOneUrl: `${baseURL}/vwap-alerts/add/one`,
