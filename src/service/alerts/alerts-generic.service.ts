@@ -83,7 +83,8 @@ export class AlertsGenericService {
       .post<InsertResult>(`${ALERTS_URLS.alertsAddOneUrl}`, { alert }, options)
       .subscribe({
         next: (response: InsertResult) => {
-          const msg = `Document inserted ${response.insertedCount}`;
+          console.log('alert-generic.service Add response --> ', response);
+          const msg = `Alert successfully added`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),
@@ -108,7 +109,8 @@ export class AlertsGenericService {
       .delete<DeleteResult>(`${ALERTS_URLS.alertsDeleteManyUrl}`, options)
       .subscribe({
         next: (response: DeleteResult) => {
-          const msg = `Documents deleted ${response.deletedCount}`;
+          console.log('alert-generic.serviceDelete response --> ', response);
+          const msg = `Alert successfully deleted`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),
@@ -145,8 +147,9 @@ export class AlertsGenericService {
       .subscribe({
         next: (response: ModifyResult) => {
           if (response.modifiedCount > 0) {
+            console.log('alert-generic.service Update response --> ', response);
             this.snackbarService.showSnackBar(
-              `✅ Updated ${response.modifiedCount} document(s).`,
+              `✅ Alert successfully updated`,
               ''
             );
           } else {
@@ -195,7 +198,8 @@ export class AlertsGenericService {
       .post<MoveResult>(`${ALERTS_URLS.alertsMoveManyUrl}`, { ids }, options)
       .subscribe({
         next: (response: MoveResult) => {
-          const msg = `Documents inserted: ${response.insertCount}, deleted: ${response.deleteCount}`;
+          console.log('alert-generic.service Move response --> ', response);
+          const msg = `Alerts moved successfully`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -57,7 +57,8 @@ export class WorkingCoinsService {
       )
       .pipe(
         tap((response) => {
-          const msg = `Document inserted: ${response.insertedCount}`;
+          console.log('working-coins.service Working Coin added:', response);
+          const msg = `Working Coin successfully added`;
           this.snackbarService.showSnackBar(msg, '');
         }),
         catchError((error) => this.handleError(error))
@@ -83,7 +84,8 @@ export class WorkingCoinsService {
       )
       .pipe(
         tap((response) => {
-          const msg = `Documents inserted: ${response.insertedCount}`;
+          console.log('working-coins.service Working Coins added:', response);
+          const msg = `Working Coins successfully added`;
           this.snackbarService.showSnackBar(msg, '');
         }),
         catchError((error) => this.handleError(error))
@@ -109,7 +111,7 @@ export class WorkingCoinsService {
       .delete<DeleteResult>(WORKING_COINS_URLS.deleteWorkingCoinsUrl, options)
       .pipe(
         tap((response) => {
-          const msg = `Documents deleted: ${response.deletedCount}`;
+          const msg = `Working Coin successfully deleted`;
           this.snackbarService.showSnackBar(msg, '');
         }),
         catchError((error) => this.handleError(error))
@@ -136,7 +138,7 @@ export class WorkingCoinsService {
       )
       .pipe(
         tap((response) => {
-          const msg = `Documents modified: ${response.modifiedCount}`;
+          const msg = `Working Coin successfully updated`;
           this.snackbarService.showSnackBar(msg, '');
         }),
         catchError((error) => this.handleError(error))

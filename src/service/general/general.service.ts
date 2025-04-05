@@ -24,6 +24,7 @@ export class GeneralService {
     const options = { ...this.httpOptions };
     this.http.get<any>(GENERAL_URLS.refreshReposUrl, options).subscribe({
       next: (data) => {
+        console.log('general.service RefreshRepos ', data);
         this.snackbarService.showSnackBar(
           'Repos refreshed',
           '',

@@ -3,12 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { SnackbarService } from '../snackbar.service';
-import {
-  DeleteResult,
-  InsertResult,
-  ModifyResult,
-  MoveResult,
-} from 'models/mongodb/operations';
+import { InsertResult, MoveResult } from 'models/mongodb/operations';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { VWAP_ALERTS_URLS } from 'src/consts/url-consts';
@@ -104,7 +99,11 @@ export class VwapAlertsGenericService {
       )
       .subscribe({
         next: (response: InsertResult) => {
-          const msg = `Document inserted ${response.insertedCount}`;
+          console.log(
+            'vwap-alerts-generic.service Add response --> ',
+            response
+          );
+          const msg = `VWAP Alert successfully added`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),
@@ -129,7 +128,11 @@ export class VwapAlertsGenericService {
       .delete<boolean>(`${VWAP_ALERTS_URLS.vwapAlertsDeleteManyUrl}`, options)
       .subscribe({
         next: (response: boolean) => {
-          const msg = `Documents deleted successfully`;
+          console.log(
+            'vwap-alerts-generic.serviceDelete response --> ',
+            response
+          );
+          const msg = `VWAP Alert successfully deleted`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),
@@ -219,7 +222,11 @@ export class VwapAlertsGenericService {
       )
       .subscribe({
         next: (response: MoveResult) => {
-          const msg = `Documents inserted: ${response.insertCount}, deleted: ${response.deleteCount}`;
+          console.log(
+            'vwap-alerts-generic.service Move response --> ',
+            response
+          );
+          const msg = `VWAP Alerts successfully moved`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),

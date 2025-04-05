@@ -64,6 +64,7 @@ export class CoinsGenericService {
       .get<any>(COINS_URLS.coinsRefreshUrl, this.httpOptions)
       .pipe(
         tap((coins) => {
+          console.log('coins-generic.service RefreshCoins ', coins.length);
           this.setCoins(coins); // Update state
           this.snackbarService.showSnackBar(
             'Coins refreshed',
