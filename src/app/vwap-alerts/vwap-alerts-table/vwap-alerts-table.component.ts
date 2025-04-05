@@ -15,7 +15,7 @@ import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Router } from '@angular/router';
-import { KLINE_CHART } from 'src/consts/url-consts';
+import { KLINE_CHART, LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
 
 @Component({
@@ -99,8 +99,12 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onGoToChart(item: VwapAlert) {
-    const urlTree = this.router.createUrlTree([KLINE_CHART], {
-      queryParams: { symbol: item.symbol },
+    const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+      queryParams: {
+        symbol: item.symbol,
+        category: item.category,
+        imageUrl: item.imageUrl,
+      },
     });
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank');

@@ -1,67 +1,66 @@
-/* ----------------------*/
-/* ARCHIVED VWAP ALERTS TABLE */
-/*---------------------- */
+/* ------------------------------- */
+/* ARCHIVED VWAP ALERTS TABLE      */
+/* ------------------------------- */
 .archived-vwap-alerts-table .mat-mdc-row:nth-child(even) {
-  background-color: #e4f7df!important;
+  background-color: #fde8fc !important; /* Creamy Peach */
 }
 
 .archived-vwap-alerts-table .mat-mdc-row {
-  height: 35px!important;
+  height: 35px !important;
 }
 
 .archived-vwap-alerts-table .mat-mdc-header-row {
-  background-color: #cbdff5 !important;
+  background-color: #ef5dea !important; /* Gentle Lavender Blue */
   height: 45px;
 }
 
 .archived-vwap-alerts-table .mat-mdc-row:hover {
-  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  background-color: #E9ECEF !important; /* Light Gray */
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
 
-/* ----------------------*/
-/* WORKING VWAP ALRTS       */
-/*---------------------- */
+/* ------------------------------- */
+/* WORKING VWAP ALERTS TABLE       */
+/* ------------------------------- */
 .working-vwap-alerts-table .mat-mdc-row:nth-child(even) {
-  background-color: #e4f7df!important;
+  background-color: #e7fef5 !important; /* Light Seafoam Green */
 }
 
 .working-vwap-alerts-table .mat-mdc-row {
-  height: 35px!important;
+  height: 35px !important;
 }
 
 .working-vwap-alerts-table .mat-mdc-header-row {
-  background-color: #8dfccc !important;
+  background-color: #0ce792 !important; /* Pale Rosy Pink */
   height: 45px;
 }
 
 .working-vwap-alerts-table .mat-mdc-row:hover {
-  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  background-color: #E9ECEF !important; /* Light Gray */
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
 
-
-/* ------------------------*/
-/* TRIGGERED VWAP ALERTS TABLE  */
-/*-------------------------*/
-.triggered-vwap-alerts-table  {
+/* ---------------------------------- */
+/* TRIGGERED VWAP ALERTS TABLE        */
+/* ---------------------------------- */
+.triggered-vwap-alerts-table {
   width: 70%;
- }
+}
 
- .triggered-vwap-alerts-table .mat-mdc-row:nth-child(even) {
-   background-color: #faf8f2!important;
- }
+.triggered-vwap-alerts-table .mat-mdc-row:nth-child(even) {
+  background-color: #fdede8 !important; /* Soft Apricot */
+}
 
- .triggered-vwap-alerts-table .mat-mdc-row {
-   height: 35px!important;
- }
+.triggered-vwap-alerts-table .mat-mdc-row {
+  height: 35px !important;
+}
 
- .triggered-vwap-alerts-table .mat-mdc-header-row {
-   background-color: #f7f181 !important;
-   height: 45px;
- }
+.triggered-vwap-alerts-table .mat-mdc-header-row {
+  background-color: #ea5a2e !important; /* Soft Pink */
+  height: 45px;
+}
 
- .triggered-vwap-alerts-table .mat-mdc-row:hover {
-   background-color: #f5f4f2 !important; /* Replace with your desired color */
-   cursor: pointer; /* Optional: Add pointer cursor on hover */
- }
+.triggered-vwap-alerts-table .mat-mdc-row:hover {
+  background-color: #E9ECEF !important; /* Light Gray */
+  cursor: pointer; /* Optional: Add pointer cursor on hover */
+}

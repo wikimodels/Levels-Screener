@@ -6,7 +6,7 @@ import {
   CandlestickData,
   UTCTimestamp,
 } from 'lightweight-charts';
-import { TWKlineService } from 'src/service/tw-chart/tw-kline.service';
+import { TWKlineService } from 'src/service/kline/tw-kline.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { KlineData } from 'models/kline/kline-data';

@@ -54,17 +54,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
 
-
-
-
-
-
-
-
-
-
-
-
 /* ----------------------*/
 /* COINS TABLE */
 /*---------------------- */
@@ -229,4 +218,9 @@ input[type=number] {
   z-index: 1000;
   background: gray;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.white-chbx-border .mdc-checkbox__background {
+  border-color: white !important;
+
 }

@@ -70,6 +70,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     this.sub = this.alertsService
       .alerts$(AlertsCollection.TriggeredAlerts)
       .subscribe((data: Alert[]) => {
+        console.log('TriggeredAlerts', data);
         data.sort((a, b) => {
           if (a.activationTime === undefined) return 1; // Place undefined values last
           if (b.activationTime === undefined) return -1; // Place undefined values last

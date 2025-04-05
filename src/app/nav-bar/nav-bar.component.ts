@@ -40,7 +40,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.router.navigate([TRIGGERED_ALERTS]);
   }
 
-  onRefreshChart() {}
+  onRefreshCoins() {
+    this.coinsService.refreshCoins();
+  }
 
   goToArchivedAlerts() {
     this.router.navigate([ARCHIVED_ALERTS]);
@@ -64,14 +66,6 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   goToVwapArchivedAlerts() {
     this.router.navigate([VWAP_ARCHIVED_ALERTS]);
-  }
-
-  goToLightweightChart() {
-    this.router.navigate([LIGHTWEIGHT_CHART]);
-  }
-
-  onRefreshCoins() {
-    this.coinsService.refreshCoins().subscribe();
   }
 
   onAddAlert() {

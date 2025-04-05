@@ -94,8 +94,8 @@
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
         <!-- Select All Checkbox -->
-        <mat-checkbox [checked]="selection.hasValue() && isAllSelected()" (change)="toggleAll()"
-          [indeterminate]="selection.hasValue()&&!isAllSelected()"></mat-checkbox>
+        <mat-checkbox class="white-chbx-border" [checked]="selection.hasValue() && isAllSelected()"
+          (change)="toggleAll()" [indeterminate]="selection.hasValue()&&!isAllSelected()"></mat-checkbox>
       </th>
       <td mat-cell *matCellDef="let element">
         <!-- Individual Row Checkbox -->

@@ -2,42 +2,43 @@
 /* WORKING ALERTS        */
 /*---------------------- */
 .working-alerts-table .mat-mdc-row:nth-child(even) {
-  background-color: #e4f7df!important;
+  background-color: #e6fff5 !important; /* Soft pastel green */
 }
 
 .working-alerts-table .mat-mdc-row {
-  height: 35px!important;
+  height: 35px !important;
 }
 
 .working-alerts-table .mat-mdc-header-row {
-  background-color: #8dfccc !important;
+  background-color: #20c997 !important;
   height: 45px;
 }
 
 .working-alerts-table .mat-mdc-row:hover {
-  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  background-color: #e9ecef !important; /* Light gray */
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
 
-
 /* ----------------------*/
-/* ARCHIVED ALERTS        */
+/* ARCHIVED ALERTS       */
 /*---------------------- */
 .archived-alerts-table .mat-mdc-row:nth-child(even) {
-  background-color: #e4f7df!important;
+  background-color: #f4eef7
+   !important; /* Gentle lavender */
 }
 
 .archived-alerts-table .mat-mdc-row {
-  height: 35px!important;
+  height: 35px !important;
 }
 
 .archived-alerts-table .mat-mdc-header-row {
-  background-color: #cbdff5 !important;
+  background-color: #5f3677!important; /* Soft blue */
   height: 45px;
+  color:whitesmoke
 }
 
 .archived-alerts-table .mat-mdc-row:hover {
-  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  background-color: #e9ecef !important; /* Light gray */
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
 
@@ -45,19 +46,19 @@
 /* TRIGGERED ALERTS TABLE  */
 /*-------------------------*/
 .triggered-alerts-table .mat-mdc-row:nth-child(even) {
-  background-color: #faf8f2!important;
+  background-color: #fff0e6 !important; /* Pale peach */
 }
 
 .triggered-alerts-table .mat-mdc-row {
-  height: 35px!important;
+  height: 35px !important;
 }
 
 .triggered-alerts-table .mat-mdc-header-row {
-  background-color: #f7f181 !important;
+  background-color: #f0ad4e !important; /* Warm amber */
   height: 45px;
 }
 
 .triggered-alerts-table .mat-mdc-row:hover {
-  background-color: #f5f4f2 !important; /* Replace with your desired color */
+  background-color: #e9ecef !important; /* Light gray */
   cursor: pointer; /* Optional: Add pointer cursor on hover */
 }
