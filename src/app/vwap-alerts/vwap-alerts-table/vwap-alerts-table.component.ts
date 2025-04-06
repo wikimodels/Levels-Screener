@@ -99,11 +99,16 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onGoToChart(item: VwapAlert) {
+    console.log('VwapAlert TBL ---> ', item);
     const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
       queryParams: {
         symbol: item.symbol,
         category: item.category,
         imageUrl: item.imageUrl,
+        tvLink: this.coinLinksService.tradingViewLink(
+          item.symbol,
+          item.exchanges || []
+        ),
       },
     });
     const url = this.router.serializeUrl(urlTree);
@@ -164,8 +169,10 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
       .getAllAlerts(AlertsCollection.WorkingAlerts)
       .subscribe((data) => {
         console.log('Vwap Working Alerts data', data);
-        this.isRotating = false;
       });
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {

@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 
 import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
-import { KLINE_CHART } from 'src/consts/url-consts';
+import { KLINE_CHART, LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
@@ -58,7 +58,6 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
     this.sub = this.alertsService
       .alerts$(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
-        console.log('ARCHIVED shit', data);
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -127,8 +126,16 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   }
 
   onGoToChart(item: VwapAlert) {
-    const urlTree = this.router.createUrlTree([KLINE_CHART], {
-      queryParams: { symbol: item.symbol },
+    const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+      queryParams: {
+        symbol: item.symbol,
+        category: item.category,
+        imageUrl: item.imageUrl,
+        tvLink: this.coinLinksService.tradingViewLink(
+          item.symbol,
+          item.exchanges || []
+        ),
+      },
     });
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank');
@@ -140,8 +147,10 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
       .getAllAlerts(AlertsCollection.ArchivedAlerts)
       .subscribe((data) => {
         console.log('Vwap Archived Alerts data', data);
-        this.isRotating = false;
       });
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
   }
 
   ngOnDestroy(): void {

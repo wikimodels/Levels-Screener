@@ -10,7 +10,7 @@
 .title-container {
   display: flex;
   align-items: center;
-  gap: 5px; /* Add consistent spacing between elements [[4]] */
+  gap: 3px; /* Add consistent spacing between elements [[4]] */
   margin-bottom: 8px; /* Reduced space below title [[1]] */
 }
 

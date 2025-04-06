@@ -19,6 +19,8 @@ import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 import { Coin } from 'models/coin/coin';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
 import { VwapAlert } from 'models/vwap/vwap-alert';
+import { Router } from '@angular/router';
+import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 /**
  * @title Table with sorting
@@ -37,11 +39,9 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = [
     'symbol',
     'anchorTime',
-    'low',
-    'price',
-    'high',
     'activationTimeStr',
     'links',
+    'chart',
     'description',
     'select',
   ];
@@ -56,6 +56,7 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   searchKeywordFilter = new FormControl();
   selection = new SelectionModel<any>(true, []);
   constructor(
+    private router: Router,
     private alertsService: VwapAlertsGenericService,
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
@@ -76,14 +77,32 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
       });
   }
 
+  onGoToChart(item: VwapAlert) {
+    const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+      queryParams: {
+        symbol: item.symbol,
+        category: item.category,
+        imageUrl: item.imageUrl,
+        tvLink: this.coinLinksService.tradingViewLink(
+          item.symbol,
+          item.exchanges || []
+        ),
+      },
+    });
+    const url = this.router.serializeUrl(urlTree);
+    window.open(url, '_blank');
+  }
+
   refreshDataTable() {
     this.isRotating = true;
     this.alertsService
       .getAllAlerts(AlertsCollection.TriggeredAlerts)
       .subscribe((data) => {
         console.log('Vwap Triggered Alerts data', data);
-        this.isRotating = false;
       });
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
   }
 
   // Filter function
@@ -156,7 +175,6 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
     const workingCoins = new Set(
       this.workingCoinsService.getCoins().map((c) => c.symbol)
     ); // Convert to Set for fast lookup
-    console.log('WorkingCoins', this.workingCoinsService);
 
     // 🔹 Find coins whose symbol is in selectedSymbols but NOT in workingCoins
     const triggeredCoins = coins.filter(
@@ -166,8 +184,6 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
     if (triggeredCoins.length > 0) {
       this.workingCoinsService.addWorkingCoin(triggeredCoins[0]);
     }
-    console.log('Triggered Coins --> ', triggeredCoins);
-
     this.selection.clear();
     this.buttonsDisabled = true;
   }

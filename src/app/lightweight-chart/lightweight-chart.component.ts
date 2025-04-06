@@ -24,6 +24,7 @@ export class LightweightChartComponent implements OnInit {
   symbol!: string;
   imageUrl!: string;
   category!: string;
+  tvLink!: string;
   private chart!: IChartApi;
   private klineData: KlineData[] = [];
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
@@ -48,7 +49,8 @@ export class LightweightChartComponent implements OnInit {
     this.symbol = params['symbol'];
     this.imageUrl = params['imageUrl'];
     this.category = params['category'];
-
+    this.tvLink = params['tvLink'];
+    console.log('TVLink', this.tvLink);
     this.initChart();
     this.loadChartData();
     this.setupClickHandler();
@@ -146,14 +148,6 @@ export class LightweightChartComponent implements OnInit {
               (c: CandlestickData) => toValidTimestamp(c.time) !== null
             )
           );
-          console.log(
-            'First 5 invalid items:',
-            candlestick.slice(0, 5).map((c: CandlestickData) => ({
-              time: c.time,
-              type: typeof c.time,
-              valid: toValidTimestamp(c.time) !== null,
-            }))
-          );
 
           this.snackBarService.showSnackBar(
             `No valid chart data (${candlestick.length} items, all invalid)`,
@@ -235,8 +229,6 @@ export class LightweightChartComponent implements OnInit {
   private calculateVWAP(
     startIndex: number
   ): { time: UTCTimestamp; value: number }[] {
-    console.log('[VWAP] Starting calculation from index:', startIndex);
-
     if (!this.candleData || this.candleData.length === 0) {
       console.error('[VWAP] No candle data available');
       return [];
@@ -281,7 +273,6 @@ export class LightweightChartComponent implements OnInit {
       }
     }
 
-    console.log('[VWAP] Calculation complete. Points:', vwapData.length);
     return vwapData;
   }
 
@@ -293,7 +284,6 @@ export class LightweightChartComponent implements OnInit {
       const clickedIndex = this.candleData.findIndex(
         (c) => c.time === clickedTime
       );
-      console.log('Clicked index:', clickedIndex);
       if (clickedIndex < 0) return;
 
       // Convert clickedTime to Unix timestamp (in seconds)

@@ -10,7 +10,7 @@
 }
 
 .archived-vwap-alerts-table .mat-mdc-header-row {
-  background-color: #ef5dea !important; /* Gentle Lavender Blue */
+  /* background-color: #ef5dea !important;   */
   height: 45px;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .working-vwap-alerts-table .mat-mdc-header-row {
-  background-color: #0ce792 !important; /* Pale Rosy Pink */
+  /* background-color: #0ce792 !important;   */
   height: 45px;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .triggered-vwap-alerts-table .mat-mdc-header-row {
-  background-color: #ea5a2e !important; /* Soft Pink */
+  /* background-color: #ea5a2e !important;   */
   height: 45px;
 }
 

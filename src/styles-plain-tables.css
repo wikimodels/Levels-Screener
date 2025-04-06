@@ -10,7 +10,7 @@
 }
 
 .working-alerts-table .mat-mdc-header-row {
-  background-color: #20c997 !important;
+  /* background-color: #20c997 !important; */
   height: 45px;
 }
 
@@ -32,9 +32,8 @@
 }
 
 .archived-alerts-table .mat-mdc-header-row {
-  background-color: #5f3677!important; /* Soft blue */
+  /* background-color: #5f3677!important;   */
   height: 45px;
-  color:whitesmoke
 }
 
 .archived-alerts-table .mat-mdc-row:hover {
@@ -54,7 +53,7 @@
 }
 
 .triggered-alerts-table .mat-mdc-header-row {
-  background-color: #f0ad4e !important; /* Warm amber */
+  /* background-color: #f0ad4e !important;   */
   height: 45px;
 }
 

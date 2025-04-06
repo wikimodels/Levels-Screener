@@ -101,6 +101,7 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
     const ids = alerts.map((a) => a.id);
     this.alertsService.deleteMany(AlertsCollection.ArchivedAlerts, ids);
     this.deleteDisabled = true;
+    this.selection.clear();
   }
 
   onEdit(alert: Alert) {

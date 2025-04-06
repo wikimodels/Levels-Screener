@@ -105,12 +105,6 @@ export class TWKlineService {
     vwapLines: { time: UTCTimestamp; value: number }[][];
     klineData: KlineData[];
   }> {
-    console.log('Fetching combined chart data with:', {
-      symbol,
-      timeframe,
-      limit,
-    });
-
     return forkJoin({
       kline: this.fetchKlineData(symbol, timeframe, limit),
       vwapAlerts: this.fetchVwapAlertsData(symbol),
@@ -142,8 +136,6 @@ export class TWKlineService {
     alerts: VwapAlert[],
     klineData: KlineData[]
   ): { time: UTCTimestamp; value: number }[][] {
-    console.log('[VWAP] Calculating VWAP lines for alerts:', alerts);
-
     if (!klineData || klineData.length === 0) {
       console.error('[VWAP] No Kline data available for VWAP calculation');
       return [];
@@ -171,10 +163,6 @@ export class TWKlineService {
         );
         return;
       }
-
-      console.log(
-        `[VWAP] Found matching Kline data for anchorTime: ${alert.anchorTime} at index ${startIndex}`
-      );
 
       let cumulativePV = 0;
       let cumulativeVolume = 0;
@@ -217,10 +205,6 @@ export class TWKlineService {
             ? parseFloat((cumulativePV / cumulativeVolume).toFixed(8)) // Round to 8 decimal places
             : 0;
 
-        console.log(
-          `[VWAP] Calculation: time=${candle.openTime}, typicalPrice=${typicalPrice}, volume=${volume}, cumulativePV=${cumulativePV}, cumulativeVolume=${cumulativeVolume}, vwapValue=${vwapValue}`
-        );
-
         // Push VWAP point with correct time format
         const adjustedTime = Math.floor(candle.openTime / 1000) + 3 * 60 * 60;
         vwapData.push({
@@ -234,7 +218,6 @@ export class TWKlineService {
       }
     });
 
-    console.log('[VWAP] Generated VWAP Lines:', vwapLines);
     return vwapLines;
   }
   /**
@@ -311,7 +294,6 @@ export class TWKlineService {
     klineData: KlineData[]
   ): CandlestickData[] {
     const klineDataCopy = [...klineData]; // Create a shallow copy to avoid side effects
-    console.log('Raw KlineData:', klineDataCopy);
 
     // Filter out invalid entries
     const filteredData = klineDataCopy.filter(
@@ -323,7 +305,6 @@ export class TWKlineService {
         typeof kline.lowPrice === 'number' &&
         typeof kline.closePrice === 'number'
     );
-    console.log('Filtered KlineData:', filteredData);
 
     if (filteredData.length === 0) {
       console.warn('No valid KlineData after filtering');
@@ -338,7 +319,6 @@ export class TWKlineService {
       low: kline.lowPrice,
       close: kline.closePrice,
     }));
-    console.log('Transformed CandlestickData:', candlestickData);
 
     return candlestickData;
   }

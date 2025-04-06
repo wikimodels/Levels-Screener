@@ -92,6 +92,15 @@
       </td>
     </ng-container>
 
+    <!-- CHART -->
+    <ng-container matColumnDef="chart">
+      <th mat-header-cell *matHeaderCellDef>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon (click)="onGoToChart(element)" class="clickable-icon">candlestick_chart</mat-icon>
+      </td>
+    </ng-container>
+
     <!-- DESCRIPTION -->
     <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef></th>
