@@ -110,7 +110,7 @@ export class AlertsGenericService {
       .subscribe({
         next: (response: DeleteResult) => {
           console.log('alert-generic.serviceDelete response --> ', response);
-          const msg = `Alert successfully deleted`;
+          const msg = `Alert(s) successfully deleted`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),

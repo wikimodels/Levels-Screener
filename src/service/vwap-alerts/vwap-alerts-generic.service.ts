@@ -132,7 +132,7 @@ export class VwapAlertsGenericService {
             'vwap-alerts-generic.serviceDelete response --> ',
             response
           );
-          const msg = `VWAP Alert successfully deleted`;
+          const msg = `VWAP Alert(s) successfully deleted`;
           this.snackbarService.showSnackBar(msg, '');
         },
         error: (error) => this.handleError(error),

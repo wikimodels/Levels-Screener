@@ -1,11 +1,10 @@
 <div class="chart-container">
   <div class="title-container">
-    <a [href]="tvLink" target="_blank"
-      style="cursor: pointer; display: flex; align-items: center; text-decoration: none; font-size: 16px; color: black;">
+    <a [href]="tvLink" target="_blank" class="chart-link">
       <img [src]="imageUrl" alt="logo" class="round-image" />
       {{symbol}} ({{category}})
     </a>
-    <mat-icon class="refresh" (click)="refreshChartData()" [ngClass]="{ 'rotate': isRotating }">
+    <mat-icon class="refresh-icon" (click)="refreshChartData()" [ngClass]="{ 'rotate': isRotating }">
       sync
     </mat-icon>
   </div>

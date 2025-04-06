@@ -29,3 +29,18 @@
   margin-left: 0; /* Remove left margin [[2]] */
   margin-top: 0px; /* Remove bottom margin [[2]] */
 }
+
+.chart-link {
+  cursor: pointer; display: flex; align-items: center; text-decoration: none; font-size: 16px; color: black;
+}
+
+.refresh-icon {
+  cursor: pointer;
+  margin-bottom: 12px;
+  width: 18px; /* Set explicit width */
+  height: 18px; /* Set explicit height */
+  display: flex; /* Center the icon if needed */
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+}
