@@ -7,6 +7,7 @@
   max-width: fit-content;
   margin: 4px 4px;
   cursor: pointer;
+  padding-top: 10px;
 }
 
 .card-container .logo img {
