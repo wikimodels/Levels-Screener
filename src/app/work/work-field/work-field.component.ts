@@ -28,10 +28,11 @@ export class WorkFieldComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  toggleAll() {}
-
-  onDrop(event: CdkDragDrop<any[]>): void {
-    //moveItemInArray(this.coins, event.previousIndex, event.currentIndex);
+  // Selection Methods
+  toggleAll(): void {
+    this.selection.isSelected(this.coinsAtWork)
+      ? this.selection.clear()
+      : this.selection.select(this.coinsAtWork);
   }
 
   ngOnDestroy(): void {

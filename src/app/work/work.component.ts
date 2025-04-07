@@ -128,6 +128,7 @@ export class WorkComponent implements OnInit, OnDestroy {
         if (newWindow) this.openedWindows.push(newWindow);
       }, index * 1500);
     });
+    this.selectionService.clear();
   }
 
   onCloseAllWindows(): void {

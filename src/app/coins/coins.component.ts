@@ -134,6 +134,7 @@ export class CoinsComponent {
         if (newWindow) this.openedWindows.push(newWindow);
       }, index * 1500);
     });
+    this.selectionService.clear();
   }
 
   private openVwapChartsFromSelection(): void {
@@ -153,6 +154,7 @@ export class CoinsComponent {
         }
       }, index * 1500); // Delay between openings
     });
+    this.selectionService.clear();
   }
 
   onCloseAllWindows(): void {
