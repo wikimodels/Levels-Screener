@@ -220,11 +220,24 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
   // Window Management Methods
   onOpenCoinglass(): void {
-    this.openWindowsFromSelection();
+    this.openCoinGlassWindowsFromSelection();
+  }
+
+  private openCoinGlassWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.coinglassLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
   }
 
   onOpenTradingview(): void {
-    this.openWindowsFromSelection();
+    this.openTvWindowsFromSelection();
   }
 
   onOpenSingleTradingview(): void {
@@ -232,7 +245,7 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
     if (newWindow) this.openedWindows.push(newWindow);
   }
 
-  private openWindowsFromSelection(): void {
+  private openTvWindowsFromSelection(): void {
     this.selection.selected.forEach((v: Coin, index: number) => {
       setTimeout(() => {
         const newWindow = window.open(

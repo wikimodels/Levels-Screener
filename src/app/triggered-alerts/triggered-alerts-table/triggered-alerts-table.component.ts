@@ -184,7 +184,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     this.openedWindows = [];
   }
 
-  private openWindowsFromSelection(): void {
+  private openTvWindowsFromSelection(): void {
     this.selection.selected.forEach((v: Coin, index: number) => {
       setTimeout(() => {
         const newWindow = window.open(
@@ -199,6 +199,23 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
   onGoToCharts(): void {
     this.openVwapChartsFromSelection();
+  }
+
+  onOpenCoinglass(): void {
+    this.openCoinGlassWindowsFromSelection();
+  }
+
+  private openCoinGlassWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.coinglassLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
   }
 
   private openVwapChartsFromSelection(): void {
@@ -222,7 +239,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onOpenTradingview(): void {
-    this.openWindowsFromSelection();
+    this.openTvWindowsFromSelection();
   }
 
   ngOnDestroy(): void {

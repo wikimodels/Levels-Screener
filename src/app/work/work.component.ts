@@ -106,11 +106,11 @@ export class WorkComponent implements OnInit, OnDestroy {
   }
 
   onOpenCoinglass(): void {
-    this.openWindowsFromSelection();
+    this.openCoinGlassWindowsFromSelection();
   }
 
   onOpenTradingview(): void {
-    this.openWindowsFromSelection();
+    this.openTvWindowsFromSelection();
   }
 
   onOpenSingleTradingview(): void {
@@ -118,11 +118,24 @@ export class WorkComponent implements OnInit, OnDestroy {
     if (newWindow) this.openedWindows.push(newWindow);
   }
 
-  private openWindowsFromSelection(): void {
+  private openTvWindowsFromSelection(): void {
     this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
       setTimeout(() => {
         const newWindow = window.open(
           this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selectionService.clear();
+  }
+
+  private openCoinGlassWindowsFromSelection(): void {
+    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinsLinksService.coinglassLink(v.symbol, v.exchanges),
           '_blank'
         );
         if (newWindow) this.openedWindows.push(newWindow);

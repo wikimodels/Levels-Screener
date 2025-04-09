@@ -177,15 +177,56 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  onOpenTradingview(): void {
-    this.openWindowsFromSelection();
+  onOpenCoinglass(): void {
+    this.openCoinGlassWindowsFromSelection();
   }
 
-  private openWindowsFromSelection(): void {
+  onOpenTradingview(): void {
+    this.openTvWindowsFromSelection();
+  }
+
+  private openTvWindowsFromSelection(): void {
     this.selection.selected.forEach((v: Coin, index: number) => {
       setTimeout(() => {
         const newWindow = window.open(
           this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
+  }
+
+  onGoToCharts(): void {
+    this.openVwapChartsFromSelection();
+  }
+
+  private openVwapChartsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+          queryParams: {
+            symbol: v.symbol,
+            category: v.category,
+            imageUrl: v.imageUrl,
+          },
+        });
+        const url = this.router.serializeUrl(urlTree);
+        const newWindow = window.open(url, '_blank');
+        if (newWindow) {
+          this.openedWindows.push(newWindow);
+        }
+      }, index * 1500); // Delay between openings
+    });
+    this.selection.clear();
+  }
+
+  private openCoinGlassWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.coinglassLink(v.symbol, v.exchanges),
           '_blank'
         );
         if (newWindow) this.openedWindows.push(newWindow);

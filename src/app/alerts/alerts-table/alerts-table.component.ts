@@ -141,6 +141,10 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     }
   }
 
+  onOpenCoinglass(): void {
+    this.openCoinGlassWindowsFromSelection();
+  }
+
   onMoveToArchive() {
     const alerts = this.selection.selected as Alert[];
     const ids = alerts.map((a) => a.id);
@@ -171,7 +175,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     this.openedWindows = [];
   }
 
-  private openWindowsFromSelection(): void {
+  private openTvWindowsFromSelection(): void {
     this.selection.selected.forEach((v: Coin, index: number) => {
       setTimeout(() => {
         const newWindow = window.open(
@@ -184,8 +188,21 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     this.selection.clear();
   }
 
+  private openCoinGlassWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.coinglassLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
+  }
+
   onOpenTradingview(): void {
-    this.openWindowsFromSelection();
+    this.openTvWindowsFromSelection();
   }
 
   onGoToCharts(): void {
