@@ -17,6 +17,8 @@ import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 import { Coin } from 'models/coin/coin';
+import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { Router } from '@angular/router';
 
 /**
  * @title Table with sorting
@@ -61,7 +63,8 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
     private coinsService: CoinsGenericService,
-    private workingCoinsService: WorkingCoinsService
+    private workingCoinsService: WorkingCoinsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -190,6 +193,30 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
         );
         if (newWindow) this.openedWindows.push(newWindow);
       }, index * 1500);
+    });
+    this.selection.clear();
+  }
+
+  onGoToCharts(): void {
+    this.openVwapChartsFromSelection();
+  }
+
+  private openVwapChartsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+          queryParams: {
+            symbol: v.symbol,
+            category: v.category,
+            imageUrl: v.imageUrl,
+          },
+        });
+        const url = this.router.serializeUrl(urlTree);
+        const newWindow = window.open(url, '_blank');
+        if (newWindow) {
+          this.openedWindows.push(newWindow);
+        }
+      }, index * 1500); // Delay between openings
     });
     this.selection.clear();
   }

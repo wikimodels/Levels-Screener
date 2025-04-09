@@ -16,6 +16,8 @@ import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.compone
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { Coin } from 'models/coin/coin';
+import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-alerts-table',
@@ -54,7 +56,8 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   constructor(
     private alertsService: AlertsGenericService,
     private modelDialog: MatDialog,
-    public coinLinksService: CoinLinksService
+    public coinLinksService: CoinLinksService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -185,6 +188,29 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     this.openWindowsFromSelection();
   }
 
+  onGoToCharts(): void {
+    this.openVwapChartsFromSelection();
+  }
+
+  private openVwapChartsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+          queryParams: {
+            symbol: v.symbol,
+            category: v.category,
+            imageUrl: v.imageUrl,
+          },
+        });
+        const url = this.router.serializeUrl(urlTree);
+        const newWindow = window.open(url, '_blank');
+        if (newWindow) {
+          this.openedWindows.push(newWindow);
+        }
+      }, index * 1500); // Delay between openings
+    });
+    this.selection.clear();
+  }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
