@@ -13,7 +13,7 @@ import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service'
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Alert } from 'models/alerts/alert';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 
 @Component({

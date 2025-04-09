@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, throwError, catchError } from 'rxjs';
 import { SnackbarService } from '../snackbar.service';
 import {
   DeleteResult,
@@ -12,7 +12,7 @@ import { SnackbarType } from 'models/shared/snackbar-type';
 import { Alert } from 'models/alerts/alert';
 import { ALERTS_URLS } from 'src/consts/url-consts';
 import { createHttpParams } from 'src/functions/create-params';
-import { GeneralService } from '../general/general.service';
+import { AlertBase } from 'models/alerts/alert-base';
 
 @Injectable({ providedIn: 'root' })
 export class AlertsGenericService {
@@ -89,6 +89,19 @@ export class AlertsGenericService {
         },
         error: (error) => this.handleError(error),
       });
+  }
+
+  public addAlertsBatch(
+    collectionName: string,
+    alertBases: AlertBase[]
+  ): Observable<any> {
+    // HTTP request to add a Alert with query parameters
+    const params = createHttpParams({ collectionName });
+    const options = { ...this.httpOptions, params };
+    console.log('Alert to add --> ', alert);
+    return this.http
+      .post<any>(`${ALERTS_URLS.alertsAddManyUrl}`, alertBases, options)
+      .pipe(catchError((error) => this.handleError(error)));
   }
 
   public deleteMany(collectionName: string, ids: string[]): void {

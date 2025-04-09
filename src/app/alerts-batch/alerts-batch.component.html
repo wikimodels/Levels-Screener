@@ -1,0 +1,48 @@
+<div class="controls-container fixed-panel" id="header">
+
+
+
+
+  <div class="header-title-container">
+    <h1 class="header-title-margin">Alerts Batch Creation</h1>
+  </div>
+  <div class="button-group">
+
+    <!-- ADD ALERT  -->
+    <button mat-raised-button color="primary" matTooltip="Submit" matTooltipPosition="above" (click)="triggerSubmit()"
+      [disabled]="isLoading">
+      {{ isLoading ? 'Processing...' : '' }}
+      <mat-icon class="button-icon-margin" svgIcon="add"></mat-icon>
+    </button>
+
+    <!-- DELETE ALERTS -->
+    <button mat-raised-button matTooltip="Clear Fiedls" matTooltipPosition="above" color="warn" (click)="clearInput()">
+      <mat-icon class="button-icon-margin" svgIcon="delete"></mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="container">
+    <!-- Left Section: Code Input Area -->
+    <div class="left-section">
+      <h3>Paste Your JSON Code Snippet</h3>
+      <form #alertForm="ngForm" (ngSubmit)="submitCode()">
+        <textarea [(ngModel)]="codeSnippet" name="codeSnippet" placeholder="Paste your JSON here..." rows="21" required>
+</textarea>
+      </form>
+    </div>
+
+    <!-- Right Section: Messages -->
+    <div class="right-section">
+      <h3>Messages</h3>
+      <div class="messages-panel">
+        <div *ngFor="let message of messages" [class.error]="message.type === 'error'"
+          [class.info]="message.type === 'info'">
+          <pre><code>{{ message.content }}</code></pre>
+        </div>
+        <p *ngIf="messages.length === 0">No messages yet.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -10,6 +10,7 @@ import {
   COINS,
   VWAP_ARCHIVED_ALERTS,
   LIGHTWEIGHT_CHART,
+  ALERTS_BATCH,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { GeneralService } from 'src/service/general/general.service';
@@ -64,6 +65,10 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
   goToVwapArchivedAlerts() {
     this.router.navigate([VWAP_ARCHIVED_ALERTS]);
+  }
+
+  goToAlertsBatch() {
+    this.router.navigate([ALERTS_BATCH]);
   }
 
   onAddAlert() {

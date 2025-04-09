@@ -11,6 +11,7 @@ export const COINS = 'coins';
 export const ADMIN = 'admin';
 export const WORK = 'work';
 export const KLINE_CHART = 'kline-chart';
+export const ALERTS_BATCH = 'alerts-batch';
 export const LIGHTWEIGHT_CHART = 'lightweight-chart';
 
 export const VWAP_TRIGGERED_ALERTS = 'vwap-' + AlertsCollection.TriggeredAlerts;
@@ -23,6 +24,7 @@ const baseURL = env.baseURL;
 export const ALERTS_URLS = {
   alertsUrl: `${baseURL}/alerts`,
   alertsAddOneUrl: `${baseURL}/alerts/add/one`,
+  alertsAddManyUrl: `${baseURL}/alerts/add/many`,
   alertsDeleteManyUrl: `${baseURL}/alerts/delete/many`,
   alertsUpdateOneUrl: `${baseURL}/alerts/update/one`,
   alertsMoveManyUrl: `${baseURL}/alerts/move/many`,
