@@ -50,6 +50,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   dataSource!: any;
   buttonsDisabled = true;
   isRotating = false;
+  private openedWindows: Window[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -173,6 +174,28 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
     this.selection.clear();
     this.buttonsDisabled = true;
+  }
+
+  onCloseAllWindows(): void {
+    this.openedWindows.forEach((win) => win.close());
+    this.openedWindows = [];
+  }
+
+  private openWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
+  }
+
+  onOpenTradingview(): void {
+    this.openWindowsFromSelection();
   }
 
   ngOnDestroy(): void {

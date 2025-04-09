@@ -50,6 +50,8 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   dataSource!: any;
   buttonsDisabled = true;
   isRotating = false;
+  defaultLink = 'https://www.tradingview.com/chart?symbol=BINANCE:BTCUSDT.P';
+  private openedWindows: Window[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -186,6 +188,61 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
     }
     this.selection.clear();
     this.buttonsDisabled = true;
+  }
+
+  onCloseAllWindows(): void {
+    this.openedWindows.forEach((win) => win.close());
+    this.openedWindows = [];
+  }
+
+  onGoToCharts(): void {
+    this.openVwapChartsFromSelection();
+  }
+
+  private openVwapChartsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+          queryParams: {
+            symbol: v.symbol,
+            category: v.category,
+            imageUrl: v.imageUrl,
+          },
+        });
+        const url = this.router.serializeUrl(urlTree);
+        const newWindow = window.open(url, '_blank');
+        if (newWindow) {
+          this.openedWindows.push(newWindow);
+        }
+      }, index * 1500); // Delay between openings
+    });
+    this.selection.clear();
+  }
+  // Window Management Methods
+  onOpenCoinglass(): void {
+    this.openWindowsFromSelection();
+  }
+
+  onOpenTradingview(): void {
+    this.openWindowsFromSelection();
+  }
+
+  onOpenSingleTradingview(): void {
+    const newWindow = window.open(this.defaultLink, '_blank');
+    if (newWindow) this.openedWindows.push(newWindow);
+  }
+
+  private openWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
   }
 
   ngOnDestroy(): void {

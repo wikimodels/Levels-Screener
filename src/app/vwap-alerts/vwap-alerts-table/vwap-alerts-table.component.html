@@ -17,6 +17,18 @@
     <mat-icon class="refresh-icon" (click)="refreshDataTable()" [ngClass]="{ 'rotate': isRotating }">sync</mat-icon>
   </div>
   <div class="button-group">
+
+    <!-- OPEN IN TV BUTTON -->
+    <button mat-raised-button class="panel-button" (click)="onOpenTradingview()" matTooltip="Open in TV"
+      matTooltipPosition="above">
+      <mat-icon svgIcon="tv" style="margin-left: 6px;"></mat-icon>
+    </button>
+
+    <!-- CLOSE ALL WINDOWS -->
+    <button mat-raised-button class="panel-button" (click)="onCloseAllWindows()" matTooltip="Close Windows"
+      matTooltipPosition="above">
+      <mat-icon svgIcon="close" style="margin-left: 6px;"></mat-icon>
+    </button>
     <!-- MOVE ALERT TO ARCHIVE -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onMoveToArchive()" matTooltip="Move to Archive"
       matTooltipPosition="above" color="accent">

@@ -17,6 +17,18 @@
   </div>
 
   <div class="button-group">
+    <!-- OPEN IN TV BUTTON -->
+    <button mat-raised-button class="panel-button" (click)="onOpenTradingview()" matTooltip="Open in TV"
+      matTooltipPosition="above">
+      <mat-icon svgIcon="tv" style="margin-left: 6px;"></mat-icon>
+    </button>
+
+    <!-- CLOSE ALL WINDOWS -->
+    <button mat-raised-button class="panel-button" (click)="onCloseAllWindows()" matTooltip="Close Windows"
+      matTooltipPosition="above">
+      <mat-icon svgIcon="close" style="margin-left: 6px;"></mat-icon>
+    </button>
+
     <!-- MOVE COINS TO WORKING COINS TABLE -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onMoveToWorkingCoins()"
       matTooltip="Add Coin to Work" matTooltipPosition="above" color="primary">

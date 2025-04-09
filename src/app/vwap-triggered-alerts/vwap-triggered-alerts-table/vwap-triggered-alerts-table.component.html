@@ -10,12 +10,31 @@
       </button>
     </mat-form-field>
   </div>
+
   <div class="header-title-container">
     <h1 class="header-title-margin">VWAP Triggered Alerts</h1>
     <mat-icon class="refresh-icon" (click)="refreshDataTable()" [ngClass]="{ 'rotate': isRotating }">sync</mat-icon>
   </div>
 
   <div class="button-group">
+
+    <!-- OPEN IN TV BUTTON -->
+    <button mat-raised-button class="panel-button" (click)="onOpenTradingview()" matTooltip="Open in TV"
+      matTooltipPosition="above">
+      <mat-icon svgIcon="tv" style="margin-left: 6px;"></mat-icon>
+    </button>
+
+    <!-- GO to CHART -->
+    <button mat-raised-button class="panel-button" (click)="onGoToCharts()" matTooltip="Go to Chart"
+      matTooltipPosition="above">
+      <mat-icon style="margin-left: 6px; font-size: 22px; margin-right: 4px;">candlestick_chart</mat-icon>
+    </button>
+
+    <!-- CLOSE ALL WINDOWS -->
+    <button mat-raised-button class="panel-button" (click)="onCloseAllWindows()" matTooltip="Close Windows"
+      matTooltipPosition="above">
+      <mat-icon svgIcon="close" style="margin-left: 6px;"></mat-icon>
+    </button>
     <!-- MOVE COINS TO WORKING COINS TABLE -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onMoveToWorkingCoins()"
       matTooltip="Add Coin to Work" matTooltipPosition="above" color="primary">
@@ -85,7 +104,7 @@
         </a>
 
         <div class="exchange-links-container" *ngFor="let exchange of element.exchanges">
-          <a [href]="coinLinksService.exchangeLink(element.symbol,exchange)" target="_blank">
+          <a [href]="coinLinksService.exchangeLink(element.symbol, exchange)" target="_blank">
             <img [src]="coinLinksService.exchangeLogoLink(exchange)" [alt]="exchange" class="round-image" />
           </a>
         </div>
@@ -94,8 +113,7 @@
 
     <!-- CHART -->
     <ng-container matColumnDef="chart">
-      <th mat-header-cell *matHeaderCellDef>
-      </th>
+      <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let element">
         <mat-icon (click)="onGoToChart(element)" class="clickable-icon">candlestick_chart</mat-icon>
       </td>

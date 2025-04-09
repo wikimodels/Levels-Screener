@@ -15,6 +15,7 @@ import { Alert } from 'models/alerts/alert';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
+import { Coin } from 'models/coin/coin';
 
 @Component({
   selector: 'app-alerts-table',
@@ -38,6 +39,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     'select',
   ];
   sub = new Subscription();
+  private openedWindows: Window[] = [];
   dataSource!: any;
   buttonsDisabled = true;
   filterValue = '';
@@ -159,6 +161,28 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.isRotating = false;
     }, 1000);
+  }
+
+  onCloseAllWindows(): void {
+    this.openedWindows.forEach((win) => win.close());
+    this.openedWindows = [];
+  }
+
+  private openWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
+  }
+
+  onOpenTradingview(): void {
+    this.openWindowsFromSelection();
   }
 
   ngOnDestroy(): void {

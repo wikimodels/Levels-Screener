@@ -17,6 +17,7 @@ import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Router } from '@angular/router';
 import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
+import { Coin } from 'models/coin/coin';
 
 @Component({
   selector: 'app-vwap-alerts-table',
@@ -43,6 +44,7 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
   buttonsDisabled = true;
   filterValue = '';
   isRotating = false;
+  private openedWindows: Window[] = [];
   collectionName = AlertsCollection.WorkingAlerts;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -173,6 +175,28 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.isRotating = false;
     }, 1000);
+  }
+
+  onOpenTradingview(): void {
+    this.openWindowsFromSelection();
+  }
+
+  private openWindowsFromSelection(): void {
+    this.selection.selected.forEach((v: Coin, index: number) => {
+      setTimeout(() => {
+        const newWindow = window.open(
+          this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
+          '_blank'
+        );
+        if (newWindow) this.openedWindows.push(newWindow);
+      }, index * 1500);
+    });
+    this.selection.clear();
+  }
+
+  onCloseAllWindows(): void {
+    this.openedWindows.forEach((win) => win.close());
+    this.openedWindows = [];
   }
 
   ngOnDestroy(): void {
