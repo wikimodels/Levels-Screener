@@ -1,0 +1,41 @@
+<div class="button-group">
+
+  <!-- OPEN IN TV BUTTON -->
+  <button mat-raised-button class="panel-button button-margin" (click)="onOpenTradingview()" matTooltip="Open in TV"
+    matTooltipPosition="above">
+    <mat-icon svgIcon="tv" style="margin-left: 6px;"></mat-icon>
+  </button>
+
+  <!-- OPEN IN COINGLASS BUTTON -->
+  <button mat-raised-button class="panel-button button-margin" (click)="onOpenCoinglass()"
+    matTooltip="Open in Coinglass" matTooltipPosition="above">
+    <mat-icon svgIcon="coinglass" style="margin-left: 6px;"></mat-icon>
+  </button>
+
+  <!-- TV BUTTON -->
+  <button mat-raised-button class="panel-button button-margin" (click)="onOpenDefaultTradingView()"
+    matTooltip="BTC in TV" matTooltipPosition="above">
+    <mat-icon svgIcon="tv-white" style="margin-left: 6px;"></mat-icon>
+  </button>
+
+  <!-- GO to VWAP CHART -->
+  <button mat-raised-button class="panel-button button-margin" (click)="onGoToVwapCharts()"
+    matTooltip="Go to Vwap Chart" matTooltipPosition="above">
+    <mat-icon style="margin-left: 6px; font-size: 22px; margin-right: 4px;">candlestick_chart</mat-icon>
+  </button>
+
+
+  <!-- GO to LINE CHART -->
+  <button mat-raised-button class="panel-button button-margin" (click)="onGoToLineCharts()"
+    matTooltip="Go to Line Chart" matTooltipPosition="above">
+    <mat-icon style="margin-left: 6px; font-size: 22px; margin-right: 4px;" svgIcon="line-chart"></mat-icon>
+  </button>
+
+  <!-- CLOSE ALL WINDOWS -->
+  <button mat-raised-button class="panel-button" (click)="onCloseAllWindows()" matTooltip="Close Windows"
+    matTooltipPosition="above">
+    <mat-icon svgIcon="close" style="margin-left: 6px;"></mat-icon>
+  </button>
+
+
+</div>

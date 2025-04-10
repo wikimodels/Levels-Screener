@@ -9,7 +9,6 @@ import {
   EXCHANGES,
   COINS,
   VWAP_ARCHIVED_ALERTS,
-  LIGHTWEIGHT_CHART,
   ALERTS_BATCH,
 } from 'src/consts/url-consts';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';

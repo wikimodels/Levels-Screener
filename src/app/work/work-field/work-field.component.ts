@@ -8,7 +8,7 @@ import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 @Component({
   selector: 'app-work-field',
   templateUrl: './work-field.component.html',
-  styleUrls: ['./work-field.component.css'],
+  styleUrls: ['./work-field.component.css', '../../../styles-alerts.css'],
 })
 export class WorkFieldComponent implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
@@ -20,6 +20,7 @@ export class WorkFieldComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.workingCoinsService.coins$.subscribe((coins) => {
         this.coinsAtWork = coins;
+        console.log('WorkingCoins --->', coins);
       })
     );
   }

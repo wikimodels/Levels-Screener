@@ -12,7 +12,7 @@ import { WorkSelectionService } from 'src/service/work.selection.service';
 @Component({
   selector: 'app-work',
   templateUrl: './work.component.html',
-  styleUrls: ['./work.component.css'],
+  styleUrls: ['./work.component.css', './../../styles-alerts.css'],
 })
 export class WorkComponent implements OnInit, OnDestroy {
   count = 0;
@@ -22,22 +22,24 @@ export class WorkComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   filteredSymbols: string[] = [];
   private subscription = new Subscription();
-  defaultLink = 'https://www.tradingview.com/chart?symbol=BINANCE:BTCUSDT.P';
-  private openedWindows: Window[] = [];
 
   constructor(
     private coinsService: CoinsGenericService,
     private workingCoinsService: WorkingCoinsService,
-    private coinsLinksService: CoinLinksService,
     private fb: FormBuilder,
     private snackbarService: SnackbarService,
     public selectionService: WorkSelectionService<any>
   ) {}
 
   ngOnInit(): void {
-    this.coins = this.coinsService.getCoins();
-    this.symbols = this.coins.map((d) => d.symbol);
-
+    this.subscription.add(
+      this.coinsService.coins$.subscribe((coins) => {
+        this.coins = coins;
+        this.symbols = coins.map((d) => d.symbol);
+        console.log('Coins fethed: ', this.coins.length);
+        console.log('Symbols', this.symbols);
+      })
+    );
     // ✅ Subscribe to Working Coins
     this.subscription.add(
       this.workingCoinsService.coins$.subscribe((coins) => {
@@ -46,7 +48,6 @@ export class WorkComponent implements OnInit, OnDestroy {
         this.count = coins.length;
       })
     );
-
     // ✅ Fetch working coins once
     this.workingCoinsService.getAllWorkingCoins();
 
@@ -103,50 +104,6 @@ export class WorkComponent implements OnInit, OnDestroy {
 
   isAllSelected(): boolean {
     return this.selectionService.isAllSelected(this.coinsAtWork);
-  }
-
-  onOpenCoinglass(): void {
-    this.openCoinGlassWindowsFromSelection();
-  }
-
-  onOpenTradingview(): void {
-    this.openTvWindowsFromSelection();
-  }
-
-  onOpenSingleTradingview(): void {
-    const newWindow = window.open(this.defaultLink, '_blank');
-    if (newWindow) this.openedWindows.push(newWindow);
-  }
-
-  private openTvWindowsFromSelection(): void {
-    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selectionService.clear();
-  }
-
-  private openCoinGlassWindowsFromSelection(): void {
-    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinsLinksService.coinglassLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selectionService.clear();
-  }
-
-  onCloseAllWindows(): void {
-    this.openedWindows.forEach((win) => win.close());
-    this.openedWindows = [];
   }
 
   onRemoveFromWork(): void {

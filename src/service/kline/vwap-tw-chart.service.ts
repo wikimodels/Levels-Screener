@@ -23,7 +23,7 @@ import { createHttpParams } from 'src/functions/create-params';
 @Injectable({
   providedIn: 'root',
 })
-export class TWKlineService {
+export class VwapTwChartService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',

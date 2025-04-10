@@ -63,6 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
       { name: 'data-object', url: 'assets/icons/data-object.svg' },
       { name: 'twitter', url: 'assets/icons/twitter.svg' },
       { name: 'cloud_sync', url: 'assets/icons/cloud_sync.svg' },
+      { name: 'line-chart', url: 'assets/icons/line-chart.svg' },
       { name: 'reddit', url: 'assets/icons/reddit.svg' },
       { name: 'telegram', url: 'assets/icons/telegram.svg' },
       { name: 'github', url: 'assets/icons/github.svg' },

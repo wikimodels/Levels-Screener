@@ -4,11 +4,16 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Coin } from 'models/coin/coin';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { Subscription } from 'rxjs';
-import { KLINE_CHART, LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import {
+  KLINE_CHART,
+  LINE_LIGHTWEIGHT_CHART,
+  VWAP_LIGHTWEIGHT_CHART,
+} from 'src/consts/url-consts';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
 import { WorkSelectionService } from 'src/service/work.selection.service';
+import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
 
 @Component({
   selector: 'app-coins',
@@ -26,15 +31,12 @@ export class CoinsComponent {
   private subscription = new Subscription();
   private sortState: 'romanAsc' | 'romanDesc' | 'alphaAsc' | 'alphaDesc' =
     'alphaAsc';
-  defaultLink = 'https://www.tradingview.com/chart?symbol=BINANCE:BTCUSDT.P';
-  private openedWindows: Window[] = [];
 
   // Constructor
   constructor(
     private coinsService: CoinsGenericService,
-    private coinsLinksService: CoinLinksService,
+    private chartsOpenerService: ChartsOpenerService,
     private fb: FormBuilder,
-    private router: Router,
     public selectionService: WorkSelectionService<any>
   ) {}
 
@@ -97,9 +99,6 @@ export class CoinsComponent {
     this.form?.reset();
   }
 
-  // Coin Management Methods
-
-  // Selection Methods
   toggleAll(): void {
     this.selectionService.isAllSelected(this.coins)
       ? this.selectionService.clear()
@@ -110,63 +109,40 @@ export class CoinsComponent {
     return this.selectionService.isAllSelected(this.coins);
   }
 
-  // Window Management Methods
+  // =========== CHARTS  =================
   onOpenCoinglass(): void {
-    this.openWindowsFromSelection();
+    this.chartsOpenerService.openCoinGlassCharts(
+      this.selectionService.selectedValues()
+    );
   }
 
   onOpenTradingview(): void {
-    this.openWindowsFromSelection();
+    this.chartsOpenerService.openTradingViewCharts(
+      this.selectionService.selectedValues()
+    );
   }
 
-  onOpenSingleTradingview(): void {
-    const newWindow = window.open(this.defaultLink, '_blank');
-    if (newWindow) this.openedWindows.push(newWindow);
+  onOpenDefaultTradingView(): void {
+    this.chartsOpenerService.openDefaultTradingView();
   }
 
-  private openWindowsFromSelection(): void {
-    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinsLinksService.tradingViewLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selectionService.clear();
+  onGoToVwapCharts(): void {
+    this.chartsOpenerService.openVwapCharts(
+      this.selectionService.selectedValues()
+    );
   }
 
-  private openVwapChartsFromSelection(): void {
-    this.selectionService.selectedValues().forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
-          queryParams: {
-            symbol: v.symbol,
-            category: v.category,
-            imageUrl: v.imageUrl,
-          },
-        });
-        const url = this.router.serializeUrl(urlTree);
-        const newWindow = window.open(url, '_blank');
-        if (newWindow) {
-          this.openedWindows.push(newWindow);
-        }
-      }, index * 1500); // Delay between openings
-    });
-    this.selectionService.clear();
+  onGoToLineCharts(): void {
+    this.chartsOpenerService.openLineCharts(
+      this.selectionService.selectedValues()
+    );
   }
 
   onCloseAllWindows(): void {
-    this.openedWindows.forEach((win) => win.close());
-    this.openedWindows = [];
+    this.chartsOpenerService.closeAllWindows();
   }
 
-  onGoToCharts(): void {
-    this.openVwapChartsFromSelection();
-  }
-
-  onSortByCategory() {}
+  // ======= COIN SORTING ===============
 
   toggleSort(): void {
     switch (this.sortState) {

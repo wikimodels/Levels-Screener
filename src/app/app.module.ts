@@ -57,8 +57,11 @@ import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-trigg
 import { VwapTriggeredAlertsTableComponent } from './vwap-triggered-alerts/vwap-triggered-alerts-table/vwap-triggered-alerts-table.component';
 import { VwapAlertMenuComponent } from './nav-bar/vwap-alert-menu/vwap-alert-menu.component';
 import { EditVwapAlertComponent } from './shared/edit-vwap-alert/edit-vwap-alert.component';
-import { LightweightChartComponent } from './lightweight-chart/lightweight-chart.component';
+
 import { AlertsBatchComponent } from './alerts-batch/alerts-batch.component';
+import { VwapLightweightChartComponent } from './vwap-lightweight-chart/vwap-lightweight-chart.component';
+import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
+import { ChartsButtonsPanelComponent } from './shared/charts-buttons-panel/charts-buttons-panel.component';
 
 echarts.use([
   LegendComponent,
@@ -113,8 +116,10 @@ echarts.registerTheme('macarons', Marcaron);
     VwapTriggeredAlertsTableComponent,
     VwapAlertMenuComponent,
     EditVwapAlertComponent,
-    LightweightChartComponent,
+    VwapLightweightChartComponent,
     AlertsBatchComponent,
+    LineLightweightChartComponent,
+    ChartsButtonsPanelComponent,
   ],
   imports: [
     FormsModule,

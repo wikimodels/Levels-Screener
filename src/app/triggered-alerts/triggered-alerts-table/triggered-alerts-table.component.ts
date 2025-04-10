@@ -17,8 +17,9 @@ import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 import { Coin } from 'models/coin/coin';
-import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { Router } from '@angular/router';
+import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
 
 /**
  * @title Table with sorting
@@ -63,8 +64,7 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
     private coinsService: CoinsGenericService,
-    private workingCoinsService: WorkingCoinsService,
-    private router: Router
+    private workingCoinsService: WorkingCoinsService
   ) {}
 
   ngOnInit() {
@@ -177,69 +177,6 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
 
     this.selection.clear();
     this.buttonsDisabled = true;
-  }
-
-  onCloseAllWindows(): void {
-    this.openedWindows.forEach((win) => win.close());
-    this.openedWindows = [];
-  }
-
-  private openTvWindowsFromSelection(): void {
-    this.selection.selected.forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selection.clear();
-  }
-
-  onGoToCharts(): void {
-    this.openVwapChartsFromSelection();
-  }
-
-  onOpenCoinglass(): void {
-    this.openCoinGlassWindowsFromSelection();
-  }
-
-  private openCoinGlassWindowsFromSelection(): void {
-    this.selection.selected.forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinLinksService.coinglassLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selection.clear();
-  }
-
-  private openVwapChartsFromSelection(): void {
-    this.selection.selected.forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
-          queryParams: {
-            symbol: v.symbol,
-            category: v.category,
-            imageUrl: v.imageUrl,
-          },
-        });
-        const url = this.router.serializeUrl(urlTree);
-        const newWindow = window.open(url, '_blank');
-        if (newWindow) {
-          this.openedWindows.push(newWindow);
-        }
-      }, index * 1500); // Delay between openings
-    });
-    this.selection.clear();
-  }
-
-  onOpenTradingview(): void {
-    this.openTvWindowsFromSelection();
   }
 
   ngOnDestroy(): void {

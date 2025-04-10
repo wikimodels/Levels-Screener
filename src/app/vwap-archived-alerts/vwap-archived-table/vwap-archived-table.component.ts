@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 
 import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
-import { KLINE_CHART, LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
@@ -126,7 +126,7 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   }
 
   onGoToChart(item: VwapAlert) {
-    const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
+    const urlTree = this.router.createUrlTree([VWAP_LIGHTWEIGHT_CHART], {
       queryParams: {
         symbol: item.symbol,
         category: item.category,

@@ -6,7 +6,7 @@ import {
   CandlestickData,
   UTCTimestamp,
 } from 'lightweight-charts';
-import { TWKlineService } from 'src/service/kline/tw-kline.service';
+import { VwapTwChartService } from 'src/service/kline/vwap-tw-chart.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { KlineData } from 'models/kline/kline-data';
@@ -14,11 +14,14 @@ import { ActivatedRoute } from '@angular/router';
 import { SafeCandleData } from 'models/chart/safe-candle-data';
 
 @Component({
-  selector: 'app-lightweight-chart',
-  templateUrl: './lightweight-chart.component.html',
-  styleUrls: ['./lightweight-chart.component.css', './../../styles-alerts.css'],
+  selector: 'app-vwap-lightweight-chart',
+  templateUrl: './vwap-lightweight-chart.component.html',
+  styleUrls: [
+    './vwap-lightweight-chart.component.css',
+    './../../styles-alerts.css',
+  ],
 })
-export class LightweightChartComponent implements OnInit {
+export class VwapLightweightChartComponent implements OnInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   isRotating = false;
   symbol!: string;
@@ -39,7 +42,7 @@ export class LightweightChartComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private klineService: TWKlineService,
+    private klineService: VwapTwChartService,
     private snackBarService: SnackbarService
   ) {}
 
@@ -70,7 +73,7 @@ export class LightweightChartComponent implements OnInit {
         horzLines: { color: '#E0E0E0' }, // Light gray horizontal grid lines [[3]][[7]]
       },
       crosshair: {
-        mode: 1, // Normal crosshair mode
+        mode: 0, // Normal crosshair mode
         vertLine: {
           width: 1,
           color: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black crosshair [[1]][[8]]
@@ -330,7 +333,7 @@ export class LightweightChartComponent implements OnInit {
           this.klineService
             .saveAnchorPoint(this.symbol, unixTimestamp)
             .subscribe({
-              next: (response) => {
+              next: (response: any) => {
                 console.log('Anchor saved successfully:', response);
                 // Optional: Add success notification
               },

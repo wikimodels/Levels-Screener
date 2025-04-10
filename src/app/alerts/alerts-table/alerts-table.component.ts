@@ -16,8 +16,9 @@ import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.compone
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { Coin } from 'models/coin/coin';
-import { LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { Route, Router } from '@angular/router';
+import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
 
 @Component({
   selector: 'app-alerts-table',
@@ -41,7 +42,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     'select',
   ];
   sub = new Subscription();
-  private openedWindows: Window[] = [];
+
   dataSource!: any;
   buttonsDisabled = true;
   filterValue = '';
@@ -56,8 +57,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   constructor(
     private alertsService: AlertsGenericService,
     private modelDialog: MatDialog,
-    public coinLinksService: CoinLinksService,
-    private router: Router
+    public coinLinksService: CoinLinksService
   ) {}
 
   ngOnInit() {
@@ -141,10 +141,6 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  onOpenCoinglass(): void {
-    this.openCoinGlassWindowsFromSelection();
-  }
-
   onMoveToArchive() {
     const alerts = this.selection.selected as Alert[];
     const ids = alerts.map((a) => a.id);
@@ -170,64 +166,6 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  onCloseAllWindows(): void {
-    this.openedWindows.forEach((win) => win.close());
-    this.openedWindows = [];
-  }
-
-  private openTvWindowsFromSelection(): void {
-    this.selection.selected.forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinLinksService.tradingViewLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selection.clear();
-  }
-
-  private openCoinGlassWindowsFromSelection(): void {
-    this.selection.selected.forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const newWindow = window.open(
-          this.coinLinksService.coinglassLink(v.symbol, v.exchanges),
-          '_blank'
-        );
-        if (newWindow) this.openedWindows.push(newWindow);
-      }, index * 1500);
-    });
-    this.selection.clear();
-  }
-
-  onOpenTradingview(): void {
-    this.openTvWindowsFromSelection();
-  }
-
-  onGoToCharts(): void {
-    this.openVwapChartsFromSelection();
-  }
-
-  private openVwapChartsFromSelection(): void {
-    this.selection.selected.forEach((v: Coin, index: number) => {
-      setTimeout(() => {
-        const urlTree = this.router.createUrlTree([LIGHTWEIGHT_CHART], {
-          queryParams: {
-            symbol: v.symbol,
-            category: v.category,
-            imageUrl: v.imageUrl,
-          },
-        });
-        const url = this.router.serializeUrl(urlTree);
-        const newWindow = window.open(url, '_blank');
-        if (newWindow) {
-          this.openedWindows.push(newWindow);
-        }
-      }, index * 1500); // Delay between openings
-    });
-    this.selection.clear();
-  }
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
