@@ -37,6 +37,7 @@ export class LineLightweightChartComponent implements OnInit {
   private klineData: KlineData[] = [];
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
   private candleData: SafeCandleData[] = [];
+  private globalLineColor = 'black';
   private vwapLines: Map<
     UTCTimestamp,
     {
@@ -199,7 +200,7 @@ export class LineLightweightChartComponent implements OnInit {
         vwapLines.forEach(
           (vwapData: { time: UTCTimestamp; value: number }[]) => {
             if (vwapData.length > 1) {
-              const color = this.getRandomColor();
+              const color = this.getVwapRandomColor();
               const series = this.chart.addLineSeries({
                 color,
                 lineWidth: 2,
@@ -223,10 +224,10 @@ export class LineLightweightChartComponent implements OnInit {
             // Create price line on the candlestick series [[7]]
             const priceLine = this.candlestickSeries.createPriceLine({
               price: lineData[0].value, // Use the first value as the price
-              color: this.getRandomColor(),
+              color: this.globalLineColor,
               lineWidth: 2,
               lineStyle: LineStyle.Solid,
-              axisLabelVisible: true,
+              axisLabelVisible: false,
             });
 
             // Store in Map with price as the key
@@ -250,7 +251,7 @@ export class LineLightweightChartComponent implements OnInit {
     // d
   }
 
-  private getRandomColor(): string {
+  private getVwapRandomColor(): string {
     const colors = [
       '#FF0000', // Red
       '#00FF00', // Lime
@@ -269,25 +270,52 @@ export class LineLightweightChartComponent implements OnInit {
     this.destroyChart();
   }
 
+  private highlightedPrice: number | undefined; // Track current highlight
+
   private setupHoverHandler(): void {
     this.chart.subscribeCrosshairMove((param) => {
-      if (!param.time) return;
+      // Case 1: Mouse leaves chart area
+      if (!param.point?.y) {
+        if (this.highlightedPrice !== undefined) {
+          this.horizontalLines.get(this.highlightedPrice)?.line.applyOptions({
+            color: this.globalLineColor, // Original color from addPriceLine
+            lineWidth: 2, // Original line width
+            lineStyle: LineStyle.Solid, // Original style
+          });
+          this.highlightedPrice = undefined;
+        }
+        return;
+      }
 
-      const hoveredTime = param.time as UTCTimestamp;
-      const hoveredCandle = this.candleData.find((c) => c.time === hoveredTime);
+      // Get current price at mouse position
+      const rawPrice = this.candlestickSeries.coordinateToPrice(param.point.y);
+      const price = roundToMatchDecimals(
+        this.klineData[0].closePrice,
+        Number(rawPrice)
+      );
 
-      if (hoveredCandle) {
-        // Update crosshair labels with detailed time
-        this.chart.applyOptions({
-          crosshair: {
-            horzLine: {
-              labelVisible: true,
-            },
-            vertLine: {
-              labelVisible: true,
-            },
-          },
+      // Case 2: Price doesn't match any line
+      if (price === null || !this.horizontalLines.has(price)) {
+        if (this.highlightedPrice !== undefined) {
+          this.horizontalLines.get(this.highlightedPrice)?.line.applyOptions({
+            color: this.globalLineColor,
+            lineWidth: 2,
+            lineStyle: LineStyle.Solid,
+          });
+          this.highlightedPrice = undefined;
+        }
+        return;
+      }
+
+      // Case 3: Price matches a line
+      if (this.highlightedPrice !== price) {
+        // Apply new highlight
+        this.horizontalLines.get(price)?.line.applyOptions({
+          color: '#FF0000', // Highlight color
+          lineWidth: 3, // Thicker line
+          lineStyle: LineStyle.Solid, // More visible style
         });
+        this.highlightedPrice = price;
       }
     });
   }
