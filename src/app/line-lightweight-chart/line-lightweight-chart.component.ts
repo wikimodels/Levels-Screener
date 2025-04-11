@@ -37,7 +37,6 @@ export class LineLightweightChartComponent implements OnInit {
   private klineData: KlineData[] = [];
   private candlestickSeries!: ISeriesApi<'Candlestick'>;
   private candleData: SafeCandleData[] = [];
-  private alertSeries!: ISeriesApi<'Line'>;
   private vwapLines: Map<
     UTCTimestamp,
     {
@@ -46,7 +45,14 @@ export class LineLightweightChartComponent implements OnInit {
     }
   > = new Map();
 
-  private horizontalLines: Map<number, IPriceLine> = new Map();
+  private horizontalLines: Map<
+    number,
+    {
+      line: IPriceLine;
+      series: ISeriesApi<'Candlestick'>;
+      data: { time: UTCTimestamp; value: number }[];
+    }
+  > = new Map();
 
   constructor(
     private route: ActivatedRoute,
@@ -67,12 +73,6 @@ export class LineLightweightChartComponent implements OnInit {
     this.loadChartData();
     this.setupClickHandler();
     this.setupHoverHandler();
-    this.alertSeries = this.chart.addLineSeries({
-      // Optional: Make series transparent
-      color: 'rgba(0,0,0,0)',
-      lastValueVisible: true,
-      priceLineVisible: true,
-    });
   }
 
   private initChart(): void {
@@ -220,19 +220,21 @@ export class LineLightweightChartComponent implements OnInit {
 
         lines.forEach((lineData: { time: UTCTimestamp; value: number }[]) => {
           if (lineData.length > 1) {
-            const color = this.getRandomColor(); // Generate a random color for the line
-            const series = this.chart.addLineSeries({
-              color,
+            // Create price line on the candlestick series [[7]]
+            const priceLine = this.candlestickSeries.createPriceLine({
+              price: lineData[0].value, // Use the first value as the price
+              color: this.getRandomColor(),
               lineWidth: 2,
-              crosshairMarkerVisible: true,
-              priceLineVisible: false, // Disable price labels on the scale
-              lastValueVisible: false, // Disable last value display
+              lineStyle: LineStyle.Solid,
+              axisLabelVisible: true,
             });
 
-            // Set the data for the line series
-            series.setData(lineData);
-
-            // Store reference to the series and its data
+            // Store in Map with price as the key
+            this.horizontalLines.set(lineData[0].value, {
+              line: priceLine,
+              series: this.candlestickSeries,
+              data: lineData,
+            });
           }
         });
         this.chart.timeScale().fitContent();
@@ -295,14 +297,25 @@ export class LineLightweightChartComponent implements OnInit {
       if (!params.point) return;
       const clickedTime = params.time as UTCTimestamp;
       // Use the candlestick series to calculate the price from the Y coordinate
-      const price = this.candlestickSeries.coordinateToPrice(params.point.y);
-      const roundedPrice = roundToMatchDecimals(
+      const rawPrice = this.candlestickSeries.coordinateToPrice(params.point.y);
+      const price = roundToMatchDecimals(
         this.klineData[0].closePrice,
-        Number(price)
+        Number(rawPrice)
       );
 
       if (price === null) return; // Handle edge cases
-      this.addPriceLine(clickedTime, roundedPrice);
+      if (this.horizontalLines.has(price)) {
+        // Remove existing line
+        const line = this.horizontalLines.get(price)!;
+        console.log('--> line', line);
+        const entry = this.horizontalLines.get(price);
+        if (entry) {
+          entry.series.removePriceLine(entry.line); // Use stored line [[7]]
+          this.horizontalLines.delete(price);
+        }
+        this.lineKlineService.deleteAlertBySymbolAndPrice(this.symbol, price);
+      }
+      //this.addPriceLine(clickedTime, price);
       this.chart.timeScale().fitContent();
       // if (this.horizontalLines.has(roundedPrice)) {
       //   this.removePriceLine(roundedPrice);
@@ -314,15 +327,21 @@ export class LineLightweightChartComponent implements OnInit {
 
   private addPriceLine(time: UTCTimestamp, price: number) {
     console.log('time:', time, 'price:', price);
+
+    // Store in Map with time as key
     const priceLine = this.candlestickSeries.createPriceLine({
-      price: price,
+      price,
       color: '#2962FF',
       lineWidth: 2,
       lineStyle: LineStyle.Dashed,
       axisLabelVisible: true,
     });
-    // Store in Map with time as key
-    this.horizontalLines.set(price, priceLine);
+
+    this.horizontalLines.set(price, {
+      line: priceLine,
+      series: this.candlestickSeries,
+      data: [{ time, value: price }],
+    });
     console.log('horizLines', this.horizontalLines);
     this.lineKlineService.addAlertBySymbolAndPrice(this.symbol, price);
   }
