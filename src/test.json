@@ -1,0 +1,45 @@
+[
+  {
+    "symbol": "1INCHUSDT",
+    "action": "fuck",
+    "price": 0.17,
+    "category": "I",
+    "alertName": "0.17000000",
+    "tvScreensUrls": ["https://www.tradingview.com/chart/?symbol=1INCHUSDT"]
+  },
+  {
+    "symbol": "1INCHUSDT",
+    "action": "fuck",
+    "price": 0.165,
+    "category": "I",
+    "alertName": "0.16500000",
+    "tvScreensUrls": ["https://www.tradingview.com/chart/?symbol=1INCHUSDT"]
+  },
+  {
+    "symbol": "1INCHUSDT",
+    "action": "fuck",
+
+    "price": 0.16,
+    "category": "I",
+    "alertName": "0.1600000",
+    "tvScreensUrls": ["https://www.tradingview.com/chart/?symbol=1INCHUSDT"]
+  },
+  {
+    "symbol": "1INCHUSDT",
+    "action": "fuck",
+
+    "price": 0.155,
+    "category": "I",
+    "alertName": "0.155000000",
+    "tvScreensUrls": ["https://www.tradingview.com/chart/?symbol=1INCHUSDT"]
+  },
+  {
+    "symbol": "1INCHUSDT",
+    "action": "fuck",
+
+    "price": 0.15,
+    "category": "I",
+    "alertName": "0.1500000",
+    "tvScreensUrls": ["https://www.tradingview.com/chart/?symbol=1INCHUSDT"]
+  }
+]

@@ -42,7 +42,7 @@ export class VwapLightweightChartComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private klineService: VwapTwChartService,
+    private vwapKlineService: VwapTwChartService,
     private snackBarService: SnackbarService
   ) {}
 
@@ -120,7 +120,7 @@ export class VwapLightweightChartComponent implements OnInit {
 
   private loadChartData(): void {
     this.isRotating = true;
-    this.klineService
+    this.vwapKlineService
       .fetchCombinedChartData(this.symbol, 'm15', 400)
       .subscribe(({ candlestick, vwapLines, klineData }) => {
         // Clear existing data
@@ -300,7 +300,7 @@ export class VwapLightweightChartComponent implements OnInit {
           this.vwapLines.delete(clickedTime);
 
           // Call delete service with Unix timestamp
-          this.klineService
+          this.vwapKlineService
             .deleteVwapBySymbolAndOpenTime(this.symbol, unixTimestamp)
             .subscribe({
               next: () => {
@@ -330,7 +330,7 @@ export class VwapLightweightChartComponent implements OnInit {
           this.vwapLines.set(clickedTime, { series, data: vwapData });
 
           // Call save service with Unix timestamp
-          this.klineService
+          this.vwapKlineService
             .saveAnchorPoint(this.symbol, unixTimestamp)
             .subscribe({
               next: (response: any) => {

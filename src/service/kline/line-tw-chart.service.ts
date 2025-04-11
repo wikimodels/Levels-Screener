@@ -9,7 +9,11 @@ import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { KlineData } from '../../models/kline/kline-data';
 import { CandlestickData, UTCTimestamp } from 'lightweight-charts';
-import { KLINE_URLS, VWAP_ALERTS_URLS } from 'src/consts/url-consts';
+import {
+  ALERTS_URLS,
+  KLINE_URLS,
+  VWAP_ALERTS_URLS,
+} from 'src/consts/url-consts';
 import { SnackbarService } from '../snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { createVwapAlert } from 'src/functions/create-vwap-alert';
@@ -19,12 +23,14 @@ import { _ChartOptions } from 'models/chart/chart-options';
 import { CoinsGenericService } from '../coins/coins-generic.service';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { createHttpParams } from 'src/functions/create-params';
+import { Alert } from 'models/alerts/alert';
+import { createLineAlert } from 'src/functions/create-line-alert';
 import { transformToCandlestickData } from 'src/functions/transform-to-candlestick-data';
 
 @Injectable({
   providedIn: 'root',
 })
-export class VwapTwChartService {
+export class LineTwChartService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -93,9 +99,22 @@ export class VwapTwChartService {
       );
   }
 
-  /**
-   * Calculates VWAP lines for a set of VwapAlerts based on their anchorTime.
-   */
+  fetchLineAlertsData(symbol: string): Observable<Alert[]> {
+    const params = new HttpParams()
+      .set('symbol', symbol)
+      .set('collectionName', 'working');
+
+    return this.http
+      .get<Alert[]>(ALERTS_URLS.alertsBySymbolUrl, {
+        params,
+      })
+      .pipe(
+        tap((data) => console.log('Fetched VWAP Alerts Data:', data)),
+        catchError((error) =>
+          this.handleError(error, 'Error fetching VWAP alerts data')
+        )
+      );
+  }
 
   fetchCombinedChartData(
     symbol: string,
@@ -104,23 +123,27 @@ export class VwapTwChartService {
   ): Observable<{
     candlestick: CandlestickData[];
     vwapLines: { time: UTCTimestamp; value: number }[][];
+    lines: { time: UTCTimestamp; value: number }[][];
     klineData: KlineData[];
   }> {
     return forkJoin({
       kline: this.fetchKlineData(symbol, timeframe, limit),
       vwapAlerts: this.fetchVwapAlertsData(symbol),
+      alerts: this.fetchLineAlertsData(symbol),
     }).pipe(
-      map(({ kline, vwapAlerts }) => {
+      map(({ kline, vwapAlerts, alerts }) => {
         // Transform Kline data into Candlestick format
         const candlestickData = transformToCandlestickData(kline);
 
         // Generate VWAP lines
         const vwapLines = this.calculateVwapLinesForAlerts(vwapAlerts, kline);
+        const lines = this.calculateLinesForAlerts(alerts, kline);
 
         // Return the combined data including klineData
         return {
           candlestick: candlestickData,
           vwapLines,
+          lines,
           klineData: kline, // Include raw Kline data
         };
       }),
@@ -131,6 +154,43 @@ export class VwapTwChartService {
         );
       })
     );
+  }
+
+  calculateLinesForAlerts(
+    alerts: Alert[],
+    klineData: KlineData[]
+  ): { time: UTCTimestamp; value: number }[][] {
+    if (!klineData || klineData.length === 0) {
+      console.error('[Line] No Kline data available for line calculation');
+      return [];
+    }
+
+    // Ensure Kline data is sorted by time
+    klineData.sort((a, b) => a.openTime - b.openTime);
+
+    // Extract the first and last timestamps from Kline data
+    const startTime = Math.floor(klineData[0].openTime / 1000) + 3 * 60 * 60; // Convert to seconds and add 3 hours
+    const endTime =
+      Math.floor(klineData[klineData.length - 1].openTime / 1000) + 3 * 60 * 60;
+
+    const lines: { time: UTCTimestamp; value: number }[][] = [];
+
+    alerts.forEach((alert) => {
+      if (typeof alert.price !== 'number' || isNaN(alert.price)) {
+        console.warn(`[Line] Invalid price for alert ID: ${alert.id}`);
+        return;
+      }
+
+      // Create a horizontal line with two points: start and end time
+      const lineData: { time: UTCTimestamp; value: number }[] = [
+        { time: startTime as UTCTimestamp, value: alert.price },
+        { time: endTime as UTCTimestamp, value: alert.price },
+      ];
+
+      lines.push(lineData);
+    });
+
+    return lines;
   }
 
   calculateVwapLinesForAlerts(
@@ -224,7 +284,7 @@ export class VwapTwChartService {
   /**
    * Saves an anchor point for VWAP calculation.
    */
-  saveAnchorPoint(symbol: string, openTime: number): Observable<any> {
+  addAlertBySymbolAndPrice(symbol: string, price: number): Observable<any> {
     const collectionName = AlertsCollection.WorkingAlerts;
     const coins = this.coinsService.getCoins();
     const coin = coins.find((coin: Coin) => coin.symbol === symbol);
@@ -235,55 +295,50 @@ export class VwapTwChartService {
         () => new Error(`Coin not found for symbol: ${symbol}`)
       );
     }
-    const alert = createVwapAlert(symbol, openTime, coin);
+    const alert = createLineAlert(symbol, price, coin);
 
     // HTTP request to add a VwapAlert with query parameters
     const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
-    return this.http
-      .post(VWAP_ALERTS_URLS.vwapAlertsAddOneUrl, { alert }, options)
-      .pipe(
-        tap(() => {
-          this.snackBarService.showSnackBar(
-            'Anchor point saved successfully!',
-            '',
-            2000,
-            SnackbarType.Info
-          );
-        }),
-        catchError((error: HttpErrorResponse) => {
-          console.error('Error saving anchor point:', error);
-          return throwError(() => new Error('Failed to save anchor point'));
-        })
-      );
+    return this.http.post(ALERTS_URLS.alertsAddOneUrl, { alert }, options).pipe(
+      tap(() => {
+        this.snackBarService.showSnackBar(
+          'Alert saved successfully!',
+          '',
+          2000,
+          SnackbarType.Info
+        );
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error saving anchor point:', error);
+        return throwError(() => new Error('Failed to save alert'));
+      })
+    );
   }
 
   /**
    * Deletes an anchor point for VWAP calculation.
    */
-  deleteVwapBySymbolAndOpenTime(
-    symbol: string,
-    openTime: number
-  ): Observable<any> {
+  deleteAlertBySymbolAndPrice(symbol: string, price: number): Observable<any> {
     const collectionName = AlertsCollection.WorkingAlerts;
     // HTTP request to add a VwapAlert with query parameters
-    const params = createHttpParams({ symbol, collectionName, openTime });
+    const params = createHttpParams({ symbol, collectionName, price });
     const options = { ...this.httpOptions, params };
     return this.http
-      .delete(VWAP_ALERTS_URLS.vwapAlertDeleteBySymbolAndOpenTimeUrl, options)
+      .delete(ALERTS_URLS.alertsDeleteBySymbolAndPriceUrl, options)
       .pipe(
         tap(() => {
           this.snackBarService.showSnackBar(
-            'Anchor point removed successfully!',
+            'Alert removed successfully!',
             '',
             2000,
             SnackbarType.Info
           );
         }),
         catchError((error: HttpErrorResponse) => {
-          console.error('Error deleting anchor point:', error);
-          return throwError(() => new Error('Failed to delete anchor point'));
+          console.error('Error deleting alert:', error);
+          return throwError(() => new Error('Failed to delete alert'));
         })
       );
   }

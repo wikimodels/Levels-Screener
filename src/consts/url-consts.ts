@@ -29,6 +29,8 @@ export const ALERTS_URLS = {
   alertsDeleteManyUrl: `${baseURL}/alerts/delete/many`,
   alertsUpdateOneUrl: `${baseURL}/alerts/update/one`,
   alertsMoveManyUrl: `${baseURL}/alerts/move/many`,
+  alertsBySymbolUrl: `${baseURL}/alerts/symbol`,
+  alertsDeleteBySymbolAndPriceUrl: `${baseURL}/alerts/delete/symbol/price`,
 };
 
 export const COINS_URLS = {
@@ -47,13 +49,6 @@ export const WORKING_COINS_URLS = {
   updateWorkingCoinUrl: `${baseURL}/working-coins/update/one`,
   deleteWorkingCoinsUrl: `${baseURL}/working-coins/delete/many`,
 };
-
-// export const ANCHORED_VWAP_URLS = {
-//   anchoredPointsBySymbolUrl: `${baseURL}/anchor-point/symbol`,
-//   anchoredPointsAllUrl: `${baseURL}/anchor-point/all`,
-//   anchoredPointAddUrl: `${baseURL}/anchor-point/add`,
-//   anchoredPointDeleteUrl: `${baseURL}/anchor-point/delete`,
-// };
 
 export const GENERAL_URLS = {
   refreshReposUrl: `${baseURL}/refresh-repos`,

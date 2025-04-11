@@ -1,1 +1,12 @@
-<p>line-lightweight-chart works!</p>
+<div class="chart-container">
+  <div class="title-container">
+    <a [href]="tvLink" target="_blank" class="chart-link">
+      <img [src]="imageUrl" alt="logo" class="round-image" />
+      {{symbol}} ({{category}})
+    </a>
+    <mat-icon class="refresh-icon" (click)="refreshChartData()" [ngClass]="{ 'rotate': isRotating }">
+      sync
+    </mat-icon>
+  </div>
+  <div #chartContainer class="chart"></div>
+</div>

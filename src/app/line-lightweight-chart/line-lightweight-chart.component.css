@@ -1,0 +1,46 @@
+.chart-container {
+  max-width: 1200px;
+  margin: 20px auto 0; /* Reduced top margin [[3]] */
+  padding: 0 20px;
+  width: 100%;
+  margin-top: 80px;
+  box-sizing: border-box;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 3px; /* Add consistent spacing between elements [[4]] */
+  margin-bottom: 8px; /* Reduced space below title [[1]] */
+}
+
+.header-title-margin {
+  margin: 0; /* Remove default h1 margin [[3]] */
+  font-size: 20px; /* Adjust font size for compactness */
+}
+
+.refresh-icon1{
+  cursor: pointer;
+  margin-bottom: 12px;
+}
+
+.refresh  {
+  cursor: pointer;
+  margin-left: 0; /* Remove left margin [[2]] */
+  margin-top: 0px; /* Remove bottom margin [[2]] */
+}
+
+.chart-link {
+  cursor: pointer; display: flex; align-items: center; text-decoration: none; font-size: 16px; color: black;
+}
+
+.refresh-icon {
+  cursor: pointer;
+  margin-bottom: 12px;
+  width: 18px; /* Set explicit width */
+  height: 18px; /* Set explicit height */
+  display: flex; /* Center the icon if needed */
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+}
