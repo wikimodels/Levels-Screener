@@ -62,6 +62,7 @@ import { AlertsBatchComponent } from './alerts-batch/alerts-batch.component';
 import { VwapLightweightChartComponent } from './vwap-lightweight-chart/vwap-lightweight-chart.component';
 import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
 import { ChartsButtonsPanelComponent } from './shared/charts-buttons-panel/charts-buttons-panel.component';
+import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 
 echarts.use([
   LegendComponent,
@@ -131,7 +132,7 @@ echarts.registerTheme('macarons', Marcaron);
     BrowserAnimationsModule,
     NgxEchartsModule.forRoot({ echarts }),
   ],
-  providers: [],
+  providers: [BaseChartDrawingService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

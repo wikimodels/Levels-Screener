@@ -1,17 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
-  createChart,
-  IChartApi,
-  ISeriesApi,
-  CandlestickData,
-  UTCTimestamp,
-} from 'lightweight-charts';
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { UTCTimestamp } from 'lightweight-charts';
 import { VwapTwChartService } from 'src/service/kline/vwap-tw-chart.service';
-import { SnackbarService } from 'src/service/snackbar.service';
-import { SnackbarType } from 'models/shared/snackbar-type';
-import { KlineData } from 'models/kline/kline-data';
 import { ActivatedRoute } from '@angular/router';
-import { SafeCandleData } from 'models/chart/safe-candle-data';
+import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 
 @Component({
   selector: 'app-vwap-lightweight-chart',
@@ -21,29 +18,18 @@ import { SafeCandleData } from 'models/chart/safe-candle-data';
     './../../styles-alerts.css',
   ],
 })
-export class VwapLightweightChartComponent implements OnInit {
+export class VwapLightweightChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   isRotating = false;
   symbol!: string;
   imageUrl!: string;
   category!: string;
   tvLink!: string;
-  private chart!: IChartApi;
-  private klineData: KlineData[] = [];
-  private candlestickSeries!: ISeriesApi<'Candlestick'>;
-  private candleData: SafeCandleData[] = [];
-  private vwapLines: Map<
-    UTCTimestamp,
-    {
-      series: ISeriesApi<'Line'>;
-      data: { time: UTCTimestamp; value: number }[];
-    }
-  > = new Map();
 
   constructor(
     private route: ActivatedRoute,
     private vwapKlineService: VwapTwChartService,
-    private snackBarService: SnackbarService
+    private baseCharDrawingService: BaseChartDrawingService
   ) {}
 
   ngOnInit(): void {
@@ -53,169 +39,30 @@ export class VwapLightweightChartComponent implements OnInit {
     this.imageUrl = params['imageUrl'];
     this.category = params['category'];
     this.tvLink = params['tvLink'];
-    console.log('TVLink', this.tvLink);
-    this.initChart();
-    this.loadChartData();
+
+    this.baseCharDrawingService.initChart(this.chartContainer);
+    this.baseCharDrawingService.loadChartData(this.symbol);
     this.setupClickHandler();
     this.setupHoverHandler();
   }
 
-  private initChart(): void {
-    this.chart = createChart(this.chartContainer.nativeElement, {
-      width: 1200,
-      height: 460,
-      layout: {
-        background: { color: '#F5F5F5' }, // Light gray background [[1]][[8]]
-        textColor: '#333333', // Dark gray text for contrast [[6]][[8]]
-      },
-      grid: {
-        vertLines: { color: '#E0E0E0' }, // Light gray vertical grid lines [[3]][[7]]
-        horzLines: { color: '#E0E0E0' }, // Light gray horizontal grid lines [[3]][[7]]
-      },
-      crosshair: {
-        mode: 0, // Normal crosshair mode
-        vertLine: {
-          width: 1,
-          color: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black crosshair [[1]][[8]]
-          style: 0,
-          labelBackgroundColor: '#555555', // Darker gray label background [[3]]
-        },
-        horzLine: {
-          width: 1,
-          color: 'rgba(0, 0, 0, 0.3)', // Semi-transparent black crosshair [[1]][[8]]
-          style: 0,
-          labelBackgroundColor: '#555555', // Darker gray label background [[3]]
-        },
-      },
-      timeScale: {
-        timeVisible: true,
-        secondsVisible: false,
-        tickMarkFormatter: (time: number) => {
-          const date = new Date(time * 1000);
-          return date.toLocaleString(undefined, {
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          });
-        },
-      },
-    });
-
-    this.candlestickSeries = this.chart.addCandlestickSeries({
-      upColor: '#FFFFFF', // White for bullish candles [[8]]
-      downColor: '#000000', // Black for bearish candles [[8]]
-      borderVisible: true, // Show borders [[8]]
-      borderColor: '#000000', // Black borders [[8]]
-      wickUpColor: '#000000', // Black wicks for up candles [[8]]
-      wickDownColor: '#000000', // Black wicks for down candles [[8]]
-    });
-
-    this.chart.timeScale().fitContent();
-  }
-
   refreshChartData() {
-    this.loadChartData();
-  }
-
-  private loadChartData(): void {
-    this.isRotating = true;
-    this.vwapKlineService
-      .fetchCombinedChartData(this.symbol, 'm15', 400)
-      .subscribe(({ candlestick, vwapLines, klineData }) => {
-        // Clear existing data
-        this.isRotating = false;
-        this.klineData = klineData;
-        this.candleData = (candlestick as SafeCandleData[]).filter(
-          (c) => !isNaN(c.time) && c.time > 0
-        );
-        this.clearAllVWAPs();
-
-        if (this.candleData.length === 0) {
-          console.error('No valid candle data available - detailed debug:');
-          console.log('Raw API response:', { candlestick, vwapLines });
-          // Handle both string and number timestamps
-          const toValidTimestamp = (t: any): UTCTimestamp | null => {
-            if (typeof t === 'number' && !isNaN(t) && t > 0)
-              return t as UTCTimestamp;
-            if (typeof t === 'string') {
-              const num = Number(t);
-              return !isNaN(num) && num > 0 ? (num as UTCTimestamp) : null;
-            }
-            return null;
-          };
-
-          console.log(
-            'Filtered candlestick data:',
-            candlestick.filter(
-              (c: CandlestickData) => toValidTimestamp(c.time) !== null
-            )
-          );
-
-          this.snackBarService.showSnackBar(
-            `No valid chart data (${candlestick.length} items, all invalid)`,
-            'Check console for details',
-            6000,
-            SnackbarType.Error
-          );
-          return;
-        }
-
-        // Verify data is ordered by time
-        const isOrdered = this.candleData.every(
-          (c, i, arr) => i === 0 || c.time > arr[i - 1].time
-        );
-
-        if (!isOrdered) {
-          console.error('Candle data is not properly ordered by time');
-          this.candleData.sort((a, b) => a.time - b.time);
-        }
-
-        // Set candlestick data
-        this.candlestickSeries.setData(this.candleData);
-
-        //Add all VWAP lines
-        vwapLines.forEach(
-          (vwapData: { time: UTCTimestamp; value: number }[]) => {
-            if (vwapData.length > 1) {
-              const color = this.getRandomVWAPColor();
-              const series = this.chart.addLineSeries({
-                color,
-                lineWidth: 2,
-                crosshairMarkerVisible: true,
-                priceLineVisible: false, // Disable price labels on the scale
-                lastValueVisible: false, // Disable last value display
-              });
-              series.setData(vwapData);
-
-              // Store reference to the series and its data
-              this.vwapLines.set(vwapData[0].time, {
-                series,
-                data: vwapData,
-              });
-            }
-          }
-        );
-
-        this.chart.timeScale().fitContent();
-      });
-  }
-
-  private clearAllVWAPs(): void {
-    this.vwapLines.forEach(({ series }) => this.chart.removeSeries(series));
-    this.vwapLines.clear();
+    this.baseCharDrawingService.loadChartData(this.symbol); // Replace
+    this.setupClickHandler();
   }
 
   private setupHoverHandler(): void {
-    this.chart.subscribeCrosshairMove((param) => {
+    this.baseCharDrawingService.chart.subscribeCrosshairMove((param) => {
       if (!param.time) return;
 
       const hoveredTime = param.time as UTCTimestamp;
-      const hoveredCandle = this.candleData.find((c) => c.time === hoveredTime);
+      const hoveredCandle = this.baseCharDrawingService.candleData.find(
+        (c) => c.time === hoveredTime
+      );
 
       if (hoveredCandle) {
         // Update crosshair labels with detailed time
-        this.chart.applyOptions({
+        this.baseCharDrawingService.chart.applyOptions({
           crosshair: {
             horzLine: {
               labelVisible: true,
@@ -232,11 +79,17 @@ export class VwapLightweightChartComponent implements OnInit {
   private calculateVWAP(
     startIndex: number
   ): { time: UTCTimestamp; value: number }[] {
-    if (!this.candleData || this.candleData.length === 0) {
+    if (
+      !this.baseCharDrawingService.candleData ||
+      this.baseCharDrawingService.candleData.length === 0
+    ) {
       console.error('[VWAP] No candle data available');
       return [];
     }
-    if (startIndex < 0 || startIndex >= this.candleData.length) {
+    if (
+      startIndex < 0 ||
+      startIndex >= this.baseCharDrawingService.candleData.length
+    ) {
       console.error('[VWAP] Invalid startIndex:', startIndex);
       return [];
     }
@@ -245,8 +98,12 @@ export class VwapLightweightChartComponent implements OnInit {
     let cumulativePV = 0;
     const vwapData: { time: UTCTimestamp; value: number }[] = [];
 
-    for (let i = startIndex; i < this.candleData.length; i++) {
-      const candle = this.candleData[i];
+    for (
+      let i = startIndex;
+      i < this.baseCharDrawingService.candleData.length;
+      i++
+    ) {
+      const candle = this.baseCharDrawingService.candleData[i];
       const typicalPrice = (candle.high + candle.low + candle.close) / 3;
       let volume = 0;
 
@@ -280,24 +137,25 @@ export class VwapLightweightChartComponent implements OnInit {
   }
 
   private setupClickHandler(): void {
-    this.chart.subscribeClick((param) => {
+    this.baseCharDrawingService.chart.subscribeClick((param) => {
       if (!param.time) return;
 
       const clickedTime = param.time as UTCTimestamp; // This is in milliseconds
-      const clickedIndex = this.candleData.findIndex(
+      const clickedIndex = this.baseCharDrawingService.candleData.findIndex(
         (c) => c.time === clickedTime
       );
       if (clickedIndex < 0) return;
 
       // Convert clickedTime to Unix timestamp (in seconds)
-      const unixTimestamp = this.klineData[clickedIndex].openTime;
+      const unixTimestamp =
+        this.baseCharDrawingService.klineData[clickedIndex].openTime;
 
-      if (this.vwapLines.has(clickedTime)) {
+      if (this.baseCharDrawingService.vwapLines.has(clickedTime)) {
         // Remove existing VWAP line and delete anchor
-        const vwapLine = this.vwapLines.get(clickedTime);
+        const vwapLine = this.baseCharDrawingService.vwapLines.get(clickedTime);
         if (vwapLine) {
-          this.chart.removeSeries(vwapLine.series);
-          this.vwapLines.delete(clickedTime);
+          this.baseCharDrawingService.chart.removeSeries(vwapLine.series);
+          this.baseCharDrawingService.vwapLines.delete(clickedTime);
 
           // Call delete service with Unix timestamp
           this.vwapKlineService
@@ -318,7 +176,7 @@ export class VwapLightweightChartComponent implements OnInit {
         const vwapData = this.calculateVWAP(clickedIndex);
         if (vwapData.length > 1) {
           const color = this.getRandomVWAPColor();
-          const series = this.chart.addLineSeries({
+          const series = this.baseCharDrawingService.chart.addLineSeries({
             color,
             lineWidth: 2,
             crosshairMarkerVisible: true,
@@ -327,7 +185,10 @@ export class VwapLightweightChartComponent implements OnInit {
           });
 
           series.setData(vwapData);
-          this.vwapLines.set(clickedTime, { series, data: vwapData });
+          this.baseCharDrawingService.vwapLines.set(clickedTime, {
+            series,
+            data: vwapData,
+          });
 
           // Call save service with Unix timestamp
           this.vwapKlineService
@@ -355,5 +216,9 @@ export class VwapLightweightChartComponent implements OnInit {
       '#FFA500', // Orange
     ];
     return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  ngOnDestroy(): void {
+    this.baseCharDrawingService.destroyChart();
   }
 }

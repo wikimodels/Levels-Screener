@@ -20,6 +20,7 @@ import { CoinsGenericService } from '../coins/coins-generic.service';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { createHttpParams } from 'src/functions/create-params';
 import { transformToCandlestickData } from 'src/functions/transform-to-candlestick-data';
+import { BaseChartService } from './base-chart.service';
 
 @Injectable({
   providedIn: 'root',
@@ -35,195 +36,18 @@ export class VwapTwChartService {
   constructor(
     private http: HttpClient,
     private snackBarService: SnackbarService,
-    private coinsService: CoinsGenericService
+    private coinsService: CoinsGenericService,
+    private baseChartService: BaseChartService
   ) {}
 
-  /**
-   * Fetches Kline data from the backend API.
-   */
-  fetchKlineData(
-    symbol: string,
-    timeframe: string,
-    limit: number
-  ): Observable<KlineData[]> {
-    console.log(
-      `🔄 [fetchKlineAndAnchors] Fetching data for: ${symbol}, TF: ${timeframe}, Limit: ${limit}`
-    );
-
-    const klineParams = new HttpParams()
-      .set('symbol', symbol)
-      .set('timeframe', timeframe)
-      .set('limit', limit.toString());
-
-    console.log(
-      `🌍 Kline API Request: ${KLINE_URLS.proxyKlineUrl} | Params:`,
-      klineParams.toString()
-    );
-
-    return this.http
-      .get<{ data: KlineData[] }>(KLINE_URLS.proxyKlineUrl, {
-        params: klineParams,
-      })
-      .pipe(
-        map((response) => response.data),
-        tap((data) => console.log('Fetched KlineData:', data)),
-        catchError((error) =>
-          this.handleError(error, 'Error fetching Kline data')
-        )
-      );
-  }
-
-  /**
-   * Fetches VWAP alerts data from the backend API.
-   */
-  fetchVwapAlertsData(symbol: string): Observable<VwapAlert[]> {
-    const params = new HttpParams()
-      .set('symbol', symbol)
-      .set('collectionName', 'working');
-
-    return this.http
-      .get<VwapAlert[]>(VWAP_ALERTS_URLS.vwapAlertsBySymbolUrl, {
-        params,
-      })
-      .pipe(
-        tap((data) => console.log('Fetched VWAP Alerts Data:', data)),
-        catchError((error) =>
-          this.handleError(error, 'Error fetching VWAP alerts data')
-        )
-      );
-  }
-
-  /**
-   * Calculates VWAP lines for a set of VwapAlerts based on their anchorTime.
-   */
-
-  fetchCombinedChartData(
-    symbol: string,
-    timeframe: string,
-    limit: number
-  ): Observable<{
-    candlestick: CandlestickData[];
-    vwapLines: { time: UTCTimestamp; value: number }[][];
-    klineData: KlineData[];
-  }> {
-    return forkJoin({
-      kline: this.fetchKlineData(symbol, timeframe, limit),
-      vwapAlerts: this.fetchVwapAlertsData(symbol),
-    }).pipe(
-      map(({ kline, vwapAlerts }) => {
-        // Transform Kline data into Candlestick format
-        const candlestickData = transformToCandlestickData(kline);
-
-        // Generate VWAP lines
-        const vwapLines = this.calculateVwapLinesForAlerts(vwapAlerts, kline);
-
-        // Return the combined data including klineData
-        return {
-          candlestick: candlestickData,
-          vwapLines,
-          klineData: kline, // Include raw Kline data
-        };
-      }),
-      catchError((error) => {
-        console.error('Error combining chart data:', error);
-        return throwError(
-          () => new Error('Failed to fetch combined chart data')
-        );
-      })
+  fetchChartData(symbol: string, timeframe: string, limit: number) {
+    return this.baseChartService.fetchCombinedChartData(
+      symbol,
+      timeframe,
+      limit
     );
   }
 
-  calculateVwapLinesForAlerts(
-    alerts: VwapAlert[],
-    klineData: KlineData[]
-  ): { time: UTCTimestamp; value: number }[][] {
-    if (!klineData || klineData.length === 0) {
-      console.error('[VWAP] No Kline data available for VWAP calculation');
-      return [];
-    }
-
-    // Ensure Kline data is sorted by time
-    klineData.sort((a, b) => a.openTime - b.openTime);
-
-    const vwapLines: { time: UTCTimestamp; value: number }[][] = [];
-
-    alerts.forEach((alert) => {
-      if (typeof alert.anchorTime !== 'number' || isNaN(alert.anchorTime)) {
-        console.warn(`[VWAP] Invalid anchorTime for alert ID: ${alert.id}`);
-        return;
-      }
-
-      // Find the starting index in Kline data
-      const startIndex = klineData.findIndex(
-        (kline) => Number(kline.openTime) === Number(alert.anchorTime)
-      );
-
-      if (startIndex === -1) {
-        console.warn(
-          `[VWAP] No matching Kline data for anchorTime: ${alert.anchorTime}`
-        );
-        return;
-      }
-
-      let cumulativePV = 0;
-      let cumulativeVolume = 0;
-
-      const vwapData: { time: UTCTimestamp; value: number }[] = [];
-
-      klineData.slice(startIndex).forEach((candle) => {
-        const typicalPrice =
-          (candle.highPrice + candle.lowPrice + candle.closePrice) / 3;
-
-        // Determine volume (quoteVolume or baseVolume)
-        let volume = 0;
-        if (
-          typeof candle.quoteVolume === 'number' &&
-          !isNaN(candle.quoteVolume) &&
-          candle.quoteVolume > 0
-        ) {
-          volume = candle.quoteVolume;
-        } else if (
-          typeof candle.baseVolume === 'number' &&
-          !isNaN(candle.baseVolume) &&
-          candle.baseVolume > 0
-        ) {
-          volume = candle.baseVolume * typicalPrice;
-        } else {
-          console.warn(
-            `[VWAP] No valid volume for candle at time: ${candle.openTime}`
-          );
-          return; // Skip this candle
-        }
-
-        if (volume > 0) {
-          cumulativePV += typicalPrice * volume;
-          cumulativeVolume += volume;
-        }
-
-        // Calculate VWAP value
-        const vwapValue =
-          cumulativeVolume > 0
-            ? parseFloat((cumulativePV / cumulativeVolume).toFixed(8)) // Round to 8 decimal places
-            : 0;
-
-        // Push VWAP point with correct time format
-        const adjustedTime = Math.floor(candle.openTime / 1000) + 3 * 60 * 60;
-        vwapData.push({
-          time: adjustedTime as UTCTimestamp, // Convert to seconds
-          value: vwapValue,
-        });
-      });
-
-      if (vwapData.length > 0) {
-        vwapLines.push(vwapData);
-      }
-    });
-
-    return vwapLines;
-  }
-  /**
-   * Saves an anchor point for VWAP calculation.
-   */
   saveAnchorPoint(symbol: string, openTime: number): Observable<any> {
     const collectionName = AlertsCollection.WorkingAlerts;
     const coins = this.coinsService.getCoins();
@@ -286,14 +110,5 @@ export class VwapTwChartService {
           return throwError(() => new Error('Failed to delete anchor point'));
         })
       );
-  }
-
-  /**
-   * Handles errors and displays a snackbar notification.
-   */
-  private handleError(error: any, message: string): Observable<never> {
-    console.error(`❌ ${message}`, error);
-    this.snackBarService.showSnackBar(message, '', 4000, SnackbarType.Error);
-    return throwError(() => new Error(message));
   }
 }
