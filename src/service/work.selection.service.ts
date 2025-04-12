@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class WorkSelectionService<T> {
   // Shared SelectionModel to manage selected items
-  private selection = new SelectionModel<T>(true);
+  selection = new SelectionModel<T>(true);
 
   // BehaviorSubject to emit changes in selection across components
   private selectionSubject = new BehaviorSubject<T[]>(this.selection.selected);

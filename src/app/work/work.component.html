@@ -40,7 +40,7 @@
       <mat-icon svgIcon="check"></mat-icon>
     </button>
 
-    <app-charts-buttons-panel [selected]="selectionService.selectedValues()"></app-charts-buttons-panel>
+    <app-charts-buttons-panel [selection]="selectionService.selection"></app-charts-buttons-panel>
 
     <!-- DELETED -->
     <button mat-raised-button class="panel-button" (click)="onRemoveFromWork()" matTooltip="Delete"

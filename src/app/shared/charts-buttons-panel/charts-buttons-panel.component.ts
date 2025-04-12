@@ -7,32 +7,38 @@ import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
   styleUrls: ['./charts-buttons-panel.component.css'],
 })
 export class ChartsButtonsPanelComponent {
-  @Input() selected: any;
+  @Input() selection: any;
   constructor(private chartsOpenerService: ChartsOpenerService) {}
 
   // =========== CHARTS  =================
   onOpenCoinglass(): void {
-    this.chartsOpenerService.openCoinGlassCharts(this.selected);
+    this.chartsOpenerService.openCoinGlassCharts(this.selection.selected);
+    this.selection.clear();
   }
 
   onOpenDefaultTradingView(): void {
     this.chartsOpenerService.openDefaultTradingView();
+    this.selection.clear();
   }
 
   onOpenTradingview(): void {
-    this.chartsOpenerService.openTradingViewCharts(this.selected);
+    this.chartsOpenerService.openTradingViewCharts(this.selection.selected);
+    this.selection.clear();
   }
 
   onOpenSingleTradingview(): void {
     this.chartsOpenerService.openDefaultTradingView();
+    this.selection.clear();
   }
 
   onGoToVwapCharts(): void {
-    this.chartsOpenerService.openVwapCharts(this.selected);
+    this.chartsOpenerService.openVwapCharts(this.selection.selected);
+    this.selection.clear();
   }
 
   onGoToLineCharts(): void {
-    this.chartsOpenerService.openLineCharts(this.selected);
+    this.chartsOpenerService.openLineCharts(this.selection.selected);
+    this.selection.clear();
   }
 
   onCloseAllWindows(): void {

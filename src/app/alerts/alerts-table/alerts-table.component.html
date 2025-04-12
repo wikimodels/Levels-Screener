@@ -25,7 +25,7 @@
       <mat-icon class="button-icon-margin" svgIcon="add"></mat-icon>
     </button>
 
-    <app-charts-buttons-panel [selected]="selection.selected"></app-charts-buttons-panel>
+    <app-charts-buttons-panel [selection]="selection"></app-charts-buttons-panel>
 
     <!-- MOVE ALERT TO ARCHIVE -->
     <button mat-raised-button [disabled]="buttonsDisabled" (click)="onMoveToArchive()" matTooltip="Move to Archive"
