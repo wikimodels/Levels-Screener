@@ -114,12 +114,14 @@ export class CoinsComponent {
     this.chartsOpenerService.openCoinGlassCharts(
       this.selectionService.selectedValues()
     );
+    this.selectionService.clear();
   }
 
   onOpenTradingview(): void {
     this.chartsOpenerService.openTradingViewCharts(
       this.selectionService.selectedValues()
     );
+    this.selectionService.clear();
   }
 
   onOpenDefaultTradingView(): void {
@@ -130,12 +132,14 @@ export class CoinsComponent {
     this.chartsOpenerService.openVwapCharts(
       this.selectionService.selectedValues()
     );
+    this.selectionService.clear();
   }
 
   onGoToLineCharts(): void {
     this.chartsOpenerService.openLineCharts(
       this.selectionService.selectedValues()
     );
+    this.selectionService.clear();
   }
 
   onCloseAllWindows(): void {
