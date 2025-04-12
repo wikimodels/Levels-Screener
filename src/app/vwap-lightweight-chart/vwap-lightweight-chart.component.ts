@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 import { UTCTimestamp } from 'lightweight-charts';
 import { VwapTwChartService } from 'src/service/kline/vwap-tw-chart.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
+import { LINE_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 @Component({
   selector: 'app-vwap-lightweight-chart',
@@ -20,7 +21,7 @@ import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.se
 })
 export class VwapLightweightChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
-  isRotating = false;
+  //isRotating = this.baseCharDrawingService.isRotating;
   symbol!: string;
   imageUrl!: string;
   category!: string;
@@ -29,7 +30,8 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private vwapKlineService: VwapTwChartService,
-    private baseCharDrawingService: BaseChartDrawingService
+    public baseCharDrawingService: BaseChartDrawingService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -216,6 +218,18 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
       '#FFA500', // Orange
     ];
     return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  goToLineChart() {
+    const urlTree = this.router.createUrlTree([LINE_LIGHTWEIGHT_CHART], {
+      queryParams: {
+        symbol: this.symbol,
+        category: this.category,
+        imageUrl: this.imageUrl,
+      },
+    });
+    const url = this.router.serializeUrl(urlTree);
+    window.open(url, '_blank');
   }
 
   ngOnDestroy(): void {

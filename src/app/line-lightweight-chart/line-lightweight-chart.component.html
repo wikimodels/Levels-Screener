@@ -2,9 +2,12 @@
   <div class="title-container">
     <a [href]="tvLink" target="_blank" class="chart-link">
       <img [src]="imageUrl" alt="logo" class="round-image" />
-      {{symbol}} ({{category}})
+      LINE CHART {{symbol}} ({{category}})
     </a>
-    <mat-icon class="refresh-icon" (click)="refreshChartData()" [ngClass]="{ 'rotate': isRotating }">
+    <mat-icon class="refresh-icon" (click)="goToVwapChart()">candlestick_chart
+    </mat-icon>
+    <mat-icon class="refresh-icon" (click)="refreshChartData()"
+      [ngClass]="{ 'rotate': baseCharDrawingService.isRotating }">
       sync
     </mat-icon>
   </div>

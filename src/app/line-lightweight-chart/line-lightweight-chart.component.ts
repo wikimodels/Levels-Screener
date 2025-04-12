@@ -7,10 +7,11 @@ import {
 } from '@angular/core';
 import { UTCTimestamp, MouseEventParams, LineStyle } from 'lightweight-charts';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LineTwChartService } from 'src/service/kline/line-tw-chart.service';
 import { roundToMatchDecimals } from 'src/functions/round-to-match-decimals';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
+import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 @Component({
   selector: 'app-vwap-lightweight-chart',
@@ -22,7 +23,7 @@ import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.se
 })
 export class LineLightweightChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
-  isRotating = false;
+
   symbol!: string;
   imageUrl!: string;
   category!: string;
@@ -31,7 +32,8 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private lineKlineService: LineTwChartService,
-    private baseCharDrawingService: BaseChartDrawingService
+    public baseCharDrawingService: BaseChartDrawingService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -110,6 +112,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   refreshChartData() {
     this.baseCharDrawingService.loadChartData(this.symbol);
   }
@@ -180,6 +183,18 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     //   this.horizontalLines.delete(price);
     //   this.lineKlineService.deleteAlertBySymbolAndPrice(this.symbol, price);
     // }
+  }
+
+  goToVwapChart() {
+    const urlTree = this.router.createUrlTree([VWAP_LIGHTWEIGHT_CHART], {
+      queryParams: {
+        symbol: this.symbol,
+        category: this.category,
+        imageUrl: this.imageUrl,
+      },
+    });
+    const url = this.router.serializeUrl(urlTree);
+    window.open(url, '_blank');
   }
 
   ngOnDestroy(): void {

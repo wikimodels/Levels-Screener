@@ -117,10 +117,13 @@ export class BaseChartDrawingService {
     }
 
     this.isRotating = true;
+    setTimeout(() => {
+      this.isRotating = false;
+    }, 1000);
     this.lineKlineService
       .fetchChartData(symbol, 'm15', 400)
       .subscribe(({ candlestick, vwapLines, lines, klineData }) => {
-        this.isRotating = false;
+        //this.isRotating = false;
         this.klineData = klineData;
         this.candleData = (candlestick as SafeCandleData[]).filter(
           (c) => !isNaN(c.time) && c.time > 0

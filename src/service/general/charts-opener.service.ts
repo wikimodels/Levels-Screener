@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoinLinksService } from '../coin-links.service';
 import { Coin } from 'models/coin/coin';
-import { LINE_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import {
+  LINE_LIGHTWEIGHT_CHART,
+  VWAP_LIGHTWEIGHT_CHART,
+} from 'src/consts/url-consts';
 
 @Injectable({
   providedIn: 'root', // Makes the service available app-wide
@@ -29,7 +32,7 @@ export class ChartsOpenerService {
 
   openVwapCharts(selectedCoins: Coin[]): void {
     this.openChartsForSelection(selectedCoins, (coin: Coin) =>
-      this.router.createUrlTree(['vwap-lightweight-chart'], {
+      this.router.createUrlTree([VWAP_LIGHTWEIGHT_CHART], {
         queryParams: {
           symbol: coin.symbol,
           category: coin.category,
