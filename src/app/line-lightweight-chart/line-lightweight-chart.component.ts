@@ -12,7 +12,6 @@ import { LineTwChartService } from 'src/service/kline/line-tw-chart.service';
 import { roundToMatchDecimals } from 'src/functions/round-to-match-decimals';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
-import { SnackbarService } from 'src/service/snackbar.service';
 
 @Component({
   selector: 'app-vwap-lightweight-chart',
@@ -34,11 +33,10 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private lineKlineService: LineTwChartService,
     public baseCharDrawingService: BaseChartDrawingService,
-    private router: Router,
-    private snackbarSercie: SnackbarService
+    private router: Router
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     window.scrollTo(0, 0);
 
     const params = this.route.snapshot.queryParams;
@@ -48,7 +46,8 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     this.tvLink = params['tvLink'];
 
     this.baseCharDrawingService.initChart(this.chartContainer);
-    this.baseCharDrawingService.loadChartData(this.symbol); // Replace
+    await this.baseCharDrawingService.loadChartData(this.symbol);
+
     this.setupClickHandler();
     this.setupHoverHandler();
   }
@@ -91,7 +90,6 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         // Check if the ratio is within the tolerance (e.g., 10%)
         if (ratio <= this.tolerance) {
           closestPrice = linePrice;
-          this.snackbarSercie.showSnackBar(price.toString(), '', 3000); // Fixed typo: "snackbarSercie" → "snackbarService"
           break;
         }
       } // ← Missing closing brace for the for-loop added here

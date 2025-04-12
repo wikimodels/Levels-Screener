@@ -111,106 +111,214 @@ export class BaseChartDrawingService {
     this.chart.timeScale().fitContent();
   }
 
-  loadChartData(symbol: string): void {
-    if (!this.chart) {
-      console.error('Chart is not initialized');
-      return;
-    }
+  // loadChartData(symbol: string): void {
+  //   if (!this.chart) {
+  //     console.error('Chart is not initialized');
+  //     return;
+  //   }
 
-    this.isRotating = true;
-    setTimeout(() => {
-      this.isRotating = false;
-    }, 1000);
-    this.lineKlineService
-      .fetchChartData(symbol, 'm15', 400)
-      .subscribe(({ candlestick, vwapLines, lines, klineData }) => {
-        //this.isRotating = false;
-        this.klineData = klineData;
-        this.candleData = (candlestick as SafeCandleData[]).filter(
-          (c) => !isNaN(c.time) && c.time > 0
-        );
-        this.clearAllVWAPs();
-        this.clearAllHorizontalLines();
+  //   this.isRotating = true;
+  //   setTimeout(() => {
+  //     this.isRotating = false;
+  //   }, 1000);
+  //   this.lineKlineService
+  //     .fetchChartData(symbol, 'm15', 400)
+  //     .subscribe(({ candlestick, vwapLines, lines, klineData }) => {
+  //       //this.isRotating = false;
+  //       this.klineData = klineData;
+  //       this.candleData = (candlestick as SafeCandleData[]).filter(
+  //         (c) => !isNaN(c.time) && c.time > 0
+  //       );
+  //       this.clearAllVWAPs();
+  //       this.clearAllHorizontalLines();
 
-        if (this.candleData.length === 0) {
-          console.error('No valid candle data available - detailed debug:');
-          console.log('Raw API response:', { candlestick, vwapLines });
-          const toValidTimestamp = (t: any): UTCTimestamp | null => {
-            if (typeof t === 'number' && !isNaN(t) && t > 0)
-              return t as UTCTimestamp;
-            if (typeof t === 'string') {
-              const num = Number(t);
-              return !isNaN(num) && num > 0 ? (num as UTCTimestamp) : null;
+  //       if (this.candleData.length === 0) {
+  //         console.error('No valid candle data available - detailed debug:');
+  //         console.log('Raw API response:', { candlestick, vwapLines });
+  //         const toValidTimestamp = (t: any): UTCTimestamp | null => {
+  //           if (typeof t === 'number' && !isNaN(t) && t > 0)
+  //             return t as UTCTimestamp;
+  //           if (typeof t === 'string') {
+  //             const num = Number(t);
+  //             return !isNaN(num) && num > 0 ? (num as UTCTimestamp) : null;
+  //           }
+  //           return null;
+  //         };
+
+  //         console.log(
+  //           'Filtered candlestick data:',
+  //           candlestick.filter(
+  //             (c: CandlestickData) => toValidTimestamp(c.time) !== null
+  //           )
+  //         );
+
+  //         this.snackBarService.showSnackBar(
+  //           `No valid chart data (${candlestick.length} items, all invalid)`,
+  //           'Check console for details',
+  //           6000,
+  //           SnackbarType.Error
+  //         );
+  //         return;
+  //       }
+
+  //       const isOrdered = this.candleData.every(
+  //         (c, i, arr) => i === 0 || c.time > arr[i - 1].time
+  //       );
+
+  //       if (!isOrdered) {
+  //         console.error('Candle data is not properly ordered by time');
+  //         this.candleData.sort((a, b) => a.time - b.time);
+  //       }
+
+  //       this.candlestickSeries.setData(this.candleData);
+
+  //       vwapLines.forEach(
+  //         (vwapData: { time: UTCTimestamp; value: number }[]) => {
+  //           if (vwapData.length > 1) {
+  //             const color = this.getVwapRandomColor();
+  //             const series = this.chart.addLineSeries({
+  //               color,
+  //               lineWidth: 2,
+  //               crosshairMarkerVisible: true,
+  //               priceLineVisible: false,
+  //               lastValueVisible: false,
+  //             });
+  //             series.setData(vwapData);
+  //             this.vwapLines.set(vwapData[0].time, {
+  //               series,
+  //               data: vwapData,
+  //             });
+  //           }
+  //         }
+  //       );
+
+  //       lines.forEach((lineData: { time: UTCTimestamp; value: number }[]) => {
+  //         if (lineData.length > 1) {
+  //           const priceLine = this.candlestickSeries.createPriceLine({
+  //             price: lineData[0].value,
+  //             color: this.globalLineColor,
+  //             lineWidth: 2,
+  //             lineStyle: LineStyle.Solid,
+  //             axisLabelVisible: false,
+  //           });
+
+  //           this.horizontalLines.set(lineData[0].value, {
+  //             line: priceLine,
+  //             series: this.candlestickSeries,
+  //             data: lineData,
+  //           });
+  //         }
+  //       });
+  //       this.chart.timeScale().fitContent();
+  //     });
+  // }
+
+  loadChartData(symbol: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.chart) {
+        console.error('Chart is not initialized');
+        reject('Chart is not initialized');
+        return;
+      }
+
+      this.isRotating = true;
+      this.lineKlineService.fetchChartData(symbol, 'm15', 400).subscribe(
+        ({ candlestick, vwapLines, lines, klineData }) => {
+          this.isRotating = false;
+          this.klineData = klineData;
+          this.candleData = (candlestick as SafeCandleData[]).filter(
+            (c) => !isNaN(c.time) && c.time > 0
+          );
+          this.clearAllVWAPs();
+          this.clearAllHorizontalLines();
+
+          if (this.candleData.length === 0) {
+            console.error('No valid candle data available - detailed debug:');
+            console.log('Raw API response:', { candlestick, vwapLines });
+            const toValidTimestamp = (t: any): UTCTimestamp | null => {
+              if (typeof t === 'number' && !isNaN(t) && t > 0)
+                return t as UTCTimestamp;
+              if (typeof t === 'string') {
+                const num = Number(t);
+                return !isNaN(num) && num > 0 ? (num as UTCTimestamp) : null;
+              }
+              return null;
+            };
+
+            console.log(
+              'Filtered candlestick data:',
+              candlestick.filter(
+                (c: CandlestickData) => toValidTimestamp(c.time) !== null
+              )
+            );
+
+            this.snackBarService.showSnackBar(
+              `No valid chart data (${candlestick.length} items, all invalid)`,
+              'Check console for details',
+              6000,
+              SnackbarType.Error
+            );
+            reject('No valid chart data');
+            return;
+          }
+
+          const isOrdered = this.candleData.every(
+            (c, i, arr) => i === 0 || c.time > arr[i - 1].time
+          );
+
+          if (!isOrdered) {
+            console.error('Candle data is not properly ordered by time');
+            this.candleData.sort((a, b) => a.time - b.time);
+          }
+
+          this.candlestickSeries.setData(this.candleData);
+
+          vwapLines.forEach(
+            (vwapData: { time: UTCTimestamp; value: number }[]) => {
+              if (vwapData.length > 1) {
+                const color = this.getVwapRandomColor();
+                const series = this.chart.addLineSeries({
+                  color,
+                  lineWidth: 2,
+                  crosshairMarkerVisible: true,
+                  priceLineVisible: false,
+                  lastValueVisible: false,
+                });
+                series.setData(vwapData);
+                this.vwapLines.set(vwapData[0].time, {
+                  series,
+                  data: vwapData,
+                });
+              }
             }
-            return null;
-          };
-
-          console.log(
-            'Filtered candlestick data:',
-            candlestick.filter(
-              (c: CandlestickData) => toValidTimestamp(c.time) !== null
-            )
           );
 
-          this.snackBarService.showSnackBar(
-            `No valid chart data (${candlestick.length} items, all invalid)`,
-            'Check console for details',
-            6000,
-            SnackbarType.Error
-          );
-          return;
-        }
-
-        const isOrdered = this.candleData.every(
-          (c, i, arr) => i === 0 || c.time > arr[i - 1].time
-        );
-
-        if (!isOrdered) {
-          console.error('Candle data is not properly ordered by time');
-          this.candleData.sort((a, b) => a.time - b.time);
-        }
-
-        this.candlestickSeries.setData(this.candleData);
-
-        vwapLines.forEach(
-          (vwapData: { time: UTCTimestamp; value: number }[]) => {
-            if (vwapData.length > 1) {
-              const color = this.getVwapRandomColor();
-              const series = this.chart.addLineSeries({
-                color,
+          lines.forEach((lineData: { time: UTCTimestamp; value: number }[]) => {
+            if (lineData.length > 1) {
+              const priceLine = this.candlestickSeries.createPriceLine({
+                price: lineData[0].value,
+                color: this.globalLineColor,
                 lineWidth: 2,
-                crosshairMarkerVisible: true,
-                priceLineVisible: false,
-                lastValueVisible: false,
+                lineStyle: LineStyle.Solid,
+                axisLabelVisible: false,
               });
-              series.setData(vwapData);
-              this.vwapLines.set(vwapData[0].time, {
-                series,
-                data: vwapData,
+
+              this.horizontalLines.set(lineData[0].value, {
+                line: priceLine,
+                series: this.candlestickSeries,
+                data: lineData,
               });
             }
-          }
-        );
-
-        lines.forEach((lineData: { time: UTCTimestamp; value: number }[]) => {
-          if (lineData.length > 1) {
-            const priceLine = this.candlestickSeries.createPriceLine({
-              price: lineData[0].value,
-              color: this.globalLineColor,
-              lineWidth: 2,
-              lineStyle: LineStyle.Solid,
-              axisLabelVisible: false,
-            });
-
-            this.horizontalLines.set(lineData[0].value, {
-              line: priceLine,
-              series: this.candlestickSeries,
-              data: lineData,
-            });
-          }
-        });
-        this.chart.timeScale().fitContent();
-      });
+          });
+          this.chart.timeScale().fitContent();
+          resolve();
+        },
+        (error) => {
+          this.isRotating = false;
+          reject(error);
+        }
+      );
+    });
   }
 
   clearAllVWAPs(): void {
