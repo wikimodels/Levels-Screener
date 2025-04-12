@@ -230,10 +230,6 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     this.lineKlineService.addAlertBySymbolAndPrice(this.symbol, price);
   }
 
-  refreshChartData() {
-    this.baseCharDrawingService.loadChartData(this.symbol);
-  }
-
   goToVwapChart() {
     const urlTree = this.router.createUrlTree([VWAP_LIGHTWEIGHT_CHART], {
       queryParams: {
@@ -244,6 +240,10 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     });
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank');
+  }
+
+  async refreshChartData() {
+    await this.baseCharDrawingService.loadChartData(this.symbol);
   }
 
   ngOnDestroy(): void {

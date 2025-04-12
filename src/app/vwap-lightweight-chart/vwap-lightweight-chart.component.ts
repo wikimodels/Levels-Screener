@@ -48,11 +48,6 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
     this.setupHoverHandler();
   }
 
-  refreshChartData() {
-    this.baseCharDrawingService.loadChartData(this.symbol); // Replace
-    this.setupClickHandler();
-  }
-
   private setupHoverHandler(): void {
     this.baseCharDrawingService.chart.subscribeCrosshairMove((param) => {
       if (!param.time) return;
@@ -230,6 +225,10 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
     });
     const url = this.router.serializeUrl(urlTree);
     window.open(url, '_blank');
+  }
+
+  async refreshChartData() {
+    await this.baseCharDrawingService.loadChartData(this.symbol);
   }
 
   ngOnDestroy(): void {
