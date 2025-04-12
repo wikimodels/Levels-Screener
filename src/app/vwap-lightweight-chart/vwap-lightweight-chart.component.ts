@@ -34,7 +34,7 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     window.scrollTo(0, 0);
     const params = this.route.snapshot.queryParams;
     this.symbol = params['symbol'];
@@ -42,7 +42,7 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
     this.category = params['category'];
     this.tvLink = params['tvLink'];
 
-    this.baseCharDrawingService.initChart(this.chartContainer);
+    await this.baseCharDrawingService.initChart(this.chartContainer);
     this.baseCharDrawingService.loadChartData(this.symbol);
     this.setupClickHandler();
     this.setupHoverHandler();
