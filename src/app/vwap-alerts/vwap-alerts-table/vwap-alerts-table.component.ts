@@ -37,7 +37,7 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
     'isActive',
     'description',
     'edit',
-    'chart',
+    // 'chart',
     'select',
   ];
   sub = new Subscription();
