@@ -18,6 +18,7 @@ import { KlineData } from 'models/kline/kline-data';
   providedIn: 'root',
 })
 export class BaseChartDrawingService {
+  tolerance = 1.001;
   isRotating = false;
   symbol!: string;
   imageUrl!: string;

@@ -12,6 +12,7 @@ import { LineTwChartService } from 'src/service/kline/line-tw-chart.service';
 import { roundToMatchDecimals } from 'src/functions/round-to-match-decimals';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { SnackbarService } from 'src/service/snackbar.service';
 
 @Component({
   selector: 'app-vwap-lightweight-chart',
@@ -23,7 +24,7 @@ import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 })
 export class LineLightweightChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
-
+  tolerance = this.baseCharDrawingService.tolerance;
   symbol!: string;
   imageUrl!: string;
   category!: string;
@@ -33,7 +34,8 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private lineKlineService: LineTwChartService,
     public baseCharDrawingService: BaseChartDrawingService,
-    private router: Router
+    private router: Router,
+    private snackbarSercie: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -54,8 +56,6 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
   // Track current highlight
 
   private setupHoverHandler(): void {
-    const tolerance = 0.1; // Define the tolerance range (adjust as needed)
-
     this.baseCharDrawingService.chart.subscribeCrosshairMove((param) => {
       // Case 1: Mouse leaves chart area
       if (!param.point?.y) {
@@ -63,7 +63,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
           this.baseCharDrawingService.horizontalLines
             .get(this.baseCharDrawingService.highlightedPrice)
             ?.line.applyOptions({
-              color: this.baseCharDrawingService.globalLineColor, // Revert to original style
+              color: this.baseCharDrawingService.globalLineColor,
               lineWidth: 2,
               lineStyle: LineStyle.Solid,
             });
@@ -72,28 +72,31 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // Get current price at mouse position
+      // Get RAW price and round to match chart's decimal precision
       const rawPrice =
         this.baseCharDrawingService.candlestickSeries.coordinateToPrice(
           param.point.y
-        );
+        ) || 0;
       const price = roundToMatchDecimals(
         this.baseCharDrawingService.klineData[0].closePrice,
-        Number(rawPrice)
+        rawPrice
       );
 
-      if (price === null) return;
-
-      // Check if the price is within tolerance of any line
+      // Find closest line within tolerance
       let closestPrice: number | undefined = undefined;
       for (const [linePrice] of this.baseCharDrawingService.horizontalLines) {
-        if (Math.abs(linePrice - price) <= tolerance) {
+        // Calculate the ratio between linePrice and price
+        const ratio = linePrice > price ? linePrice / price : price / linePrice;
+
+        // Check if the ratio is within the tolerance (e.g., 10%)
+        if (ratio <= this.tolerance) {
           closestPrice = linePrice;
+          this.snackbarSercie.showSnackBar(price.toString(), '', 3000); // Fixed typo: "snackbarSercie" → "snackbarService"
           break;
         }
-      }
+      } // ← Missing closing brace for the for-loop added here
 
-      // Case 2: No matching line within tolerance
+      // Case 2: No line within tolerance
       if (closestPrice === undefined) {
         if (this.baseCharDrawingService.highlightedPrice !== undefined) {
           this.baseCharDrawingService.horizontalLines
@@ -108,7 +111,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         return;
       }
 
-      // Case 3: Price matches a line within tolerance
+      // Case 3: Line found within tolerance
       if (this.baseCharDrawingService.highlightedPrice !== closestPrice) {
         // Revert previous highlight
         if (this.baseCharDrawingService.highlightedPrice !== undefined) {
@@ -123,27 +126,23 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
 
         // Apply new highlight
         this.baseCharDrawingService.horizontalLines
-          .get(closestPrice)
+          .get(closestPrice) // ← Use closestPrice (not price)
           ?.line.applyOptions({
-            color: '#FF0000', // Highlight color
-            lineWidth: 3, // Thicker line
-            lineStyle: LineStyle.Solid, // More visible style
+            color: '#FF0000',
+            lineWidth: 3,
+            lineStyle: LineStyle.Solid,
           });
-        this.baseCharDrawingService.highlightedPrice = closestPrice;
+        this.baseCharDrawingService.highlightedPrice = closestPrice; // ← Use closestPrice
       }
     });
-  }
-
-  refreshChartData() {
-    this.baseCharDrawingService.loadChartData(this.symbol);
   }
 
   private setupClickHandler(): void {
     this.baseCharDrawingService.chart.subscribeClick(
       (params: MouseEventParams) => {
-        if (!params.point?.y) return; // Ignore clicks without valid coordinates
+        if (!params.point?.y) return; // Ignore invalid clicks
 
-        // Get price at the clicked Y coordinate
+        // Get price at clicked Y coordinate
         const rawPrice =
           this.baseCharDrawingService.candlestickSeries.coordinateToPrice(
             params.point.y
@@ -155,53 +154,66 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
 
         if (price === null) return; // Handle invalid prices
 
-        const tolerance = 0.1; // Define the tolerance range (adjust as needed)
+        // Check if a highlighted line is clicked (using ratio tolerance)
+        if (this.baseCharDrawingService.highlightedPrice !== undefined) {
+          const highlightedPrice = this.baseCharDrawingService.highlightedPrice;
+          const ratio =
+            highlightedPrice > price
+              ? highlightedPrice / price
+              : price / highlightedPrice;
 
-        // Check if a line is highlighted and matches the clicked price
-        if (
-          this.baseCharDrawingService.highlightedPrice !== undefined &&
-          Math.abs(this.baseCharDrawingService.highlightedPrice - price) <=
-            tolerance
-        ) {
-          // Remove the highlighted line
-          const closestPrice = this.baseCharDrawingService.highlightedPrice;
-          const entry =
-            this.baseCharDrawingService.horizontalLines.get(closestPrice);
-          if (entry) {
-            entry.series.removePriceLine(entry.line); // Remove the line from the chart
-            this.baseCharDrawingService.horizontalLines.delete(closestPrice); // Remove it from the Map
-            this.lineKlineService.deleteAlertBySymbolAndPrice(
-              this.symbol,
-              closestPrice
-            ); // Delete from backend
-          }
-          this.baseCharDrawingService.highlightedPrice = undefined; // Reset highlight
-        } else {
-          // Add a new price line if no line is detected under the click
-          let lineExists = false;
-          for (const [linePrice] of this.baseCharDrawingService
-            .horizontalLines) {
-            if (Math.abs(linePrice - price) <= tolerance) {
-              lineExists = true;
-              break;
+          if (ratio <= this.tolerance) {
+            // Remove the highlighted line
+            const entry =
+              this.baseCharDrawingService.horizontalLines.get(highlightedPrice);
+            if (entry) {
+              entry.series.removePriceLine(entry.line);
+              this.baseCharDrawingService.horizontalLines.delete(
+                highlightedPrice
+              );
+              this.lineKlineService.deleteAlertBySymbolAndPrice(
+                this.symbol,
+                highlightedPrice
+              );
             }
+            this.baseCharDrawingService.highlightedPrice = undefined;
+            return; // Exit early after removal
           }
+        }
 
-          if (!lineExists) {
-            // Add a new price line at the clicked price
-            const time = this.baseCharDrawingService.klineData[0]
-              .closePrice as UTCTimestamp;
-            this.addPriceLine(time, price);
+        // Check if a line already exists within ratio tolerance
+        let lineExists = false;
+        for (const [linePrice] of this.baseCharDrawingService.horizontalLines) {
+          const ratio =
+            linePrice > price ? linePrice / price : price / linePrice;
+          if (ratio <= this.tolerance) {
+            lineExists = true;
+            break;
           }
+        }
+
+        // Add new line if no existing line is within tolerance
+        if (!lineExists) {
+          const time = this.baseCharDrawingService.klineData[0]
+            .openTime as UTCTimestamp; // Fixed: Use `time` instead of `closePrice`
+          this.addPriceLine(time, price);
         }
       }
     );
   }
 
   private addPriceLine(time: UTCTimestamp, price: number) {
-    console.log('time:', time, 'price:', price);
+    // Remove existing line at the same price if present
+    if (this.baseCharDrawingService.horizontalLines.has(price)) {
+      const existingEntry =
+        this.baseCharDrawingService.horizontalLines.get(price);
+      if (existingEntry) {
+        existingEntry.series.removePriceLine(existingEntry.line);
+        this.baseCharDrawingService.horizontalLines.delete(price);
+      }
+    }
 
-    // Store in Map with time as key
+    // Create and store new line
     const priceLine =
       this.baseCharDrawingService.candlestickSeries.createPriceLine({
         price,
@@ -216,18 +228,13 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
       series: this.baseCharDrawingService.candlestickSeries,
       data: [{ time, value: price }],
     });
-    console.log('horizLines', this.baseCharDrawingService.horizontalLines);
+
     this.lineKlineService.addAlertBySymbolAndPrice(this.symbol, price);
   }
 
-  // private removePriceLine(price: number) {
-  //   const priceLine = this.horizontalLines.get(price);
-  //   if (priceLine) {
-  //     this.alertSeries.removePriceLine(priceLine);
-  //     this.horizontalLines.delete(price);
-  //     this.lineKlineService.deleteAlertBySymbolAndPrice(this.symbol, price);
-  //   }
-  // }
+  refreshChartData() {
+    this.baseCharDrawingService.loadChartData(this.symbol);
+  }
 
   goToVwapChart() {
     const urlTree = this.router.createUrlTree([VWAP_LIGHTWEIGHT_CHART], {

@@ -43,16 +43,14 @@ export class LineTwChartService {
     );
   }
 
-  addAlertBySymbolAndPrice(symbol: string, price: number): Observable<any> {
+  addAlertBySymbolAndPrice(symbol: string, price: number): void {
     const collectionName = AlertsCollection.WorkingAlerts;
     const coins = this.coinsService.getCoins();
     const coin = coins.find((coin: Coin) => coin.symbol === symbol);
 
     if (!coin) {
       console.error(`Coin not found for symbol: ${symbol}`);
-      return throwError(
-        () => new Error(`Coin not found for symbol: ${symbol}`)
-      );
+      throwError(() => new Error(`Coin not found for symbol: ${symbol}`));
     }
     const alert = createLineAlert(symbol, price, coin);
 
@@ -60,28 +58,51 @@ export class LineTwChartService {
     const params = createHttpParams({ collectionName });
     const options = { ...this.httpOptions, params };
 
-    return this.http.post(ALERTS_URLS.alertsAddOneUrl, { alert }, options).pipe(
-      tap(() => {
-        this.snackBarService.showSnackBar(
-          'Alert saved successfully!',
-          '',
-          2000,
-          SnackbarType.Info
-        );
-      }),
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error saving anchor point:', error);
-        return throwError(() => new Error('Failed to save alert'));
-      })
-    );
+    this.http
+      .post(ALERTS_URLS.alertsAddOneUrl, { alert }, options)
+      .pipe(
+        tap(() => {
+          this.snackBarService.showSnackBar(
+            'Alert saved successfully!',
+            '',
+            2000,
+            SnackbarType.Info
+          );
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error saving anchor point:', error);
+          return throwError(() => new Error('Failed to save alert'));
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          // Handle successful response (if needed)
+          console.log('Alert added successfully:', data);
+          this.snackBarService.showSnackBar(
+            'Alert added successfully!',
+            '',
+            2000,
+            SnackbarType.Info
+          );
+        },
+        error: (err) => {
+          // Handle error explicitly
+          console.error('Error in subscription:', err);
+          this.snackBarService.showSnackBar(err, '', 8000, SnackbarType.Error);
+        },
+        complete: () => {
+          // Handle completion (optional)
+          console.log('DELETE request completed.');
+        },
+      });
   }
 
-  deleteAlertBySymbolAndPrice(symbol: string, price: number): Observable<any> {
+  deleteAlertBySymbolAndPrice(symbol: string, price: number): void {
     const collectionName = AlertsCollection.WorkingAlerts;
     // HTTP request to add a VwapAlert with query parameters
     const params = createHttpParams({ symbol, collectionName, price });
     const options = { ...this.httpOptions, params };
-    return this.http
+    this.http
       .delete(ALERTS_URLS.alertsDeleteBySymbolAndPriceUrl, options)
       .pipe(
         tap(() => {
@@ -96,6 +117,27 @@ export class LineTwChartService {
           console.error('Error deleting alert:', error);
           return throwError(() => new Error('Failed to delete alert'));
         })
-      );
+      )
+      .subscribe({
+        next: (data) => {
+          // Handle successful response (if needed)
+          console.log('Alert deleted successfully:', data);
+          this.snackBarService.showSnackBar(
+            'Alert removed successfully!',
+            '',
+            2000,
+            SnackbarType.Info
+          );
+        },
+        error: (err) => {
+          // Handle error explicitly
+          console.error('Error in subscription:', err);
+          this.snackBarService.showSnackBar(err, '', 8000, SnackbarType.Error);
+        },
+        complete: () => {
+          // Handle completion (optional)
+          console.log('DELETE request completed.');
+        },
+      });
   }
 }
