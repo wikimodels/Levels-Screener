@@ -221,6 +221,7 @@ export class VwapLightweightChartComponent implements OnInit, OnDestroy {
         symbol: this.symbol,
         category: this.category,
         imageUrl: this.imageUrl,
+        tvLink: this.tvLink,
       },
     });
     const url = this.router.serializeUrl(urlTree);

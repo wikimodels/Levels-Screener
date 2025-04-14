@@ -32,8 +32,20 @@ export class NewAlertComponent implements OnInit, OnDestroy {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 
   ngOnInit(): void {
-    this.coins = this.coinsService.getCoins();
-    this.symbols = this.coins.map((c) => c.symbol);
+    this.coins = this.coinsService
+      .getCoins()
+      .filter(
+        (coin) =>
+          coin.exchanges.includes('Bybit') ||
+          coin.exchanges.includes('BingX PF')
+      );
+    this.symbols = this.coins
+      .filter(
+        (coin) =>
+          coin.exchanges.includes('Bybit') ||
+          coin.exchanges.includes('BingX PF')
+      )
+      .map((c) => c.symbol);
     this.exchanges = this.coins.map((c) => c.exchanges);
 
     this.form = this.fb.group({
@@ -68,7 +80,7 @@ export class NewAlertComponent implements OnInit, OnDestroy {
       const coins = this.coins.find((c) => c.symbol == value);
       this.logoUrl = coins?.imageUrl ? coins?.imageUrl : this.logoUrl;
       this.displayedSymol = coins?.symbol
-        ? coins?.symbol + ' ALERT'
+        ? coins?.symbol + ' LINE ALERT'
         : this.displayedSymol;
     });
   }

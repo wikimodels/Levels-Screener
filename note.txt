@@ -11,4 +11,4 @@ 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
 cr.books
 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
 
-
+C:\Users\Vitali\.deno\deployctl

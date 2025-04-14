@@ -40,8 +40,6 @@ export class CoinsGenericService {
   }
 
   public getCoins(): Coin[] {
-    //TODO
-    console.log('getCoins()');
     return this.coinsSubject.value;
   }
 
@@ -52,18 +50,21 @@ export class CoinsGenericService {
   public loadCoins(): Observable<Coin[]> {
     return this.http.get<any>(COINS_URLS.coinsUrl, this.httpOptions).pipe(
       tap((coins) => {
-        console.log(coins);
+        coins;
         this.setCoins(coins); // Update state
       }),
       catchError((error) => this.handleError(error)) // Handle errors properly
     );
   }
 
-  public refreshCoins(): Observable<Coin[]> {
-    return this.http
+  public refreshCoins() {
+    this.http
       .get<any>(COINS_URLS.coinsRefreshUrl, this.httpOptions)
       .pipe(
-        tap((coins) => {
+        catchError((error) => this.handleError(error)) // Handle errors properly
+      )
+      .subscribe({
+        next: (coins) => {
           console.log('coins-generic.service RefreshCoins ', coins.length);
           this.setCoins(coins); // Update state
           this.snackbarService.showSnackBar(
@@ -72,19 +73,17 @@ export class CoinsGenericService {
             3000,
             SnackbarType.Info
           );
-        }),
-        catchError((error) => this.handleError(error)) // Handle errors properly
-      );
-  }
-
-  private createHttpParams(params?: { [key: string]: any }): HttpParams {
-    let httpParams = new HttpParams();
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        httpParams = httpParams.set(key, value);
+          // Additional logic for successful response, if needed
+        },
+        error: (err) => {
+          console.error('coins-generic.service RefreshCoins - error', err);
+          // Additional error handling logic, if needed
+        },
+        complete: () => {
+          console.log('coins-generic.service RefreshCoins - complete');
+          // Logic to execute when the observable completes, if needed
+        },
       });
-    }
-    return httpParams;
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

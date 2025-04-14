@@ -23,7 +23,6 @@ import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 })
 export class LineLightweightChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
-  tolerance = this.baseCharDrawingService.tolerance;
   symbol!: string;
   imageUrl!: string;
   category!: string;
@@ -44,8 +43,9 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
     this.imageUrl = params['imageUrl'];
     this.category = params['category'];
     this.tvLink = params['tvLink'];
+    console.log(this.symbol, this.imageUrl, this.category, this.tvLink);
 
-    this.baseCharDrawingService.initChart(this.chartContainer);
+    https: this.baseCharDrawingService.initChart(this.chartContainer);
     await this.baseCharDrawingService.loadChartData(this.symbol);
 
     this.setupClickHandler();
@@ -88,7 +88,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         const ratio = linePrice > price ? linePrice / price : price / linePrice;
 
         // Check if the ratio is within the tolerance (e.g., 10%)
-        if (ratio <= this.tolerance) {
+        if (ratio <= this.baseCharDrawingService.getTolerance()) {
           closestPrice = linePrice;
           break;
         }
@@ -160,7 +160,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
               ? highlightedPrice / price
               : price / highlightedPrice;
 
-          if (ratio <= this.tolerance) {
+          if (ratio <= this.baseCharDrawingService.getTolerance()) {
             // Remove the highlighted line
             const entry =
               this.baseCharDrawingService.horizontalLines.get(highlightedPrice);
@@ -184,7 +184,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         for (const [linePrice] of this.baseCharDrawingService.horizontalLines) {
           const ratio =
             linePrice > price ? linePrice / price : price / linePrice;
-          if (ratio <= this.tolerance) {
+          if (ratio <= this.baseCharDrawingService.getTolerance()) {
             lineExists = true;
             break;
           }
@@ -236,6 +236,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         symbol: this.symbol,
         category: this.category,
         imageUrl: this.imageUrl,
+        tvLink: this.tvLink,
       },
     });
     const url = this.router.serializeUrl(urlTree);

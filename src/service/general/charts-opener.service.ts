@@ -37,6 +37,10 @@ export class ChartsOpenerService {
           symbol: coin.symbol,
           category: coin.category,
           imageUrl: coin.imageUrl,
+          tvLink: this.coinsLinksService.tradingViewLink(
+            coin.symbol,
+            coin.exchanges
+          ),
         },
       })
     );
@@ -49,6 +53,10 @@ export class ChartsOpenerService {
           symbol: coin.symbol,
           category: coin.category,
           imageUrl: coin.imageUrl,
+          tvLink: this.coinsLinksService.tradingViewLink(
+            coin.symbol,
+            coin.exchanges
+          ),
         },
       })
     );

@@ -7,8 +7,7 @@ import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
   templateUrl: './coins-field.component.html',
   styleUrls: ['./coins-field.component.css'],
 })
-export class CoinsFieldComponent implements OnInit {
+export class CoinsFieldComponent {
   @Input() coins!: Coin[];
   constructor() {}
-  ngOnInit(): void {}
 }
