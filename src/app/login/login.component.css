@@ -1,0 +1,23 @@
+
+.container {
+   display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+/* styles.css or component-specific CSS */
+.google-login-button {
+  display: flex;
+  align-items: center; /* Vertically center the logo and text */
+  justify-content: center; /* Horizontally center the content */
+  gap: 8px; /* Add spacing between the logo and text */
+  padding: 8px 16px; /* Adjust padding for better appearance */
+  font-size: 16px; /* Set font size */
+  font-weight: 500; /* Make the text slightly bold */
+}
+
+.google-logo {
+  width: 24px; /* Set the width of the Google logo */
+  height: 24px; /* Set the height of the Google logo */
+}

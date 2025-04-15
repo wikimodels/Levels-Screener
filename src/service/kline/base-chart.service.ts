@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError, forkJoin } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { KlineData } from '../../models/kline/kline-data';
 import { CandlestickData, UTCTimestamp } from 'lightweight-charts';
 import {
   ALERTS_URLS,
@@ -17,6 +16,7 @@ import { Alert } from 'models/alerts/alert';
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { calculateLinesForAlerts } from 'src/functions/calculate-lines-for-alerts';
 import { calculateVwapLinesForAlerts } from 'src/functions/calculate-vwap-lines-for-alerts';
+import { KlineData } from 'models/kline/kline-data';
 
 @Injectable({
   providedIn: 'root',

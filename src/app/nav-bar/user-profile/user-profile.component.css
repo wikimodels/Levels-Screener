@@ -1,0 +1,18 @@
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between the image and text */
+}
+
+.profile-picture {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%; /* Makes the image circular */
+  object-fit: cover; /* Ensures the image fits nicely */
+}
+
+.greeting {
+  font-size: 16px;
+  font-weight: 500;
+  color: #fbfafa; /* Dark gray text */
+}

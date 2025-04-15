@@ -1,0 +1,4 @@
+<div *ngIf="userData" class="user-profile">
+  <img [src]="userData.picture" alt="Profile Picture" class="profile-picture" />
+  <span class="greeting">Hi, {{ userData.givenName }}!</span>
+</div>

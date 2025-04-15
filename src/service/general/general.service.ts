@@ -36,6 +36,24 @@ export class GeneralService {
     });
   }
 
+  public refreshDopplerConfig(): void {
+    const options = { ...this.httpOptions };
+    this.http
+      .get<any>(GENERAL_URLS.refreshDopplerConfigUrl, options)
+      .subscribe({
+        next: (data) => {
+          console.log('general.service RefreshDopplerConfig', data);
+          this.snackbarService.showSnackBar(
+            'Config refreshed',
+            '',
+            3000,
+            SnackbarType.Info
+          );
+        },
+        error: (error) => this.handleError(error),
+      });
+  }
+
   //---------------------------------------------
   // ✅ ERROR HANDLING
   //---------------------------------------------

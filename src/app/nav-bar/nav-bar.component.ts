@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NewAlertComponent } from '../alerts/new-alert/new-alert.component';
@@ -6,13 +7,13 @@ import {
   ALERTS_AT_WORK,
   TRIGGERED_ALERTS,
   ARCHIVED_ALERTS,
-  EXCHANGES,
   COINS,
   VWAP_ARCHIVED_ALERTS,
-  ALERTS_BATCH,
+  LOGIN,
 } from 'src/consts/url-consts';
-import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { GeneralService } from 'src/service/general/general.service';
+
+import { UserData } from 'models/user/user-data';
+import { AuthService } from 'src/service/auth.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -20,15 +21,27 @@ import { GeneralService } from 'src/service/general/general.service';
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit, OnDestroy {
+  userData: UserData = {
+    isWhitelisted: false,
+    givenName: 'Unknown',
+    familyName: 'Unknown',
+    email: 'Unknown',
+    picture: 'Unknown',
+  };
+  subscription: Subscription = new Subscription();
   constructor(
     private router: Router,
     private modelDialog: MatDialog,
-    private coinsService: CoinsGenericService,
-    private generalService: GeneralService
+    private authService: AuthService
   ) {}
 
-  ngOnInit(): void {}
-  ngOnDestroy(): void {}
+  ngOnInit(): void {
+    this.subscription.add(
+      this.authService.userData$.subscribe((userData: UserData) => {
+        this.userData = userData;
+      })
+    );
+  }
 
   onGetToWork() {
     this.router.navigate(['work']);
@@ -42,32 +55,16 @@ export class NavBarComponent implements OnInit, OnDestroy {
     this.router.navigate([TRIGGERED_ALERTS]);
   }
 
-  onRefreshCoins() {
-    this.coinsService.refreshCoins();
-  }
-
   goToArchivedAlerts() {
     this.router.navigate([ARCHIVED_ALERTS]);
-  }
-
-  goToExchanges() {
-    this.router.navigate([EXCHANGES]);
   }
 
   goToCoins() {
     this.router.navigate([COINS]);
   }
 
-  onRefreshRepos() {
-    this.generalService.refreshRepos();
-  }
-
   goToVwapArchivedAlerts() {
     this.router.navigate([VWAP_ARCHIVED_ALERTS]);
-  }
-
-  goToAlertsBatch() {
-    this.router.navigate([ALERTS_BATCH]);
   }
 
   onAddAlert() {
@@ -77,5 +74,17 @@ export class NavBarComponent implements OnInit, OnDestroy {
       width: '100vw',
       height: '100vh',
     });
+  }
+
+  onLogin() {
+    this.router.navigate([LOGIN]);
+  }
+
+  onLogout() {
+    this.authService.logout();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

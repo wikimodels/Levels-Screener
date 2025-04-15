@@ -14,6 +14,7 @@ import {
   VWAP_LIGHTWEIGHT_CHART,
   ALERTS_BATCH,
   LINE_LIGHTWEIGHT_CHART,
+  LOGIN,
 } from 'src/consts/url-consts';
 import { TriggeredAlertsComponent } from './triggered-alerts/triggered-alerts.component';
 import { ArchivedAlertsComponent } from './archived-alerts/archived-alerts.component';
@@ -27,6 +28,7 @@ import { VwapArchivedAlertsComponent } from './vwap-archived-alerts/vwap-archive
 import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-triggered-alerts.component';
 import { AlertsBatchComponent } from './alerts-batch/alerts-batch.component';
 import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
+import { LoginComponent } from './login/login.component';
 // Import your route constants
 
 const routes: Routes = [
@@ -35,6 +37,10 @@ const routes: Routes = [
   {
     path: VWAP_TRIGGERED_ALERTS,
     component: VwapTriggeredAlertsComponent,
+  },
+  {
+    path: LOGIN,
+    component: LoginComponent,
   },
   { path: VWAP_ARCHIVED_ALERTS, component: VwapArchivedAlertsComponent },
   { path: VWAP_ALERTS_AT_WORK, component: VwapAlertsComponent },

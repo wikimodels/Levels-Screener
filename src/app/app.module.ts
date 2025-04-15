@@ -63,6 +63,10 @@ import { VwapLightweightChartComponent } from './vwap-lightweight-chart/vwap-lig
 import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
 import { ChartsButtonsPanelComponent } from './shared/charts-buttons-panel/charts-buttons-panel.component';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
+import { AdminPanelMenuComponent } from './nav-bar/admin-panel-menu/admin-panel-menu.component';
+
+import { GoogleSignInComponent } from './google-sign-in/google-sign-in.component';
+import { UserProfileComponent } from './nav-bar/user-profile/user-profile.component';
 
 echarts.use([
   LegendComponent,
@@ -121,6 +125,9 @@ echarts.registerTheme('macarons', Marcaron);
     AlertsBatchComponent,
     LineLightweightChartComponent,
     ChartsButtonsPanelComponent,
+    AdminPanelMenuComponent,
+    GoogleSignInComponent,
+    UserProfileComponent,
   ],
   imports: [
     FormsModule,

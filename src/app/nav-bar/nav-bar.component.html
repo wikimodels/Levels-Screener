@@ -23,28 +23,22 @@
     <mat-icon style="cursor: pointer;">handyman</mat-icon>
   </button>
 
-  <button mat-icon-button matTooltip="Exchanges" (click)="goToExchanges()">
-    <mat-icon style="cursor: pointer;">attach_money</mat-icon>
-  </button>
 
-  <button mat-icon-button matTooltip="Refresh Coins" (click)="onRefreshCoins()">
-    <mat-icon style="cursor: pointer;">update</mat-icon>
-  </button>
+
+
 
   <button mat-icon-button matTooltip="Coins" (click)="goToCoins()">
     <mat-icon style="cursor: pointer;">local_atm</mat-icon>
   </button>
 
 
-  <button mat-icon-button matTooltip="Refresh Repos" (click)="onRefreshRepos()">
-    <mat-icon style="cursor: pointer;" svgIcon="cloud_sync"></mat-icon>
-  </button>
-
-  <button mat-icon-button matTooltip="Alerts Batch" (click)="goToAlertsBatch()">
-    <mat-icon style="cursor: pointer;" svgIcon="data-object"></mat-icon>
-  </button>
 
   <app-vwap-alert-menu></app-vwap-alert-menu>
-
-
+  <app-admin-panel-menu></app-admin-panel-menu>
+  <div *ngIf="!userData.isWhitelisted"><mat-icon style="cursor: pointer; " matTooltip="Log In"
+      (click)="onLogin()">login</mat-icon></div>
+  <div *ngIf="userData.isWhitelisted" style="display: flex; align-items: center; gap: 8px;">
+    <app-user-profile [userData]="userData"></app-user-profile>
+    <mat-icon style="cursor: pointer" (click)="onLogout()" matTooltip="Log Out">logout</mat-icon>
+  </div>
 </mat-toolbar>

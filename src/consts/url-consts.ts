@@ -14,7 +14,7 @@ export const KLINE_CHART = 'kline-chart';
 export const ALERTS_BATCH = 'alerts-batch';
 export const VWAP_LIGHTWEIGHT_CHART = 'vwap-lightweight-chart';
 export const LINE_LIGHTWEIGHT_CHART = 'line-lightweight-chart';
-
+export const LOGIN = 'login';
 export const VWAP_TRIGGERED_ALERTS = 'vwap-' + AlertsCollection.TriggeredAlerts;
 export const VWAP_ARCHIVED_ALERTS = 'vwap-' + AlertsCollection.ArchivedAlerts;
 export const VWAP_ALERTS_AT_WORK = 'vwap-' + AlertsCollection.WorkingAlerts;
@@ -52,6 +52,8 @@ export const WORKING_COINS_URLS = {
 
 export const GENERAL_URLS = {
   refreshReposUrl: `${baseURL}/refresh-repos`,
+  refreshDopplerConfigUrl: `${baseURL}/refresh-config`,
+  userAuthUrl: `${baseURL}/user-auth`,
 };
 
 export const VWAP_ALERTS_URLS = {

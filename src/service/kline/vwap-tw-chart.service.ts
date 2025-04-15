@@ -3,23 +3,18 @@ import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
-  HttpParams,
 } from '@angular/common/http';
-import { Observable, throwError, forkJoin } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { KlineData } from '../../models/kline/kline-data';
-import { CandlestickData, UTCTimestamp } from 'lightweight-charts';
-import { KLINE_URLS, VWAP_ALERTS_URLS } from 'src/consts/url-consts';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { VWAP_ALERTS_URLS } from 'src/consts/url-consts';
 import { SnackbarService } from '../snackbar.service';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { createVwapAlert } from 'src/functions/create-vwap-alert';
 import { Coin } from 'models/coin/coin';
-import { VwapAlert } from 'models/vwap/vwap-alert';
 import { _ChartOptions } from 'models/chart/chart-options';
 import { CoinsGenericService } from '../coins/coins-generic.service';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { createHttpParams } from 'src/functions/create-params';
-import { transformToCandlestickData } from 'src/functions/transform-to-candlestick-data';
 import { BaseChartService } from './base-chart.service';
 
 @Injectable({

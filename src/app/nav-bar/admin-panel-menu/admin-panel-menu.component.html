@@ -1,0 +1,23 @@
+<button mat-button [matMenuTriggerFor]="menu">
+  <mat-icon svgIcon="admin-person"></mat-icon>Admin</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="goToExchanges()">
+    <mat-icon style="cursor: pointer;">attach_money</mat-icon>
+    <span>Exchanges</span>
+  </button>
+  <button mat-menu-item (click)="onRefreshCoins()">
+    <mat-icon style="cursor: pointer;">update</mat-icon><span>Refresh Coins</span>
+  </button>
+  <button mat-menu-item (click)="onRefreshRepos()">
+    <mat-icon style="cursor: pointer;" svgIcon="cloud_sync"></mat-icon>
+    <span>Refresh Repos</span>
+  </button>
+  <button mat-menu-item (click)="onRefreshConfig()">
+    <mat-icon style="cursor: pointer;">api</mat-icon>
+    <span>Refresh Config</span>
+  </button>
+  <button mat-menu-item (click)="goToAlertsBatch()">
+    <mat-icon style="cursor: pointer;" svgIcon="data-object"></mat-icon>
+    <span>Alerts Batch</span>
+  </button>
+</mat-menu>
