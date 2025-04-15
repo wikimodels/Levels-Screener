@@ -123,7 +123,7 @@ export class AuthService {
   /**
    * Handles invalid or expired tokens.
    */
-  private handleInvalidToken(): void {
+  handleInvalidToken(): void {
     // Clear the invalid token
     localStorage.removeItem('authToken');
 

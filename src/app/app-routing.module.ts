@@ -29,30 +29,64 @@ import { VwapTriggeredAlertsComponent } from './vwap-triggered-alerts/vwap-trigg
 import { AlertsBatchComponent } from './alerts-batch/alerts-batch.component';
 import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
 import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/auth.guard';
 // Import your route constants
 
 const routes: Routes = [
   { path: '', component: AlertsComponent },
-  { path: COINS, component: CoinsComponent },
+  { path: COINS, component: CoinsComponent, canActivate: [AuthGuard] },
   {
     path: VWAP_TRIGGERED_ALERTS,
     component: VwapTriggeredAlertsComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: LOGIN,
     component: LoginComponent,
   },
-  { path: VWAP_ARCHIVED_ALERTS, component: VwapArchivedAlertsComponent },
-  { path: VWAP_ALERTS_AT_WORK, component: VwapAlertsComponent },
-  { path: LINE_LIGHTWEIGHT_CHART, component: LineLightweightChartComponent },
-  { path: EXCHANGES, component: ExchangesComponent },
-  { path: ALERTS_AT_WORK, component: AlertsComponent },
-  { path: ALERTS_BATCH, component: AlertsBatchComponent },
-  { path: TRIGGERED_ALERTS, component: TriggeredAlertsComponent },
-  { path: ARCHIVED_ALERTS, component: ArchivedAlertsComponent },
-  { path: WORK, component: WorkComponent },
-  { path: VWAP_LIGHTWEIGHT_CHART, component: VwapLightweightChartComponent },
-  { path: '**', redirectTo: '' },
+  {
+    path: VWAP_ARCHIVED_ALERTS,
+    component: VwapArchivedAlertsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: VWAP_ALERTS_AT_WORK,
+    component: VwapAlertsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: LINE_LIGHTWEIGHT_CHART,
+    component: LineLightweightChartComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: EXCHANGES, component: ExchangesComponent, canActivate: [AuthGuard] },
+  {
+    path: ALERTS_AT_WORK,
+    component: AlertsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ALERTS_BATCH,
+    component: AlertsBatchComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: TRIGGERED_ALERTS,
+    component: TriggeredAlertsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ARCHIVED_ALERTS,
+    component: ArchivedAlertsComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: WORK, component: WorkComponent, canActivate: [AuthGuard] },
+  {
+    path: VWAP_LIGHTWEIGHT_CHART,
+    component: VwapLightweightChartComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: '**', redirectTo: '', canActivate: [AuthGuard] },
   // Your existing routes
 ];
 
