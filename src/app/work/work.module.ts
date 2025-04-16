@@ -14,17 +14,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Custom Components
 import { WorkComponent } from './work.component';
-import { WorkItemComponent } from './work-item/work-item.component';
+import { WorkItemComponent } from '../shared/work-item/work-item.component';
 import { WorkFieldComponent } from './work-field/work-field.component';
 import { ChartsButtonsPanelModule } from '../shared/charts-buttons-panel/charts-buttons-panel.module';
 import { WorkRoutingModule } from './work-routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  declarations: [WorkComponent, WorkItemComponent, WorkFieldComponent],
+  declarations: [WorkComponent, WorkFieldComponent],
   imports: [
     // Angular Core Modules
     CommonModule,
     ReactiveFormsModule,
+    SharedModule,
 
     // Angular Material Modules
     MatRippleModule,
@@ -39,6 +41,6 @@ import { WorkRoutingModule } from './work-routing.module';
     // Custom Modules
     ChartsButtonsPanelModule,
   ],
-  exports: [WorkComponent, WorkItemComponent, WorkFieldComponent],
+  exports: [WorkComponent],
 })
 export class WorkModule {}

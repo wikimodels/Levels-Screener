@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Coin } from 'models/coin/coin';
 import { Subscription } from 'rxjs';

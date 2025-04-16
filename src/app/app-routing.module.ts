@@ -28,7 +28,12 @@ const routes: Routes = [
       import('./alerts/alerts.module').then((m) => m.AlertsModule),
     canActivate: [AuthGuard],
   },
-  { path: COINS, component: CoinsComponent, canActivate: [AuthGuard] },
+  {
+    path: COINS,
+    loadChildren: () =>
+      import('./coins/coins.module').then((m) => m.CoinsModule),
+    canActivate: [AuthGuard],
+  },
   {
     path: VWAP_TRIGGERED_ALERTS,
     loadChildren: () =>

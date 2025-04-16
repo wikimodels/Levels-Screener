@@ -1,3 +1,8 @@
+import { MatMenuModule } from '@angular/material/menu'; // For mat-menu/matMenuTriggerFor
+import { MatToolbarModule } from '@angular/material/toolbar'; // For mat-toolbar
+import { MatButtonModule } from '@angular/material/button'; // For mat-button/mat-icon-button
+import { MatIconModule } from '@angular/material/icon'; // For mat-icon
+import { MatTooltipModule } from '@angular/material/tooltip'; // For matTooltip
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';

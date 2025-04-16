@@ -2,38 +2,43 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-// Angular Material Modules
+// Material Modules
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatRippleModule } from '@angular/material/core';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar'; // Added for snackbar errors
 
 // Components
 import { CoinsComponent } from './coins.component';
 import { CoinsFieldComponent } from './coins-field/coins-field.component';
-import { WorkItemComponent } from '../work/work-item/work-item.component';
+import { SharedModule } from '../shared/shared.module';
+import { CoinsRoutingModule } from './coins-routing.module';
 
 @NgModule({
-  declarations: [CoinsComponent, CoinsFieldComponent, WorkItemComponent],
+  declarations: [CoinsComponent, CoinsFieldComponent],
   imports: [
     // Angular Core Modules
-    CommonModule,
-    ReactiveFormsModule,
+    CommonModule, // Provides *ngIf, *ngFor
+    ReactiveFormsModule, // For reactive forms
 
-    // Angular Material Modules
-    MatFormFieldModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatTooltipModule,
-    MatRippleModule,
+    // Material Modules
+    MatFormFieldModule, // For <mat-form-field>
+    MatInputModule, // For <input matInput>
+    MatAutocompleteModule, // For <mat-autocomplete>
+    MatIconModule, // For <mat-icon>
+    MatCheckboxModule, // For <mat-checkbox>
+    MatOptionModule, // For <mat-option>
+    MatSnackBarModule, // For MatSnackBar service
+
+    // App Modules
+    SharedModule, // Contains shared components/directives
+    CoinsRoutingModule, // Routing configuration
   ],
-  exports: [CoinsComponent, CoinsFieldComponent, WorkItemComponent],
+  exports: [
+    CoinsComponent, // Only if used in other modules
+  ],
 })
 export class CoinsModule {}
