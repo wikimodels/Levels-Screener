@@ -1,19 +1,3 @@
-import { CanvasRenderer } from 'echarts/renderers';
-import * as echarts from 'echarts/core';
-import Marcaron from './marcaron';
-import { BarChart, CandlestickChart, LineChart } from 'echarts/charts';
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  DataZoomComponent,
-  DataZoomInsideComponent,
-  DataZoomSliderComponent,
-  LegendComponent,
-  ToolboxComponent,
-} from 'echarts/components';
-import { NgxEchartsModule } from 'ngx-echarts';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -22,7 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AlertsTableComponent } from './alerts/alerts-table/alerts-table.component';
 import { AlertsComponent } from './alerts/alerts.component';
 import { ImageModalComponent } from './alerts/image-modal/image-modal.component';
-import { NewAlertComponent } from './alerts/new-alert/new-alert.component';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component'; // ✅ Added to declarations
 import { ArchivedAlertsComponent } from './archived-alerts/archived-alerts.component';
@@ -64,25 +48,10 @@ import { LineLightweightChartComponent } from './line-lightweight-chart/line-lig
 import { ChartsButtonsPanelComponent } from './shared/charts-buttons-panel/charts-buttons-panel.component';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 import { AdminPanelMenuComponent } from './nav-bar/admin-panel-menu/admin-panel-menu.component';
-
+import { NewAlertComponent } from './new-alert/new-alert.component';
 import { GoogleSignInComponent } from './google-sign-in/google-sign-in.component';
 import { UserProfileComponent } from './nav-bar/user-profile/user-profile.component';
 
-echarts.use([
-  LegendComponent,
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  LineChart,
-  CanvasRenderer,
-  BarChart,
-  CandlestickChart,
-  DataZoomComponent,
-  DataZoomInsideComponent,
-  DataZoomSliderComponent,
-  ToolboxComponent,
-]);
-echarts.registerTheme('macarons', Marcaron);
 @NgModule({
   declarations: [
     AppComponent,
@@ -137,7 +106,6 @@ echarts.registerTheme('macarons', Marcaron);
     AppMaterialModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    NgxEchartsModule.forRoot({ echarts }),
   ],
   providers: [BaseChartDrawingService],
   bootstrap: [AppComponent],

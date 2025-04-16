@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { NewAlertComponent } from '../new-alert/new-alert.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,10 +14,7 @@ import { Alert } from 'models/alerts/alert';
 import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
-import { Coin } from 'models/coin/coin';
-import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
-import { Route, Router } from '@angular/router';
-import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
+import { NewAlertComponent } from 'src/app/new-alert/new-alert.component';
 
 @Component({
   selector: 'app-alerts-table',

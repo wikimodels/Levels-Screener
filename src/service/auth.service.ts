@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, NgZone } from '@angular/core'; // Import NgZone
+import { Injectable, NgZone } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
-import { jwtDecode } from 'jwt-decode'; // Import jwt-decode for token decoding
+import { jwtDecode } from 'jwt-decode';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { GENERAL_URLS, LOGIN } from 'src/consts/url-consts';
 import { SnackbarService } from './snackbar.service';
@@ -10,18 +10,20 @@ import { Router } from '@angular/router';
 
 declare const google: any;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  noname: UserData = {
+  // Default user data with fallback avatar
+  private defaultUser: UserData = {
     isWhitelisted: false,
-    givenName: 'Unknown',
-    familyName: 'Unknown',
-    email: 'Unknown',
-    picture: 'Unknown',
+    givenName: 'Guest',
+    familyName: 'User',
+    email: 'unknown@example.com',
+    picture: 'https://example.com/default-avatar.png', // Add your default avatar URL
   };
-  private userDataSubject = new BehaviorSubject<UserData>(this.noname);
+
+  private userDataSubject = new BehaviorSubject<UserData>(
+    this.getPersistedUserData() || this.defaultUser // Initialize from storage
+  );
   public userData$ = this.userDataSubject.asObservable();
 
   private httpOptions = {
@@ -35,11 +37,11 @@ export class AuthService {
     private http: HttpClient,
     private snackbarService: SnackbarService,
     private router: Router,
-    private ngZone: NgZone // Inject NgZone
+    private ngZone: NgZone
   ) {}
 
   /**
-   * Authenticates the user by sending the token to the backend.
+   * Authenticates the user and persists session data
    */
   public authenticateUser(token: string): Observable<UserData> {
     if (!this.isTokenValid(token)) {
@@ -51,20 +53,19 @@ export class AuthService {
       .post<UserData>(GENERAL_URLS.userAuthUrl, { token }, this.httpOptions)
       .pipe(
         tap((userData: UserData) => {
-          // Store the token securely
+          // Persist both token and user data
           localStorage.setItem('authToken', token);
+          this.persistUserData(userData); // Store user data
 
-          // Update the user data in the BehaviorSubject
+          // Handle missing picture URL
+          if (!userData.picture) {
+            userData.picture = this.generateAvatar(userData.email);
+          }
+
           this.userDataSubject.next(userData);
 
-          // Show a warning if the user is not whitelisted
           if (!userData.isWhitelisted) {
-            this.snackbarService.showSnackBar(
-              `${userData.givenName}, you are not welcome here!`,
-              '',
-              3000,
-              SnackbarType.Warning
-            );
+            this.showWhitelistWarning(userData.givenName);
           }
         }),
         catchError((error) => this.handleError(error))
@@ -72,82 +73,112 @@ export class AuthService {
   }
 
   /**
-   * Logs out the user.
+   * Logout with full session cleanup
    */
   logout(): void {
-    // Revoke the Google token
     const authToken = localStorage.getItem('authToken');
+
+    const cleanup = () => {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userData');
+      this.userDataSubject.next(this.defaultUser);
+      this.ngZone.run(() => this.router.navigate([LOGIN]));
+    };
+
     if (authToken) {
       google.accounts.id.revoke(authToken, (response: any) => {
         console.log('Google token revoked:', response);
-
-        // Clear local session data
-        localStorage.removeItem('authToken');
-        this.userDataSubject.next(this.noname);
-
-        // Redirect to the login page within Angular's zone
-        this.ngZone.run(() => {
-          this.router.navigate([LOGIN]);
-        });
+        cleanup();
       });
     } else {
-      // If no token exists, redirect directly
-      this.ngZone.run(() => {
-        this.router.navigate([LOGIN]);
-      });
+      cleanup();
     }
   }
 
   /**
-   * Checks if the user is authenticated.
+   * Session persistence methods
+   */
+  private persistUserData(userData: UserData): void {
+    localStorage.setItem('userData', JSON.stringify(userData));
+  }
+
+  private getPersistedUserData(): UserData | null {
+    const storedData = localStorage.getItem('userData');
+    return storedData ? JSON.parse(storedData) : null;
+  }
+
+  /**
+   * Avatar generation for missing pictures
+   */
+  private generateAvatar(email: string): string {
+    // Example using DiceBear avatars
+    const seed = email.split('@')[0];
+    return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}&size=64`;
+  }
+
+  /**
+   * Token validation with storage check
    */
   isAuthenticated(): boolean {
     const token = localStorage.getItem('authToken');
-    return !!token && this.isTokenValid(token); // Ensure the token exists and is valid
+    if (!token) return false;
+
+    const isValid = this.isTokenValid(token);
+    if (!isValid) this.handleInvalidToken();
+    return isValid;
   }
 
   /**
-   * Decodes the token and checks its expiration time.
+   * Enhanced token validation
    */
   private isTokenValid(token: string): boolean {
     try {
-      const decodedToken: any = jwtDecode(token);
-      const currentTime = Date.now() / 1000; // Current time in seconds
-      return decodedToken.exp > currentTime; // Check if the token is not expired
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return false; // Invalid token
+      const decoded = jwtDecode(token);
+      return decoded.exp! > Date.now() / 1000;
+    } catch {
+      return false;
     }
   }
 
   /**
-   * Handles invalid or expired tokens.
+   * Invalid token handler
    */
   handleInvalidToken(): void {
-    // Clear the invalid token
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    this.userDataSubject.next(this.defaultUser);
 
-    // Notify the user
     this.snackbarService.showSnackBar(
-      'Your session has expired. Please log in again.',
+      'Session expired. Please login again.',
       '',
       5000,
       SnackbarType.Error
     );
 
-    // Redirect to the login page within Angular's zone
-    this.ngZone.run(() => {
-      this.router.navigate([LOGIN]);
-    });
+    this.ngZone.run(() => this.router.navigate([LOGIN]));
   }
 
   /**
-   * Handles errors during authentication.
+   * Whitelist warning helper
    */
+  private showWhitelistWarning(name: string): void {
+    this.snackbarService.showSnackBar(
+      `${name}, you are not welcome here!`,
+      '',
+      3000,
+      SnackbarType.Warning
+    );
+  }
+
+  // Keep existing error handler
   private handleError(error: Error): Observable<never> {
-    console.error('An error occurred:', error);
-    const msg = 'Authentication failed: ' + error.message;
-    this.snackbarService.showSnackBar(msg, '', 8000, SnackbarType.Error);
-    return throwError(() => new Error('Something went wrong!', error));
+    console.error('Authentication error:', error);
+    this.snackbarService.showSnackBar(
+      `Login failed: ${error.message}`,
+      '',
+      8000,
+      SnackbarType.Error
+    );
+    return throwError(() => error);
   }
 }

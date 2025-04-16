@@ -2,7 +2,7 @@ import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { NewAlertComponent } from '../alerts/new-alert/new-alert.component';
+import { NewAlertComponent } from 'src/app/new-alert/new-alert.component';
 import {
   ALERTS_AT_WORK,
   TRIGGERED_ALERTS,
