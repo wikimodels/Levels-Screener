@@ -41,7 +41,6 @@ import { VwapTriggeredAlertsTableComponent } from './vwap-triggered-alerts/vwap-
 import { VwapAlertMenuComponent } from './nav-bar/vwap-alert-menu/vwap-alert-menu.component';
 import { EditVwapAlertComponent } from './shared/edit-vwap-alert/edit-vwap-alert.component';
 
-import { AlertsBatchComponent } from './alerts-batch/alerts-batch.component';
 import { VwapLightweightChartComponent } from './vwap-lightweight-chart/vwap-lightweight-chart.component';
 import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
 import { ChartsButtonsPanelComponent } from './shared/charts-buttons-panel/charts-buttons-panel.component';
@@ -51,6 +50,7 @@ import { NewAlertComponent } from './new-alert/new-alert.component';
 import { GoogleSignInComponent } from './google-sign-in/google-sign-in.component';
 import { UserProfileComponent } from './nav-bar/user-profile/user-profile.component';
 import { ExchangesModule } from './exchanges/exchanges.module';
+import { AlertsBatchModule } from './alerts-batch/alerts-batch.module';
 
 @NgModule({
   declarations: [
@@ -87,7 +87,6 @@ import { ExchangesModule } from './exchanges/exchanges.module';
     VwapAlertMenuComponent,
     EditVwapAlertComponent,
     VwapLightweightChartComponent,
-    AlertsBatchComponent,
     LineLightweightChartComponent,
     ChartsButtonsPanelComponent,
     AdminPanelMenuComponent,
@@ -98,6 +97,7 @@ import { ExchangesModule } from './exchanges/exchanges.module';
     FormsModule,
     BrowserModule,
     HttpClientModule,
+    AlertsBatchModule,
     AppRoutingModule,
     AppMaterialModule,
     ExchangesModule,

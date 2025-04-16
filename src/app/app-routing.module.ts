@@ -72,7 +72,10 @@ const routes: Routes = [
   },
   {
     path: ALERTS_BATCH,
-    component: AlertsBatchComponent,
+    loadChildren: () =>
+      import('./alerts-batch/alerts-batch.module').then(
+        (m) => m.AlertsBatchModule
+      ),
     canActivate: [AuthGuard],
   },
   {
