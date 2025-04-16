@@ -33,11 +33,19 @@ import { AuthGuard } from './guards/auth.guard';
 // Import your route constants
 
 const routes: Routes = [
-  { path: '', component: AlertsComponent },
+  {
+    path: '',
+    loadChildren: () =>
+      import('./alerts/alerts.module').then((m) => m.AlertsModule),
+    canActivate: [AuthGuard],
+  },
   { path: COINS, component: CoinsComponent, canActivate: [AuthGuard] },
   {
     path: VWAP_TRIGGERED_ALERTS,
-    component: VwapTriggeredAlertsComponent,
+    loadChildren: () =>
+      import('./vwap-triggered-alerts/vwap-triggered-alerts.module').then(
+        (m) => m.VwapTriggeredAlertsModule
+      ),
     canActivate: [AuthGuard],
   },
   {
@@ -46,17 +54,26 @@ const routes: Routes = [
   },
   {
     path: VWAP_ARCHIVED_ALERTS,
-    component: VwapArchivedAlertsComponent,
+    loadChildren: () =>
+      import('./vwap-archived-alerts/vwap-archived-alerts.module').then(
+        (m) => m.VwapArchivedAlertsModule
+      ),
     canActivate: [AuthGuard],
   },
   {
     path: VWAP_ALERTS_AT_WORK,
-    component: VwapAlertsComponent,
+    loadChildren: () =>
+      import('./vwap-alerts/vwap-alerts.module').then(
+        (m) => m.VwapAlertsModule
+      ),
     canActivate: [AuthGuard],
   },
   {
     path: LINE_LIGHTWEIGHT_CHART,
-    component: LineLightweightChartComponent,
+    loadChildren: () =>
+      import('./line-lightweight-chart/line-lightweight-chart.module').then(
+        (m) => m.LineLightweightChartModule
+      ),
     canActivate: [AuthGuard],
   },
   {
@@ -80,18 +97,31 @@ const routes: Routes = [
   },
   {
     path: TRIGGERED_ALERTS,
-    component: TriggeredAlertsComponent,
+    loadChildren: () =>
+      import('./triggered-alerts/triggered-alerts.module').then(
+        (m) => m.TriggeredAlertsModule
+      ),
     canActivate: [AuthGuard],
   },
   {
     path: ARCHIVED_ALERTS,
-    component: ArchivedAlertsComponent,
+    loadChildren: () =>
+      import('./archived-alerts/archived-alerts.module').then(
+        (m) => m.ArchivedAlertsModule
+      ),
     canActivate: [AuthGuard],
   },
-  { path: WORK, component: WorkComponent, canActivate: [AuthGuard] },
+  {
+    path: WORK,
+    loadChildren: () => import('./work/work.module').then((m) => m.WorkModule),
+    canActivate: [AuthGuard],
+  },
   {
     path: VWAP_LIGHTWEIGHT_CHART,
-    component: VwapLightweightChartComponent,
+    loadChildren: () =>
+      import('./vwap-lightweight-chart/vwap-lightweight-chart.module').then(
+        (m) => m.VwapLightweightChartModule
+      ),
     canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: '', canActivate: [AuthGuard] },
