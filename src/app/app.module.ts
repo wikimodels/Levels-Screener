@@ -15,11 +15,7 @@ import { SnackbarComponent } from './shared/snackbar/snackbar.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { TvListComponent } from './shared/tv-list/tv-list.component';
 import { ValidationSummaryComponent } from './shared/validation-summary/validation-summary.component';
-import { WorkComponent } from './work/work.component';
-import { WorkFieldComponent } from './work/work-field/work-field.component';
 import { AlertMenuComponent } from './nav-bar/alert-menu/alert-menu.component';
-
-import { WorkItemComponent } from './work/work-item/work-item.component';
 
 import { CoinsComponent } from './coins/coins.component';
 import { CoinsFieldComponent } from './coins/coins-field/coins-field.component';
@@ -27,8 +23,6 @@ import { CoinsFieldComponent } from './coins/coins-field/coins-field.component';
 import { VwapAlertMenuComponent } from './nav-bar/vwap-alert-menu/vwap-alert-menu.component';
 import { EditVwapAlertComponent } from './shared/edit-vwap-alert/edit-vwap-alert.component';
 
-import { VwapLightweightChartComponent } from './vwap-lightweight-chart/vwap-lightweight-chart.component';
-import { LineLightweightChartComponent } from './line-lightweight-chart/line-lightweight-chart.component';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 import { AdminPanelMenuComponent } from './nav-bar/admin-panel-menu/admin-panel-menu.component';
 import { NewAlertComponent } from './new-alert/new-alert.component';

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Angular Material Modules
-import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -11,23 +10,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRippleModule } from '@angular/material/core';
 
-// Custom Components
-import { WorkComponent } from './work.component';
-import { WorkItemComponent } from './work-item/work-item.component';
-import { WorkFieldComponent } from './work-field/work-field.component';
-import { ChartsButtonsPanelModule } from '../shared/charts-buttons-panel/charts-buttons-panel.module';
-import { WorkRoutingModule } from './work-routing.module';
+// Components
+import { CoinsComponent } from './coins.component';
+import { CoinsFieldComponent } from './coins-field/coins-field.component';
+import { WorkItemComponent } from '../work/work-item/work-item.component';
 
 @NgModule({
-  declarations: [WorkComponent, WorkItemComponent, WorkFieldComponent],
+  declarations: [CoinsComponent, CoinsFieldComponent, WorkItemComponent],
   imports: [
     // Angular Core Modules
     CommonModule,
     ReactiveFormsModule,
 
     // Angular Material Modules
-    MatRippleModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
@@ -35,10 +32,8 @@ import { WorkRoutingModule } from './work-routing.module';
     MatButtonModule,
     MatCheckboxModule,
     MatTooltipModule,
-    WorkRoutingModule,
-    // Custom Modules
-    ChartsButtonsPanelModule,
+    MatRippleModule,
   ],
-  exports: [WorkComponent, WorkItemComponent, WorkFieldComponent],
+  exports: [CoinsComponent, CoinsFieldComponent, WorkItemComponent],
 })
-export class WorkModule {}
+export class CoinsModule {}
