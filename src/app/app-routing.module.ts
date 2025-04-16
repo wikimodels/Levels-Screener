@@ -59,7 +59,12 @@ const routes: Routes = [
     component: LineLightweightChartComponent,
     canActivate: [AuthGuard],
   },
-  { path: EXCHANGES, component: ExchangesComponent, canActivate: [AuthGuard] },
+  {
+    path: EXCHANGES,
+    loadChildren: () =>
+      import('./exchanges/exchanges.module').then((m) => m.ExchangesModule),
+    canActivate: [AuthGuard],
+  },
   {
     path: ALERTS_AT_WORK,
     component: AlertsComponent,

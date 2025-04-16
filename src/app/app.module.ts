@@ -27,8 +27,7 @@ import { WorkFieldComponent } from './work/work-field/work-field.component';
 import { AlertMenuComponent } from './nav-bar/alert-menu/alert-menu.component';
 
 import { WorkItemComponent } from './work/work-item/work-item.component';
-import { ExchangesComponent } from './exchanges/exchanges.component';
-import { ExchangeTableComponent } from './exchanges/exchange-table/exchange-table.component';
+
 import { CoinsComponent } from './coins/coins.component';
 import { CoinsFieldComponent } from './coins/coins-field/coins-field.component';
 
@@ -51,6 +50,7 @@ import { AdminPanelMenuComponent } from './nav-bar/admin-panel-menu/admin-panel-
 import { NewAlertComponent } from './new-alert/new-alert.component';
 import { GoogleSignInComponent } from './google-sign-in/google-sign-in.component';
 import { UserProfileComponent } from './nav-bar/user-profile/user-profile.component';
+import { ExchangesModule } from './exchanges/exchanges.module';
 
 @NgModule({
   declarations: [
@@ -75,15 +75,11 @@ import { UserProfileComponent } from './nav-bar/user-profile/user-profile.compon
     WorkFieldComponent,
     WorkItemComponent,
     AlertMenuComponent,
-    ExchangesComponent,
-    ExchangeTableComponent,
     CoinsComponent,
     CoinsFieldComponent,
-
     AlertsTableComponent,
     VwapAlertsComponent,
     VwapAlertsTableComponent,
-
     VwapArchivedAlertsComponent,
     VwapArchivedTableComponent,
     VwapTriggeredAlertsComponent,
@@ -104,6 +100,7 @@ import { UserProfileComponent } from './nav-bar/user-profile/user-profile.compon
     HttpClientModule,
     AppRoutingModule,
     AppMaterialModule,
+    ExchangesModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
   ],
