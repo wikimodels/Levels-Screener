@@ -15,8 +15,7 @@ import {
   LINE_LIGHTWEIGHT_CHART,
   LOGIN,
 } from 'src/consts/url-consts';
-import { CoinsComponent } from './coins/coins.component';
-// Import other components as needed
+
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 // Import your route constants
@@ -44,7 +43,8 @@ const routes: Routes = [
   },
   {
     path: LOGIN,
-    component: LoginComponent,
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginModule),
   },
   {
     path: VWAP_ARCHIVED_ALERTS,

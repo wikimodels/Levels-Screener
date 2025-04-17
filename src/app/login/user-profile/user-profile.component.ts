@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserData } from 'models/user/user-data';
+
 import { LOGIN } from 'src/consts/url-consts';
 import { AuthService } from 'src/app/login/service/auth.service';
+import { UserData } from '../model/user/user-data';
 
 @Component({
   selector: 'app-user-profile',

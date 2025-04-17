@@ -14,11 +14,7 @@ import {
   ARCHIVED_ALERTS,
   COINS,
   VWAP_ARCHIVED_ALERTS,
-  LOGIN,
 } from 'src/consts/url-consts';
-
-import { UserData } from 'models/user/user-data';
-import { AuthService } from 'src/app/login/service/auth.service';
 
 @Component({
   selector: 'app-nav-bar',

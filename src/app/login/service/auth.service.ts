@@ -5,8 +5,8 @@ import { jwtDecode } from 'jwt-decode';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { GENERAL_URLS, LOGIN } from 'src/consts/url-consts';
 import { SnackbarService } from '../../../service/snackbar.service';
-import { UserData } from 'models/user/user-data';
 import { Router } from '@angular/router';
+import { UserData } from '../model/user/user-data';
 
 declare const google: any;
 
