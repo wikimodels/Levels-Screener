@@ -18,7 +18,7 @@ import {
 } from 'src/consts/url-consts';
 
 import { UserData } from 'models/user/user-data';
-import { AuthService } from 'src/service/auth.service';
+import { AuthService } from 'src/app/login/service/auth.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -26,27 +26,10 @@ import { AuthService } from 'src/service/auth.service';
   styleUrls: ['./nav-bar.component.css'],
 })
 export class NavBarComponent implements OnInit, OnDestroy {
-  userData: UserData = {
-    isWhitelisted: false,
-    givenName: 'Unknown',
-    familyName: 'Unknown',
-    email: 'Unknown',
-    picture: 'Unknown',
-  };
   subscription: Subscription = new Subscription();
-  constructor(
-    private router: Router,
-    private modelDialog: MatDialog,
-    private authService: AuthService
-  ) {}
+  constructor(private router: Router, private modelDialog: MatDialog) {}
 
-  ngOnInit(): void {
-    this.subscription.add(
-      this.authService.userData$.subscribe((userData: UserData) => {
-        this.userData = userData;
-      })
-    );
-  }
+  ngOnInit(): void {}
 
   onGetToWork() {
     this.router.navigate(['work']);
@@ -79,14 +62,6 @@ export class NavBarComponent implements OnInit, OnDestroy {
       width: '100vw',
       height: '100vh',
     });
-  }
-
-  onLogin() {
-    this.router.navigate([LOGIN]);
-  }
-
-  onLogout() {
-    this.authService.logout();
   }
 
   ngOnDestroy(): void {

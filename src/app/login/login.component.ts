@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgZone } from '@angular/core'; // Import NgZone
 import { ALERTS_AT_WORK } from 'src/consts/url-consts';
-import { AuthService } from 'src/service/auth.service';
+import { AuthService } from 'src/app/login/service/auth.service';
 
 declare const google: any; // Declare the global `google` object
 
@@ -30,6 +30,8 @@ export class LoginComponent implements OnInit {
       document.getElementById('google-signin-button'), // Container for the button
       { theme: 'outline', size: 'large' } // Customize the button appearance
     );
+
+    this.authService.isGoogleInitialized = true;
   }
 
   handleCredentialResponse(response: any): void {

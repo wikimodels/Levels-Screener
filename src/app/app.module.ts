@@ -39,7 +39,7 @@ import { VwapTriggeredAlertsModule } from './vwap-triggered-alerts/vwap-triggere
 import { WorkModule } from './work/work.module';
 import { AppMaterialModule } from './material.module';
 import { SharedModule } from './shared/shared.module';
-import { UserProfileComponent } from './nav-bar/user-profile/user-profile.component';
+import { UserProfileComponent } from './login/user-profile/user-profile.component';
 import { AdminPanelMenuComponent } from './nav-bar/admin-panel-menu/admin-panel-menu.component';
 import { AlertMenuComponent } from './nav-bar/alert-menu/alert-menu.component';
 import { VwapAlertMenuComponent } from './nav-bar/vwap-alert-menu/vwap-alert-menu.component';

@@ -36,10 +36,5 @@
   <app-vwap-alert-menu></app-vwap-alert-menu>
   <app-admin-panel-menu></app-admin-panel-menu>
 
-  <div *ngIf="!userData.isWhitelisted"><mat-icon style="cursor: pointer; " matTooltip="Log In"
-      (click)="onLogin()">login</mat-icon></div>
-  <div *ngIf="userData.isWhitelisted" style="display: flex; align-items: center; gap: 8px;">
-    <app-user-profile [userData]="userData"></app-user-profile>
-    <mat-icon style="cursor: pointer" (click)="onLogout()" matTooltip="Log Out">logout</mat-icon>
-  </div>
+  <app-user-profile></app-user-profile>
 </mat-toolbar>

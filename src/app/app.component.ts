@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
       { name: 'pause', url: 'assets/icons/pause.svg' },
       { name: 'ws', url: 'assets/icons/ws.svg' },
       { name: 'websocket', url: 'assets/icons/websocket.svg' },
+      { name: 'server-person', url: 'assets/icons/server-person.svg' },
       { name: 'check', url: 'assets/icons/check.svg' },
       { name: 'close', url: 'assets/icons/close.svg' },
       { name: 'alarm', url: 'assets/icons/alarm.svg' },

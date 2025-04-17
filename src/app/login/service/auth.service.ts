@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { SnackbarType } from 'models/shared/snackbar-type';
 import { GENERAL_URLS, LOGIN } from 'src/consts/url-consts';
-import { SnackbarService } from './snackbar.service';
+import { SnackbarService } from '../../../service/snackbar.service';
 import { UserData } from 'models/user/user-data';
 import { Router } from '@angular/router';
 
@@ -12,13 +12,14 @@ declare const google: any;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  public isGoogleInitialized = false;
   // Default user data with fallback avatar
   private defaultUser: UserData = {
     isWhitelisted: false,
-    givenName: 'Guest',
-    familyName: 'User',
-    email: 'unknown@example.com',
-    picture: 'https://example.com/default-avatar.png', // Add your default avatar URL
+    givenName: 'Unknown',
+    familyName: 'Unknown',
+    email: 'Unknown',
+    picture: 'Unknown',
   };
 
   private userDataSubject = new BehaviorSubject<UserData>(
@@ -53,19 +54,19 @@ export class AuthService {
       .post<UserData>(GENERAL_URLS.userAuthUrl, { token }, this.httpOptions)
       .pipe(
         tap((userData: UserData) => {
-          // Persist both token and user data
-          localStorage.setItem('authToken', token);
-          this.persistUserData(userData); // Store user data
-
-          // Handle missing picture URL
-          if (!userData.picture) {
-            userData.picture = this.generateAvatar(userData.email);
-          }
-
-          this.userDataSubject.next(userData);
-
           if (!userData.isWhitelisted) {
-            this.showWhitelistWarning(userData.givenName);
+            this.handleNotListedUser();
+          } else {
+            // Persist both token and user data
+            localStorage.setItem('authToken', token);
+            this.persistUserData(userData); // Store user data
+
+            // Handle missing picture URL
+            if (!userData.picture) {
+              userData.picture = this.generateAvatar(userData.email);
+            }
+
+            this.userDataSubject.next(userData);
           }
         }),
         catchError((error) => this.handleError(error))
@@ -85,11 +86,13 @@ export class AuthService {
       this.ngZone.run(() => this.router.navigate([LOGIN]));
     };
 
-    if (authToken) {
+    if (authToken && this.isGoogleInitialized && google.accounts?.id) {
+      // Revoke Google token
       google.accounts.id.revoke(authToken, (response: any) => {
         console.log('Google token revoked:', response);
         cleanup();
       });
+      this.isGoogleInitialized = false;
     } else {
       cleanup();
     }
@@ -161,13 +164,9 @@ export class AuthService {
   /**
    * Whitelist warning helper
    */
-  private showWhitelistWarning(name: string): void {
-    this.snackbarService.showSnackBar(
-      `${name}, you are not welcome here!`,
-      '',
-      3000,
-      SnackbarType.Warning
-    );
+  private handleNotListedUser(): void {
+    this.ngZone.run(() => this.router.navigate([LOGIN]));
+    this.logout();
   }
 
   // Keep existing error handler
