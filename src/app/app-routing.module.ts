@@ -17,7 +17,7 @@ import {
 } from 'src/consts/url-consts';
 
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './login/guards/auth.guard';
 // Import your route constants
 
 const routes: Routes = [
