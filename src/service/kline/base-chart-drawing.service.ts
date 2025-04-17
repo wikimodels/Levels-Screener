@@ -222,7 +222,7 @@ export class BaseChartDrawingService {
                 price: lineData[0].value,
                 color: this.globalLineColor,
                 lineWidth: 2,
-                lineStyle: LineStyle.Solid,
+                lineStyle: LineStyle.Dotted,
                 axisLabelVisible: false,
               });
 

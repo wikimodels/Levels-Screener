@@ -9,7 +9,7 @@ import { Alert } from 'models/alerts/alert';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
-import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
+import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 
 @Component({

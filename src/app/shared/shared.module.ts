@@ -15,7 +15,6 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 // Components
 import { CarouselComponent } from './carousel/carousel.component';
 import { DescriptionModalComponent } from './description-modal/description-modal.component';
-import { EditAlertComponent } from './edit-alert/edit-alert.component';
 import { EditVwapAlertComponent } from './edit-vwap-alert/edit-vwap-alert.component';
 import { SnackbarComponent } from './snackbar/snackbar.component';
 import { SpinnerComponent } from './spinner/spinner.component';
@@ -28,7 +27,6 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [
     CarouselComponent,
     DescriptionModalComponent,
-    EditAlertComponent,
     EditVwapAlertComponent,
     SnackbarComponent,
     SpinnerComponent,
@@ -56,7 +54,6 @@ import { MatButtonModule } from '@angular/material/button';
     // Components
     CarouselComponent,
     DescriptionModalComponent,
-    EditAlertComponent,
     EditVwapAlertComponent,
     SnackbarComponent,
     SpinnerComponent,

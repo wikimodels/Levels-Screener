@@ -64,7 +64,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
             ?.line.applyOptions({
               color: this.baseCharDrawingService.globalLineColor,
               lineWidth: 2,
-              lineStyle: LineStyle.Solid,
+              lineStyle: LineStyle.Dotted,
             });
           this.baseCharDrawingService.highlightedPrice = undefined;
         }
@@ -102,7 +102,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
             ?.line.applyOptions({
               color: this.baseCharDrawingService.globalLineColor,
               lineWidth: 2,
-              lineStyle: LineStyle.Solid,
+              lineStyle: LineStyle.Dotted,
             });
           this.baseCharDrawingService.highlightedPrice = undefined;
         }
@@ -118,7 +118,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
             ?.line.applyOptions({
               color: this.baseCharDrawingService.globalLineColor,
               lineWidth: 2,
-              lineStyle: LineStyle.Solid,
+              lineStyle: LineStyle.Dotted,
             });
         }
 
@@ -217,7 +217,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         price,
         color: this.baseCharDrawingService.globalLineColor,
         lineWidth: 2,
-        lineStyle: LineStyle.Solid,
+        lineStyle: LineStyle.Dotted,
         axisLabelVisible: false,
       });
 

@@ -47,12 +47,14 @@ import { CoinsModule } from './coins/coins.module';
 
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { SnackbarService } from 'src/service/snackbar.service';
+import { EditAlertComponent } from './edit-alert/edit-alert.component';
 // ... other component imports ...
 
 @NgModule({
   declarations: [
     AppComponent,
     NewAlertComponent,
+    EditAlertComponent,
     NavBarComponent,
     UserProfileComponent,
     AdminPanelMenuComponent,

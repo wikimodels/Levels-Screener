@@ -10,7 +10,7 @@ import { DescriptionModalComponent } from '../../shared/description-modal/descri
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { AlertsCollection } from 'models/alerts/alerts-collections';
 import { Alert } from 'models/alerts/alert';
-import { EditAlertComponent } from 'src/app/shared/edit-alert/edit-alert.component';
+import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { Subscription } from 'rxjs';

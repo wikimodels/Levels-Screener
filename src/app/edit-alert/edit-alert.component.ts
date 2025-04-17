@@ -40,7 +40,7 @@ export class EditAlertComponent {
       isActive: [''],
       keyLevelName: [{ value: '', disabled: true }],
       price: [{ value: '', disabled: true }],
-      action: [{ value: '', disabled: true }],
+      action: ['', Validators.required],
       description: ['', Validators.required],
       imageLinks: this.fb.array([]),
     });
@@ -106,6 +106,7 @@ export class EditAlertComponent {
     this.form?.updateValueAndValidity();
     if (this.form?.valid) {
       this.data.alert.description = this.form.get('description')?.value;
+      this.data.alert.action = this.form.get('action')?.value;
       this.data.alert.tvScreensUrls = this.imageLinks.value;
       this.data.alert.isActive = this.form.get('isActive')?.value;
 
@@ -115,6 +116,8 @@ export class EditAlertComponent {
         {
           isActive: this.data.alert.isActive,
           description: this.data.alert.description,
+          action: this.data.alert.action,
+          tvScreensUrls: this.data.alert.tvScreensUrls,
         }
       );
 
