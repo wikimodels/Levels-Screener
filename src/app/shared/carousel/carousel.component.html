@@ -17,7 +17,9 @@
 
   <div class="indicators" [class.visible]="controlsVisible">
     <button *ngFor="let image of images; let i = index" class="indicator" [class.active]="i === currentSlide"
-      (click)="currentSlide = i">
+      (click)="currentSlide = i" [attr.aria-label]="'Go to slide ' + (i + 1)">
+      <span class="indicator-progress"></span>
     </button>
   </div>
+
 </div>
