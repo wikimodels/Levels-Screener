@@ -36,7 +36,6 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   onGoToLogin(): void {
     this.router.navigate([LOGIN]);
-    window.location.reload();
   }
 
   ngOnDestroy(): void {

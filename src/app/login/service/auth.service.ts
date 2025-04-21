@@ -220,14 +220,6 @@ export class AuthService {
     this.auth.signOut().then(() => {
       this.userDataSubject.next(this.defaultUser);
       this.ngZone.run(() => this.router.navigate([LOGIN]));
-      // On logout, add this:
-      // if (window.google?.accounts?.id) {
-      //   window.google.accounts.id.disableAutoSelect(); // Clear cached credentials [[5]][[8]]
-      //   const userEmail = this.userDataSubject.value.email;
-      //   if (window.google?.accounts?.id && userEmail) {
-      //     window.google.accounts.id.revoke(userEmail, (done: any) => {}); // [[3]][[8]]
-      //   }
-      // }
     });
   }
 
