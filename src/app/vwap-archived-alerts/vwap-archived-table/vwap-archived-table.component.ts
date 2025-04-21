@@ -6,8 +6,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 

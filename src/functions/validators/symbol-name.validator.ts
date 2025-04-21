@@ -3,7 +3,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { Coin } from 'models/coin/coin';
+import { Coin } from 'src/app/models/coin/coin';
 import { Observable, of } from 'rxjs';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 

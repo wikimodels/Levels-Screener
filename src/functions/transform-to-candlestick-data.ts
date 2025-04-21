@@ -1,5 +1,5 @@
 import { CandlestickData, UTCTimestamp } from 'lightweight-charts';
-import { KlineData } from 'models/kline/kline-data';
+import { KlineData } from 'src/app/models/kline/kline-data';
 
 export function transformToCandlestickData(
   klineData: KlineData[]

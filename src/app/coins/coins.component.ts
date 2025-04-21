@@ -1,15 +1,9 @@
-import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Coin } from 'models/coin/coin';
-import { SnackbarType } from 'models/shared/snackbar-type';
+import { Coin } from 'src/app/models/coin/coin';
+
 import { Subscription } from 'rxjs';
-import {
-  KLINE_CHART,
-  LINE_LIGHTWEIGHT_CHART,
-  VWAP_LIGHTWEIGHT_CHART,
-} from 'src/consts/url-consts';
-import { CoinLinksService } from 'src/service/coin-links.service';
+
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 
 import { WorkSelectionService } from 'src/service/work.selection.service';

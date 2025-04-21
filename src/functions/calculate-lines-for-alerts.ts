@@ -1,6 +1,6 @@
 import { UTCTimestamp } from 'lightweight-charts';
-import { Alert } from 'models/alerts/alert';
-import { KlineData } from 'models/kline/kline-data';
+import { Alert } from 'src/app/models/alerts/alert';
+import { KlineData } from 'src/app/models/kline/kline-data';
 
 export function calculateLinesForAlerts(
   alerts: Alert[],

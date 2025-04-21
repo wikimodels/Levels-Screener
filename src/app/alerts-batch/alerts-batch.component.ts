@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AlertBase, AlertBaseDefaults } from 'models/alerts/alert-base';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { SnackbarType } from 'models/shared/snackbar-type';
+import { AlertBase, AlertBaseDefaults } from 'src/app/models/alerts/alert-base';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 

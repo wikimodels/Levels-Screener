@@ -7,12 +7,12 @@ import {
   InsertResult,
   ModifyResult,
   MoveResult,
-} from 'models/mongodb/operations';
-import { SnackbarType } from 'models/shared/snackbar-type';
-import { Alert } from 'models/alerts/alert';
+} from 'src/app/models/mongodb/operations';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
+import { Alert } from 'src/app/models/alerts/alert';
 import { ALERTS_URLS } from 'src/consts/url-consts';
 import { createHttpParams } from 'src/functions/create-params';
-import { AlertBase } from 'models/alerts/alert-base';
+import { AlertBase } from 'src/app/models/alerts/alert-base';
 
 @Injectable({ providedIn: 'root' })
 export class AlertsGenericService {

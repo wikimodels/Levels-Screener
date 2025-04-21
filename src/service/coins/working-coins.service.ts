@@ -7,10 +7,10 @@ import {
   DeleteResult,
   InsertResult,
   ModifyResult,
-} from 'models/mongodb/operations';
-import { SnackbarType } from 'models/shared/snackbar-type';
+} from 'src/app/models/mongodb/operations';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
 import { WORKING_COINS_URLS } from 'src/consts/url-consts';
-import { Coin } from 'models/coin/coin';
+import { Coin } from 'src/app/models/coin/coin';
 
 @Injectable({ providedIn: 'root' })
 export class WorkingCoinsService {

@@ -9,8 +9,8 @@ import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { v4 as uuidv4 } from 'uuid';
 
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { Coin } from 'models/coin/coin';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
+import { Coin } from 'src/app/models/coin/coin';
 
 @Component({
   selector: 'app-new-alert',

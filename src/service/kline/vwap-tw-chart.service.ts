@@ -8,14 +8,15 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { VWAP_ALERTS_URLS } from 'src/consts/url-consts';
 import { SnackbarService } from '../snackbar.service';
-import { SnackbarType } from 'models/shared/snackbar-type';
+
 import { createVwapAlert } from 'src/functions/create-vwap-alert';
-import { Coin } from 'models/coin/coin';
-import { _ChartOptions } from 'models/chart/chart-options';
-import { CoinsGenericService } from '../coins/coins-generic.service';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { createHttpParams } from 'src/functions/create-params';
+
 import { BaseChartService } from './base-chart.service';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
+import { Coin } from 'src/app/models/coin/coin';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
+import { createHttpParams } from 'src/functions/create-params';
+import { CoinsGenericService } from '../coins/coins-generic.service';
 
 @Injectable({
   providedIn: 'root',

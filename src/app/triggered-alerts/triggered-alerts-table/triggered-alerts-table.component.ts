@@ -8,18 +8,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DescriptionModalComponent } from '../../shared/description-modal/description-modal.component';
 
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { Alert } from 'models/alerts/alert';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
+import { Alert } from 'src/app/models/alerts/alert';
 import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { SnackbarService } from 'src/service/snackbar.service';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
-import { Coin } from 'models/coin/coin';
-import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
-import { Router } from '@angular/router';
-import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
+import { Coin } from 'src/app/models/coin/coin';
 
 /**
  * @title Table with sorting

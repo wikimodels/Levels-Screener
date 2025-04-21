@@ -10,13 +10,13 @@ import {
   VWAP_ALERTS_URLS,
 } from 'src/consts/url-consts';
 import { SnackbarService } from '../snackbar.service';
-import { SnackbarType } from 'models/shared/snackbar-type';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
 import { transformToCandlestickData } from 'src/functions/transform-to-candlestick-data';
-import { Alert } from 'models/alerts/alert';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+import { Alert } from 'src/app/models/alerts/alert';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 import { calculateLinesForAlerts } from 'src/functions/calculate-lines-for-alerts';
 import { calculateVwapLinesForAlerts } from 'src/functions/calculate-vwap-lines-for-alerts';
-import { KlineData } from 'models/kline/kline-data';
+import { KlineData } from 'src/app/models/kline/kline-data';
 
 @Injectable({
   providedIn: 'root',

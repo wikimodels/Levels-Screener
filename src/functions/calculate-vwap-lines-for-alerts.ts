@@ -1,6 +1,6 @@
 import { UTCTimestamp } from 'lightweight-charts';
-import { KlineData } from 'models/kline/kline-data';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+import { KlineData } from 'src/app/models/kline/kline-data';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 
 export function calculateVwapLinesForAlerts(
   alerts: VwapAlert[],

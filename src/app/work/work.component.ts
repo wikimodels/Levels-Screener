@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Coin } from 'models/coin/coin';
-import { SnackbarType } from 'models/shared/snackbar-type';
+
 import { Subscription } from 'rxjs';
-import { CoinLinksService } from 'src/service/coin-links.service';
+
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 import { SnackbarService } from 'src/service/snackbar.service';
 import { WorkSelectionService } from 'src/service/work.selection.service';
+import { Coin } from '../models/coin/coin';
+import { SnackbarType } from '../models/shared/snackbar-type';
 
 @Component({
   selector: 'app-work',

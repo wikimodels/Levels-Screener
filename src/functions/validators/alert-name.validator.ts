@@ -3,7 +3,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Observable, of } from 'rxjs';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 

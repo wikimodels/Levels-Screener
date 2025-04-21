@@ -8,11 +8,11 @@ import {
   IPriceLine,
   ISeriesApi,
 } from 'lightweight-charts';
-import { SafeCandleData } from 'models/chart/safe-candle-data';
-import { SnackbarType } from 'models/shared/snackbar-type';
+import { SafeCandleData } from 'src/app/models/chart/safe-candle-data';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
 import { LineTwChartService } from './line-tw-chart.service';
 import { SnackbarService } from '../snackbar.service';
-import { KlineData } from 'models/kline/kline-data';
+import { KlineData } from 'src/app/models/kline/kline-data';
 
 @Injectable({
   providedIn: 'root',

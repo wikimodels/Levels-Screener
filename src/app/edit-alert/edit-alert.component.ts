@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
-import { Alert } from 'models/alerts/alert';
+import { Alert } from 'src/app/models/alerts/alert';
 
 @Component({
   selector: 'app-edit-alert',

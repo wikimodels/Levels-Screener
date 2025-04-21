@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Coin } from 'models/coin/coin';
+import { Coin } from 'src/app/models/coin/coin';
 
 @Component({
   selector: 'app-coins-field',

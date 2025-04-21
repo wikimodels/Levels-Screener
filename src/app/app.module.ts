@@ -1,3 +1,6 @@
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireModule } from '@angular/fire/compat';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -51,6 +54,7 @@ import { SnackbarService } from 'src/service/snackbar.service';
 
 import { EditAlertModule } from './edit-alert/edit-alert.module';
 import { EditVwapAlertModule } from './edit-vwap-alert/edit-vwap-alert.module';
+import { env } from 'src/environment/environment';
 // ... other component imports ...
 
 @NgModule({
@@ -71,6 +75,8 @@ import { EditVwapAlertModule } from './edit-vwap-alert/edit-vwap-alert.module';
     BrowserAnimationsModule,
     CommonModule,
     RouterModule,
+    AngularFireModule.initializeApp(env.firebaseConfig),
+    AngularFireAuthModule,
 
     // Material Modules
     AppMaterialModule,

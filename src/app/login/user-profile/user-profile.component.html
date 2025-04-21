@@ -1,5 +1,5 @@
 <div *ngIf="!userData.isWhitelisted"><mat-icon style="cursor: pointer; margin-top: 8px;" matTooltip="Log In"
-    (click)="onLogin()">login</mat-icon></div>
+    (click)="onGoToLogin()">login</mat-icon></div>
 <div *ngIf="userData.isWhitelisted" style="display: flex; align-items: center; gap: 8px;">
   <div *ngIf="userData" class="user-profile">
     <img [src]="userData.picture" class="profile-picture" />

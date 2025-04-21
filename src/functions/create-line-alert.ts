@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Coin } from 'models/coin/coin';
-import { Alert } from 'models/alerts/alert';
+import { Coin } from 'src/app/models/coin/coin';
+import { Alert } from 'src/app/models/alerts/alert';
 
 export function createLineAlert(
   symbol: string,

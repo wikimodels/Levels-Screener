@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoinLinksService } from '../coin-links.service';
-import { Coin } from 'models/coin/coin';
+import { Coin } from 'src/app/models/coin/coin';
 import {
   LINE_LIGHTWEIGHT_CHART,
   VWAP_LIGHTWEIGHT_CHART,

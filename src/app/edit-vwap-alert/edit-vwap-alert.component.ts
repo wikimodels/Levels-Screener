@@ -4,9 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs';
 
-import { Alert } from 'models/alerts/alert';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 
 @Component({
   selector: 'app-vwap-edit-alert',

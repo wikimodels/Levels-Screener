@@ -1,7 +1,8 @@
 import { Subscription } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Coin } from 'models/coin/coin';
+
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
+import { Coin } from '../models/coin/coin';
 
 @Component({
   selector: 'app-exchanges',

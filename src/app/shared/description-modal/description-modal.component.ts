@@ -7,7 +7,7 @@ import {
   transition,
   state,
 } from '@angular/animations';
-import { Alert } from 'models/alerts/alert';
+import { Alert } from 'src/app/models/alerts/alert';
 
 @Component({
   selector: 'app-description-modal',

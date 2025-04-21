@@ -8,17 +8,15 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 import { TooltipPosition } from '@angular/material/tooltip';
-import { AlertsCollection } from 'models/alerts/alerts-collections';
-import { Alert } from 'models/alerts/alert';
+import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
+import { Alert } from 'src/app/models/alerts/alert';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 import { Router } from '@angular/router';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { EditVwapAlertComponent } from 'src/app/edit-vwap-alert/edit-vwap-alert.component';
-import { Coin } from 'models/coin/coin';
-import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
 
 @Component({
   selector: 'app-vwap-alerts-table',

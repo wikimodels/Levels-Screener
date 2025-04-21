@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Coin } from 'models/coin/coin';
+import { Component, Input, OnInit } from '@angular/core';
+import { Coin } from 'src/app/models/coin/coin';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { WorkSelectionService } from 'src/service/work.selection.service';
 

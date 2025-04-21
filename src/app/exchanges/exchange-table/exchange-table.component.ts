@@ -1,5 +1,5 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { Coin } from 'models/coin/coin';
+import { Component, Input } from '@angular/core';
+import { Coin } from 'src/app/models/coin/coin';
 import { CoinLinksService } from 'src/service/coin-links.service';
 
 @Component({

@@ -1,8 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Coin } from 'models/coin/coin';
+
 import { Subscription } from 'rxjs';
+import { Coin } from 'src/app/models/coin/coin';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 
 @Component({

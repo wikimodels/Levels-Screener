@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Coin } from 'models/coin/coin';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+import { Coin } from 'src/app/models/coin/coin';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 import { formatToUTCString } from 'src/utils/fortmat-to-utc-str';
 
 export function createVwapAlert(

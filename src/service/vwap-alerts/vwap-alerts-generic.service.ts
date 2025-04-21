@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { SnackbarService } from '../snackbar.service';
-import { InsertResult, MoveResult } from 'models/mongodb/operations';
-import { SnackbarType } from 'models/shared/snackbar-type';
-import { VwapAlert } from 'models/vwap/vwap-alert';
+
 import { VWAP_ALERTS_URLS } from 'src/consts/url-consts';
 import { createHttpParams } from 'src/functions/create-params';
+import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
+import { InsertResult, MoveResult } from 'src/app/models/mongodb/operations';
 
 @Injectable({ providedIn: 'root' })
 export class VwapAlertsGenericService {

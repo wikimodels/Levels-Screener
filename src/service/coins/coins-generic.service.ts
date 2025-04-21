@@ -13,10 +13,10 @@ import {
   catchError,
   of,
 } from 'rxjs';
-import { Coin } from 'models/coin/coin';
+import { Coin } from 'src/app/models/coin/coin';
 import { SnackbarService } from '../snackbar.service';
 import { COINS_URLS } from 'src/consts/url-consts';
-import { SnackbarType } from 'models/shared/snackbar-type';
+import { SnackbarType } from 'src/app/models/shared/snackbar-type';
 
 @Injectable({ providedIn: 'root' })
 export class CoinsGenericService {
