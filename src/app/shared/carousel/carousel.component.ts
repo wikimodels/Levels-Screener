@@ -1,3 +1,4 @@
+// carousel.component.ts
 import { Component, Input } from '@angular/core';
 
 @Component({
@@ -6,33 +7,17 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./carousel.component.css'],
 })
 export class CarouselComponent {
-  @Input() images: string[] | undefined = []; // Default to an empty array if undefined
+  @Input() images: string[] = [];
   currentSlide = 0;
-  previousSlide = 0;
-  isNext = true;
+  controlsVisible = false;
 
-  nextSlide() {
-    if (this.images && this.images.length > 0) {
-      this.previousSlide = this.currentSlide;
-      this.isNext = true;
-      this.currentSlide = (this.currentSlide + 1) % this.images.length;
-    }
+  prevSlide(): void {
+    this.currentSlide =
+      this.currentSlide > 0 ? this.currentSlide - 1 : this.images.length - 1;
   }
 
-  prevSlide() {
-    if (this.images && this.images.length > 0) {
-      this.previousSlide = this.currentSlide;
-      this.isNext = false;
-      this.currentSlide =
-        (this.currentSlide - 1 + this.images.length) % this.images.length;
-    }
-  }
-
-  goToSlide(index: number) {
-    if (this.images && this.images.length > 0) {
-      this.previousSlide = this.currentSlide;
-      this.isNext = index > this.currentSlide;
-      this.currentSlide = index;
-    }
+  nextSlide(): void {
+    this.currentSlide =
+      this.currentSlide < this.images.length - 1 ? this.currentSlide + 1 : 0;
   }
 }

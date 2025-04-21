@@ -1,26 +1,23 @@
-<!-- <div class="carousel-container">
-  <div class="carousel-slide" *ngFor="let image of images; let i = index" [class.active]="i === currentSlide">
-    <img [src]="image" alt="Slide {{ i + 1 }}" />
+<!-- carousel.component.html -->
+<div class="carousel-container" (mouseenter)="controlsVisible = true" (mouseleave)="controlsVisible = false">
+  <div class="slides-container">
+    <div *ngFor="let image of images; let i = index" class="slide" [class.active]="i === currentSlide">
+      <img [src]="image" alt="Chart {{i + 1}}">
+    </div>
   </div>
 
-  <mat-icon svgIcon="_arrow_back" class="carousel-control prev" (click)="prevSlide()">_arrow_back</mat-icon>
-  <mat-icon svgIcon="_arrow_forward" class="carousel-control next" (click)="nextSlide()">_arrow_back</mat-icon>
-
-  <div class="carousel-indicators">
-    <span *ngFor="let image of images; let i = index" [class.active]="i === currentSlide" (click)="goToSlide(i)"></span>
-  </div>
-</div> -->
-
-<div class="carousel-container">
-  <div *ngFor="let image of images; let i = index" class="carousel-slide" [ngClass]="{'active': i === currentSlide}">
-    <img [src]="image" alt="Slide {{i + 1}}">
+  <div class="controls" [class.visible]="controlsVisible">
+    <button class="control prev" (click)="prevSlide()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button class="control next" (click)="nextSlide()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
   </div>
 
-  <mat-icon svgIcon="_arrow_back" class="carousel-control prev" (click)="prevSlide()">arrow_back</mat-icon>
-  <mat-icon svgIcon="_arrow_forward" class="carousel-control next" (click)="nextSlide()">arrow_forward</mat-icon>
-
-  <div class="carousel-indicators">
-    <span *ngFor="let image of images; let i = index" [ngClass]="{'active': i === currentSlide}"
-      (click)="currentSlide = i"></span>
+  <div class="indicators" [class.visible]="controlsVisible">
+    <button *ngFor="let image of images; let i = index" class="indicator" [class.active]="i === currentSlide"
+      (click)="currentSlide = i">
+    </button>
   </div>
 </div>
