@@ -1,12 +1,12 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
-/src/app/environments
+/src/app/environment
 /dist
 /tmp
 /out-tsc
 /bazel-out
-/environment
+
 # Node
 /node_modules
 npm-debug.log
