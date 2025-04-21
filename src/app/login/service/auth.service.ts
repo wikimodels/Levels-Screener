@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
 
 import { SnackbarService } from 'src/service/snackbar.service';
 import { UserData } from '../model/user/user-data';
-import { env } from 'src/environment/environment';
+import { env } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

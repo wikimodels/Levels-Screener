@@ -1,5 +1,5 @@
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
-import { env } from 'src/environment/environment';
+import { env } from 'src/environments/environment';
 
 //COMPONENTS
 export const TRIGGERED_ALERTS = AlertsCollection.TriggeredAlerts;
