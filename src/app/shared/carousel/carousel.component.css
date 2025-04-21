@@ -119,3 +119,7 @@
 .indicator-progress {
   display: none;
 }
+/* Remove all focus outlines globally for carousel */
+.carousel-container *:focus {
+  outline: none;
+}
