@@ -24,13 +24,13 @@ const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./alerts/alerts.module').then((m) => m.AlertsModule),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: COINS,
     loadChildren: () =>
       import('./coins/coins.module').then((m) => m.CoinsModule),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: VWAP_TRIGGERED_ALERTS,
@@ -38,7 +38,7 @@ const routes: Routes = [
       import('./vwap-triggered-alerts/vwap-triggered-alerts.module').then(
         (m) => m.VwapTriggeredAlertsModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: LOGIN,
@@ -51,7 +51,7 @@ const routes: Routes = [
       import('./vwap-archived-alerts/vwap-archived-alerts.module').then(
         (m) => m.VwapArchivedAlertsModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: VWAP_ALERTS_AT_WORK,
@@ -59,7 +59,7 @@ const routes: Routes = [
       import('./vwap-alerts/vwap-alerts.module').then(
         (m) => m.VwapAlertsModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: LINE_LIGHTWEIGHT_CHART,
@@ -67,19 +67,19 @@ const routes: Routes = [
       import('./line-lightweight-chart/line-lightweight-chart.module').then(
         (m) => m.LineLightweightChartModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: EXCHANGES,
     loadChildren: () =>
       import('./exchanges/exchanges.module').then((m) => m.ExchangesModule),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: ALERTS_AT_WORK,
     loadChildren: () =>
       import('./alerts/alerts.module').then((m) => m.AlertsModule),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: ALERTS_BATCH,
@@ -87,7 +87,7 @@ const routes: Routes = [
       import('./alerts-batch/alerts-batch.module').then(
         (m) => m.AlertsBatchModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: TRIGGERED_ALERTS,
@@ -95,7 +95,7 @@ const routes: Routes = [
       import('./triggered-alerts/triggered-alerts.module').then(
         (m) => m.TriggeredAlertsModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: ARCHIVED_ALERTS,
@@ -103,12 +103,12 @@ const routes: Routes = [
       import('./archived-alerts/archived-alerts.module').then(
         (m) => m.ArchivedAlertsModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: WORK,
     loadChildren: () => import('./work/work.module').then((m) => m.WorkModule),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: VWAP_LIGHTWEIGHT_CHART,
@@ -116,12 +116,12 @@ const routes: Routes = [
       import('./vwap-lightweight-chart/vwap-lightweight-chart.module').then(
         (m) => m.VwapLightweightChartModule
       ),
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: '**',
     redirectTo: '',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
 ];
 
