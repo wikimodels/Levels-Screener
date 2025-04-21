@@ -16,7 +16,7 @@ import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-ge
 import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Router } from '@angular/router';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
-import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
+import { EditVwapAlertComponent } from 'src/app/edit-vwap-alert/edit-vwap-alert.component';
 import { Coin } from 'models/coin/coin';
 import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
 
@@ -163,6 +163,19 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
   clearInput() {
     this.filterValue = '';
     this.dataSource.filter = this.filterValue.trim().toLowerCase();
+  }
+
+  onToggleActiveStatus(alert: VwapAlert) {
+    const updatedIsActive = !alert.isActive;
+
+    this.alertsService.updateOne(
+      this.collectionName,
+      { id: alert.id }, // filter
+      { isActive: updatedIsActive } // updated fields
+    );
+
+    // Optionally update UI immediately (optimistic update)
+    alert.isActive = updatedIsActive;
   }
 
   refreshDataTable() {

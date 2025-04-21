@@ -48,14 +48,15 @@ import { CoinsModule } from './coins/coins.module';
 
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
 import { SnackbarService } from 'src/service/snackbar.service';
-import { EditAlertComponent } from './edit-alert/edit-alert.component';
+
+import { EditAlertModule } from './edit-alert/edit-alert.module';
+import { EditVwapAlertModule } from './edit-vwap-alert/edit-vwap-alert.module';
 // ... other component imports ...
 
 @NgModule({
   declarations: [
     AppComponent,
     NewAlertComponent,
-    EditAlertComponent,
     NavBarComponent,
     AdminPanelMenuComponent,
     AlertMenuComponent,
@@ -88,7 +89,9 @@ import { EditAlertComponent } from './edit-alert/edit-alert.component';
     WorkModule,
     CoinsModule,
     LoginModule,
-
+    //------------
+    EditAlertModule,
+    EditVwapAlertModule,
     // ... other modules ...
     SharedModule,
   ],

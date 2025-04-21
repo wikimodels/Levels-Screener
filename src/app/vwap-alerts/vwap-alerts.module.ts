@@ -14,6 +14,7 @@ import { ChartsButtonsPanelModule } from '../shared/charts-buttons-panel/charts-
 import { VwapAlertsTableComponent } from './vwap-alerts-table/vwap-alerts-table.component';
 import { VwapAlertsComponent } from './vwap-alerts.component';
 import { VwapAlertsRoutingModule } from './vwap-alerts-routing.module';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [VwapAlertsComponent, VwapAlertsTableComponent],
@@ -31,6 +32,7 @@ import { VwapAlertsRoutingModule } from './vwap-alerts-routing.module';
     MatFormFieldModule,
     VwapAlertsRoutingModule,
     ChartsButtonsPanelModule,
+    MatSlideToggleModule,
   ],
   exports: [VwapAlertsComponent, VwapAlertsTableComponent],
 })

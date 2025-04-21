@@ -39,7 +39,7 @@ export class EditVwapAlertComponent {
     this.displayedSymbol = this.data.alert.symbol + ' VWAP ALERT EDIT';
     this.form = this.fb.group({
       symbol: [{ value: '', disabled: true }],
-      isActive: [''],
+      isActive: [this.data.alert.isActive],
       anchorTimeStr: [{ value: '', disabled: true }],
       description: ['', Validators.required],
       imageLinks: this.fb.array([]),

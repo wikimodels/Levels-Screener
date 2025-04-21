@@ -152,22 +152,17 @@ export class AlertsGenericService {
 
     // 🔹 Send update request to the server
     this.http
-      .put<ModifyResult>(
+      .put<boolean>(
         `${ALERTS_URLS.alertsUpdateOneUrl}`,
         { filter, updatedData },
         options
       )
       .subscribe({
-        next: (response: ModifyResult) => {
-          if (response.modifiedCount > 0) {
+        next: (response: boolean) => {
+          if (response) {
             console.log('alert-generic.service Update response --> ', response);
             this.snackbarService.showSnackBar(
               `✅ Alert successfully updated`,
-              ''
-            );
-          } else {
-            this.snackbarService.showSnackBar(
-              `⚠️ No matching documents found.`,
               ''
             );
           }

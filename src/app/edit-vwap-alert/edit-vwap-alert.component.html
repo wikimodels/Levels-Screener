@@ -37,13 +37,13 @@
             </mat-form-field>
 
             <!-- isActive -->
-            <mat-form-field appearance="fill" class="form">
-              <mat-label>Active Status</mat-label>
-              <mat-select formControlName="isActive">
-                <mat-option [value]="true">Active</mat-option>
-                <mat-option [value]="false">Inactive</mat-option>
-              </mat-select>
-            </mat-form-field>
+            <div class="form"
+              style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px;">
+              <label class="mat-label" style="margin-bottom: 4px;">Active Status</label>
+              <mat-slide-toggle formControlName="isActive" color="primary" color="warn">
+                {{ form.get('isActive')?.value ? 'Active' : 'Inactive' }}
+              </mat-slide-toggle>
+            </div>
           </div>
         </div>
 

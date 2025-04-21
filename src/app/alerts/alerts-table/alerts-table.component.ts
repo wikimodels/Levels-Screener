@@ -162,6 +162,19 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     }, 1000);
   }
 
+  onToggleActiveStatus(alert: Alert) {
+    const updatedIsActive = !alert.isActive;
+
+    this.alertsService.updateOne(
+      this.collectionName,
+      { id: alert.id }, // filter
+      { isActive: updatedIsActive } // updated fields
+    );
+
+    // Optionally update UI immediately (optimistic update)
+    alert.isActive = updatedIsActive;
+  }
+
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }

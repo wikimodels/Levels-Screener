@@ -37,7 +37,7 @@ export class EditAlertComponent {
     this.displayedSymbol = this.data.alert.symbol + ' ALERT EDIT';
     this.form = this.fb.group({
       symbol: [{ value: '', disabled: true }],
-      isActive: [''],
+      isActive: [this.data.alert.isActive],
       keyLevelName: [{ value: '', disabled: true }],
       price: [{ value: '', disabled: true }],
       action: ['', Validators.required],

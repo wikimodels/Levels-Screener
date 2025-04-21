@@ -11,7 +11,7 @@ import { VwapAlert } from 'models/vwap/vwap-alert';
 import { Subscription } from 'rxjs';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 
-import { EditVwapAlertComponent } from 'src/app/shared/edit-vwap-alert/edit-vwap-alert.component';
+import { EditVwapAlertComponent } from 'src/app/edit-vwap-alert/edit-vwap-alert.component';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 import { CoinLinksService } from 'src/service/coin-links.service';
