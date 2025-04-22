@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Coin } from 'src/app/models/coin/coin';
 import { Alert } from 'src/app/models/alerts/alert';
+import { getAlertName } from './get-alert-name';
 
 export function createLineAlert(
   symbol: string,
@@ -10,7 +11,7 @@ export function createLineAlert(
   const alert: Alert = {
     id: uuidv4(),
     action: 'Line Cross',
-    alertName: '*' + symbol.split('USDT')[0] + '-' + price.toString(),
+    alertName: '*' + getAlertName(symbol, price),
     isActive: true,
     symbol: symbol,
     category: coin?.category || '',

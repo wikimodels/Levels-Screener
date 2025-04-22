@@ -12,6 +12,7 @@ import { LineTwChartService } from 'src/service/kline/line-tw-chart.service';
 import { roundToMatchDecimals } from 'src/functions/round-to-match-decimals';
 import { BaseChartDrawingService } from 'src/service/kline/base-chart-drawing.service';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
+import { getAlertName } from 'src/functions/get-alert-name';
 
 @Component({
   selector: 'app-vwap-lightweight-chart',
@@ -218,7 +219,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         color: this.baseCharDrawingService.globalLineColor,
         lineWidth: 2,
         axisLabelVisible: true,
-        title: symbol.split('USDT')[0] + '-' + price,
+        title: getAlertName(this.symbol, price),
         lineStyle: LineStyle.Dotted,
       });
 

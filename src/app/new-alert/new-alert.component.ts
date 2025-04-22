@@ -13,6 +13,7 @@ import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Coin } from 'src/app/models/coin/coin';
 import { PriceDuplicateValidator } from 'src/functions/validators/price-duplicate.validator';
 import { priceValueValidator } from 'src/functions/validators/price-value.validator';
+import { getAlertName } from 'src/functions/get-alert-name';
 
 @Component({
   selector: 'app-new-alert',
@@ -165,10 +166,7 @@ export class NewAlertComponent implements OnInit, OnDestroy {
       alert.id = uuidv4();
       alert.description = this.form.get('description')?.value;
       alert.tvScreensUrls = this.form.get('tvScreensUrls')?.value;
-      alert.alertName =
-        coin?.symbol.split('USDT')[0] +
-        '-' +
-        this.form.get('price')?.value.toString();
+      alert.alertName = getAlertName(coin?.symbol || '', alert.price);
       alert.action = this.form.get('action')?.value;
       alert.price = this.form.get('price')?.value;
       alert.isActive = this.form.get('isActive')?.value;
