@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   trigger,
@@ -34,19 +34,24 @@ import { Alert } from 'src/app/models/alerts/alert';
     ]),
   ],
 })
-export class DescriptionModalComponent {
+export class DescriptionModalComponent implements OnInit {
+  imageUrls: string[] = [];
+  defaultImageUrl = 'assets/img/no-chart-image.jpg';
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Alert,
     public dialogRef: MatDialogRef<DescriptionModalComponent>
   ) {}
-  imageLoaded: boolean = false; // Tracks if the actual image has
-  placeholderImage: string = 'assets/img/placeholder600x400.svg'; //
+
+  ngOnInit(): void {
+    if (this.data.tvScreensUrls && this.data.tvScreensUrls?.length !== 0) {
+      this.imageUrls = [...this.data.tvScreensUrls];
+    } else {
+      this.imageUrls.push(this.defaultImageUrl);
+    }
+  }
 
   closeDialog() {
     this.dialogRef.close();
-  }
-
-  onImageLoad() {
-    this.imageLoaded = true;
   }
 }

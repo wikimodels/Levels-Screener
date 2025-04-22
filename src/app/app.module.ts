@@ -43,7 +43,6 @@ import { SnackbarService } from 'src/service/snackbar.service';
 import { EditAlertModule } from './edit-alert/edit-alert.module';
 import { EditVwapAlertModule } from './edit-vwap-alert/edit-vwap-alert.module';
 import { env } from 'src/environments/environment';
-// ... other component imports ...
 
 @NgModule({
   declarations: [

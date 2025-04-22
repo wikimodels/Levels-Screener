@@ -92,7 +92,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
           closestPrice = linePrice;
           break;
         }
-      } // ← Missing closing brace for the for-loop added here
+      }
 
       // Case 2: No line within tolerance
       if (closestPrice === undefined) {
@@ -194,13 +194,13 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         if (!lineExists) {
           const time = this.baseCharDrawingService.klineData[0]
             .openTime as UTCTimestamp; // Fixed: Use `time` instead of `closePrice`
-          this.addPriceLine(time, price);
+          this.addPriceLine(this.symbol, time, price);
         }
       }
     );
   }
 
-  private addPriceLine(time: UTCTimestamp, price: number) {
+  private addPriceLine(symbol: string, time: UTCTimestamp, price: number) {
     // Remove existing line at the same price if present
     if (this.baseCharDrawingService.horizontalLines.has(price)) {
       const existingEntry =
@@ -217,8 +217,9 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
         price,
         color: this.baseCharDrawingService.globalLineColor,
         lineWidth: 2,
+        axisLabelVisible: true,
+        title: symbol.split('USDT')[0] + '-' + price,
         lineStyle: LineStyle.Dotted,
-        axisLabelVisible: false,
       });
 
     this.baseCharDrawingService.horizontalLines.set(price, {
@@ -226,7 +227,7 @@ export class LineLightweightChartComponent implements OnInit, OnDestroy {
       series: this.baseCharDrawingService.candlestickSeries,
       data: [{ time, value: price }],
     });
-
+    console.log(this.baseCharDrawingService.horizontalLines);
     this.lineKlineService.addAlertBySymbolAndPrice(this.symbol, price);
   }
 

@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Coin } from 'src/app/models/coin/coin';
+import { PriceDuplicateValidator } from 'src/functions/validators/price-duplicate.validator';
+import { priceValueValidator } from 'src/functions/validators/price-value.validator';
 
 @Component({
   selector: 'app-new-alert',
@@ -56,24 +58,25 @@ export class NewAlertComponent implements OnInit, OnDestroy {
           SymbolNameValidator.createValidator(this.coinsService),
         ]),
       ],
-      alertName: [
-        '',
-        Validators.compose([Validators.required]),
-        Validators.composeAsync([
-          AlertNameValidator.createValidator(this.alertsService),
-        ]),
-      ],
+      // alertName: [
+      //   '',
+      //   Validators.compose([Validators.required]),
+      //   Validators.composeAsync([
+      //     AlertNameValidator.createValidator(this.alertsService),
+      //   ]),
+      // ],
       price: [
         '',
-        Validators.compose([
-          Validators.required,
-          Validators.pattern('^-?\\d*(\\.\\d+)?$'),
+        Validators.compose([Validators.required, priceValueValidator()]),
+        Validators.composeAsync([
+          PriceDuplicateValidator.createValidator(this.alertsService, 'symbol'),
         ]),
       ],
       isActive: [true],
       action: ['', Validators.required],
       description: ['Nothing to say yet', Validators.required],
-      tvScreensUrls: this.fb.array([this.createImageUrlControl()]),
+      tvScreensUrls: this.fb.array([]),
+      //tvScreensUrls: this.fb.array([this.createImageUrlControl()]),
     });
 
     this.form.get('symbol')?.valueChanges.subscribe((value: string) => {
@@ -137,10 +140,14 @@ export class NewAlertComponent implements OnInit, OnDestroy {
   }
 
   removeLink(index: number) {
-    if (this.imgUrls.length > 1) {
-      this.imgUrls.removeAt(index);
-    }
+    this.imgUrls.removeAt(index);
   }
+
+  // removeLink(index: number) {
+  //   if (this.imgUrls.length > 1) {
+  //     this.imgUrls.removeAt(index);
+  //   }
+  // }
 
   onSubmit() {
     this.form?.markAllAsTouched();
@@ -158,7 +165,10 @@ export class NewAlertComponent implements OnInit, OnDestroy {
       alert.id = uuidv4();
       alert.description = this.form.get('description')?.value;
       alert.tvScreensUrls = this.form.get('tvScreensUrls')?.value;
-      alert.alertName = this.form.get('alertName')?.value;
+      alert.alertName =
+        coin?.symbol.split('USDT')[0] +
+        '-' +
+        this.form.get('price')?.value.toString();
       alert.action = this.form.get('action')?.value;
       alert.price = this.form.get('price')?.value;
       alert.isActive = this.form.get('isActive')?.value;

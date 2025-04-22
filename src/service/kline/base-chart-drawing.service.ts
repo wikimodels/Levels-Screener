@@ -223,7 +223,8 @@ export class BaseChartDrawingService {
                 color: this.globalLineColor,
                 lineWidth: 2,
                 lineStyle: LineStyle.Dotted,
-                axisLabelVisible: false,
+                axisLabelVisible: true,
+                title: symbol.split('USDT')[0] + '-' + lineData[0].value,
               });
 
               this.horizontalLines.set(lineData[0].value, {

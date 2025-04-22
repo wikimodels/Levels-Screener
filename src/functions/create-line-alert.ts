@@ -10,7 +10,7 @@ export function createLineAlert(
   const alert: Alert = {
     id: uuidv4(),
     action: 'Line Cross',
-    alertName: price.toString(),
+    alertName: '*' + symbol.split('USDT')[0] + '-' + price.toString(),
     isActive: true,
     symbol: symbol,
     category: coin?.category || '',

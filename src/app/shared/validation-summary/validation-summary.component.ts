@@ -93,6 +93,14 @@ export class ValidationSummaryComponent implements OnInit, OnDestroy {
       if (control.touched && errors['AlertNameExists']) {
         this.errors.push(`Such Key Level Name already exists`);
       }
+
+      if (control.touched && errors['priceExists']) {
+        this.errors.push(`Alert for this Price already exists`);
+      }
+
+      if (control.touched && errors['priceInvalid']) {
+        this.errors.push(`Price should be a number`);
+      }
     });
   }
 

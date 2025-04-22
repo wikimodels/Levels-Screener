@@ -2,8 +2,7 @@
   <div class="card">
     <div class="card-symbol">
       <div>
-        <img [src]="data.imageUrl ? data.imageUrl : 'assets/img/noname.png'" [alt]="data.symbol" class="round-image"
-          (load)="onImageLoad()" />
+        <img [src]="data.imageUrl ? data.imageUrl : 'assets/img/noname.png'" [alt]="data.symbol" class="round-image" />
       </div>
       <div>
         <h1 style="margin-top: 10px;">{{data.symbol}} ({{data.category}})</h1>
@@ -16,6 +15,6 @@
   </div>
 
   <div style="width: 90%;">
-    <app-carousel [images]="data.tvScreensUrls||[]"></app-carousel>
+    <app-carousel [images]="imageUrls"></app-carousel>
   </div>
 </div>

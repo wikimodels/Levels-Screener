@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -7,7 +13,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
-import { TooltipPosition } from '@angular/material/tooltip';
+import { MatTooltip, TooltipPosition } from '@angular/material/tooltip';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Alert } from 'src/app/models/alerts/alert';
@@ -38,14 +44,16 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     'select',
   ];
   sub = new Subscription();
-
+  tooltipMessage: string = '';
   dataSource!: any;
   buttonsDisabled = true;
   filterValue = '';
   isRotating = false;
   collectionName = AlertsCollection.WorkingAlerts;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
   searchKeywordFilter = new FormControl();
   tooltipPosition: TooltipPosition = 'above';
 
@@ -53,7 +61,8 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   constructor(
     private alertsService: AlertsGenericService,
     private modelDialog: MatDialog,
-    public coinLinksService: CoinLinksService
+    public coinLinksService: CoinLinksService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -173,6 +182,34 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
 
     // Optionally update UI immediately (optimistic update)
     alert.isActive = updatedIsActive;
+  }
+
+  copyToClipboard(text: string, tooltip: MatTooltip): void {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        // Включаем тултип и показываем
+        tooltip.message = 'Copied';
+        tooltip.disabled = false;
+        tooltip.show();
+
+        // Через секунду скрываем и отключаем
+        setTimeout(() => {
+          tooltip.message = '';
+          tooltip.hide();
+          tooltip.disabled = true;
+        }, 1000);
+      })
+      .catch(() => {
+        // Аналогично для ошибки
+        tooltip.message = 'Failed!';
+        tooltip.disabled = false;
+        tooltip.show();
+        setTimeout(() => {
+          tooltip.hide();
+          tooltip.disabled = true;
+        }, 1000);
+      });
   }
 
   ngOnDestroy(): void {

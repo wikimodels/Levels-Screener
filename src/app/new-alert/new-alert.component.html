@@ -30,13 +30,13 @@
             </mat-form-field>
 
             <!-- Alert Name -->
-            <mat-form-field appearance="fill" class="form">
+            <!-- <mat-form-field appearance="fill" class="form">
               <mat-label>Alert Name</mat-label>
               <input matInput type="string" formControlName="alertName" tabindex="-1" />
               <mat-error *ngIf="form.get('alertName')?.errors?.['alertNameTaken']">
                 This Alert Name already taken
               </mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
 
             <!-- Action -->
             <mat-form-field appearance="fill" class="form">
@@ -82,7 +82,8 @@
                 <mat-error *ngIf="link.hasError('required')">Image URL is required</mat-error> -->
               </div>
             </div>
-            <mat-icon (click)="addLink()" style="margin-top: -20px; font-size: 30px;cursor: pointer;">add</mat-icon>
+            <mat-icon (click)="addLink()" style="margin-top: -20px; font-size: 30px;cursor: pointer;"
+              matTooltip="Add Image Link" matTooltipPosition="above">add</mat-icon>
           </div>
         </div>
 
