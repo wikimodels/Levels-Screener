@@ -12,6 +12,7 @@ import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { DialogService } from 'src/service/general/dialog.service';
 import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
+import { CoinLinksService } from 'src/service/coin-links.service';
 
 @Component({
   selector: 'app-archived-table',
@@ -45,7 +46,8 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   constructor(
     private alertsService: AlertsGenericService,
     private matDialog: MatDialog,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    public coinLinksService: CoinLinksService
   ) {}
 
   ngOnInit() {

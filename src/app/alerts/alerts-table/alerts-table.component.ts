@@ -38,7 +38,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     'symbol',
     'alertName',
     'action',
-    'price',
+    // 'price',
     'links',
     'isActive',
     'description',
