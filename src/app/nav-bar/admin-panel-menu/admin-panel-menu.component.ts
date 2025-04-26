@@ -23,21 +23,6 @@ export class AdminPanelMenuComponent {
     this.router.navigate([EXCHANGES]);
   }
 
-  onRefreshRepos() {
-    this.generalService.refreshRepos();
-  }
-
-  onRefreshCoins() {
-    this.coinsService.refreshRepos();
-  }
-
-  onRefreshConfig() {
-    this.coinsService.refreshDopplerConfig();
-  }
-
-  onCleanTriggeredAlerts() {
-    this.coinsService.cleanTriggeredAlerts();
-  }
   onGoToDConfig() {
     this.router.navigate([DCONFIG]);
   }

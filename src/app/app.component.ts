@@ -28,9 +28,14 @@ export class AppComponent implements OnInit, OnDestroy {
   registerIcons(): void {
     const icons: { name: string; url: string }[] = [
       { name: 'developer-mode', url: 'assets/icons/developer-mode.svg' },
+      {
+        name: 'developer-mode-white',
+        url: 'assets/icons/developer-mode-white.svg',
+      },
       { name: 'bingx-sf', url: 'assets/icons/bingx-sf.svg' },
       { name: 'google-logo', url: 'assets/icons/google-logo.svg' },
       { name: 'mop', url: 'assets/icons/mop.svg' },
+      { name: 'mop-white', url: 'assets/icons/mop-white.svg' },
       { name: 'bingx-pf', url: 'assets/icons/bingx-pf.svg' },
       { name: 'sorter', url: 'assets/icons/sorter.svg' },
       { name: 'admin-person', url: 'assets/icons/admin-person.svg' },

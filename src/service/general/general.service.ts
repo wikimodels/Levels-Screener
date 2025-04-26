@@ -72,9 +72,9 @@ export class GeneralService {
       });
   }
 
-  public getConfig(): void {
+  public getConfig(): Observable<string> {
     const options = { ...this.httpOptions };
-    this.http.get<any>(GENERAL_URLS.configUrl, options).pipe(
+    return this.http.get<any>(GENERAL_URLS.configUrl, options).pipe(
       tap(() => {
         console.log('getConfig');
       }),
