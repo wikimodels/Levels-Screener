@@ -224,3 +224,42 @@ input[type=number] {
   border-color: white !important;
 
 }
+
+/* --------- SWIPER -------------*/
+.swiper-pagination {
+  bottom: 10px !important;
+}
+
+.swiper-zoom-container {
+  transition: transform 0.3s ease-in-out; /* smooth zooming */
+  transform-origin: center center;        /* make zoom feel natural */
+  max-width: 200%;                        /* prevent scaling beyond a limit */
+  max-height: 200%;
+}
+
+/* Optional: Style the image itself */
+.swiper-zoom-container img {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+
+/* then override: */
+:root {
+  --swiper-pagination-bullet-inactive-color: rgb(195, 199, 195);   /* non-active bullets */
+  --swiper-pagination-color: orange;                  /* active bullet */
+  --swiper-pagination-bullet-inactive-opacity: 1;     /* fully opaque */
+}
+
+
+.full-screen-dialog .mat-dialog-container {
+  padding: 0;               /* remove inner padding */
+  margin: 0;                /* remove default margins */
+  width: 98vw !important;  /* force full viewport width */
+  height: 100vh !important; /* force full viewport height */
+  max-width: none !important;
+  max-height: none !important;
+}

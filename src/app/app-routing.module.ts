@@ -14,6 +14,8 @@ import {
   ALERTS_BATCH,
   LINE_LIGHTWEIGHT_CHART,
   LOGIN,
+  SWIPER_VIEWER,
+  DCONFIG,
 } from 'src/consts/url-consts';
 
 import { LoginComponent } from './login/login.component';
@@ -111,10 +113,24 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: DCONFIG,
+    loadChildren: () =>
+      import('./d-config/d-config.module').then((m) => m.DConfigModule),
+    canActivate: [AuthGuard],
+  },
+  {
     path: VWAP_LIGHTWEIGHT_CHART,
     loadChildren: () =>
       import('./vwap-lightweight-chart/vwap-lightweight-chart.module').then(
         (m) => m.VwapLightweightChartModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: SWIPER_VIEWER,
+    loadChildren: () =>
+      import('./swiper-viewer/swiper-viewer.module').then(
+        (m) => m.SwiperViewerModule
       ),
     canActivate: [AuthGuard],
   },

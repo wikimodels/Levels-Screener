@@ -21,6 +21,8 @@ import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { NewAlertComponent } from 'src/app/new-alert/new-alert.component';
+import { DialogService } from 'src/service/general/dialog.service';
+import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
 
 @Component({
   selector: 'app-alerts-table',
@@ -62,7 +64,7 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
     private alertsService: AlertsGenericService,
     private modelDialog: MatDialog,
     public coinLinksService: CoinLinksService,
-    private cdr: ChangeDetectorRef
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -116,13 +118,11 @@ export class AlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onOpenDescriptionModalDialog(alert: Alert): void {
-    this.modelDialog.open(DescriptionModalComponent, {
-      data: alert,
-      enterAnimationDuration: 250,
-      exitAnimationDuration: 250,
-      width: '100vw',
-      height: '100vh',
-    });
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+    this.dialogService.openFullScreenDialog(SwiperViewerComponent, alert);
   }
 
   onDeleteSelected() {

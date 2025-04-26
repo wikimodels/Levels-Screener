@@ -43,6 +43,8 @@ import { SnackbarService } from 'src/service/snackbar.service';
 import { EditAlertModule } from './edit-alert/edit-alert.module';
 import { EditVwapAlertModule } from './edit-vwap-alert/edit-vwap-alert.module';
 import { env } from 'src/environments/environment';
+import { SwiperViewerModule } from './swiper-viewer/swiper-viewer.module';
+import { DConfigModule } from './d-config/d-config.module';
 
 @NgModule({
   declarations: [
@@ -82,11 +84,13 @@ import { env } from 'src/environments/environment';
     WorkModule,
     CoinsModule,
     LoginModule,
+    SwiperViewerModule,
     //------------
     EditAlertModule,
     EditVwapAlertModule,
     // ... other modules ...
     SharedModule,
+    DConfigModule,
   ],
   providers: [BaseChartDrawingService, CoinsGenericService, SnackbarService],
   bootstrap: [AppComponent],

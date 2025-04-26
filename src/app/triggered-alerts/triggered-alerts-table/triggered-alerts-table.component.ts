@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DescriptionModalComponent } from '../../shared/description-modal/description-modal.component';
 
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
@@ -16,6 +15,10 @@ import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
 import { Coin } from 'src/app/models/coin/coin';
+import { SWIPER_VIEWER } from 'src/consts/url-consts';
+import { Router } from '@angular/router';
+import { DialogService } from 'src/service/general/dialog.service';
+import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
 
 /**
  * @title Table with sorting
@@ -60,7 +63,9 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
     private coinsService: CoinsGenericService,
-    private workingCoinsService: WorkingCoinsService
+    private workingCoinsService: WorkingCoinsService,
+    private dialogService: DialogService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -117,13 +122,12 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onOpenDescriptionModalDialog(alert: Alert): void {
-    this.matDialog.open(DescriptionModalComponent, {
-      data: alert,
-      enterAnimationDuration: 250,
-      exitAnimationDuration: 250,
-      width: '100vw',
-      height: '100vh',
-    });
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+
+    this.dialogService.openFullScreenDialog(SwiperViewerComponent, alert);
   }
 
   onEdit(alert: Alert) {
@@ -134,6 +138,14 @@ export class TriggeredAlertsTableComponent implements OnInit, OnDestroy {
       width: '95vw',
       height: '100vh',
     });
+  }
+
+  onShowScreens(alert: Alert): void {
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+    this.router.navigate([SWIPER_VIEWER], { state: { alert } });
   }
 
   onDeleteSelected() {

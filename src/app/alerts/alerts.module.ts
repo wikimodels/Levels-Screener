@@ -15,6 +15,7 @@ import { AlertsTableComponent } from './alerts-table/alerts-table.component';
 import { AlertsRoutingModule } from './alerts-routing.module';
 import { ChartsButtonsPanelModule } from '../shared/charts-buttons-panel/charts-buttons-panel.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { SwiperViewerModule } from '../swiper-viewer/swiper-viewer.module';
 
 @NgModule({
   declarations: [AlertsComponent, AlertsTableComponent],
@@ -33,6 +34,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     AlertsRoutingModule,
     ChartsButtonsPanelModule,
     MatSlideToggleModule,
+    SwiperViewerModule,
   ],
   exports: [AlertsComponent, AlertsTableComponent],
 })

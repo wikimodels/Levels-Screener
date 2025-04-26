@@ -1,9 +1,9 @@
 /* carousel.component.css */
 .carousel-container {
   position: relative;
-  width: 77vw;
-  height: calc(77vw * 9 / 21);
-  margin: 2rem auto;
+  width: 97vw;
+  height: calc(97vw * 9 / 21);
+  margin: 1rem auto;
   overflow: hidden;
   border-radius: 8px;
 }

@@ -16,6 +16,8 @@ import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-generic.service';
+import { DialogService } from 'src/service/general/dialog.service';
+import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
 
 @Component({
   selector: 'app-vwap-archived-table',
@@ -49,7 +51,8 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
     private alertsService: VwapAlertsGenericService,
     private matDialog: MatDialog,
     private router: Router,
-    public coinLinksService: CoinLinksService
+    public coinLinksService: CoinLinksService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -93,13 +96,11 @@ export class VwapArchivedTableComponent implements OnInit, OnDestroy {
   }
 
   onOpenDescriptionModalDialog(alert: VwapAlert): void {
-    this.matDialog.open(DescriptionModalComponent, {
-      data: alert,
-      enterAnimationDuration: 250,
-      exitAnimationDuration: 250,
-      width: '100vw',
-      height: '100vh',
-    });
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+    this.dialogService.openFullScreenDialog(SwiperViewerComponent, alert);
   }
 
   onDeleteSelected() {

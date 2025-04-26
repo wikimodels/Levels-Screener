@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ALERTS_BATCH, EXCHANGES } from 'src/consts/url-consts';
+import { ALERTS_BATCH, DCONFIG, EXCHANGES } from 'src/consts/url-consts';
 import { GeneralService } from 'src/service/general/general.service';
 
 @Component({
@@ -15,11 +15,11 @@ export class AdminPanelMenuComponent {
     private coinsService: GeneralService
   ) {}
 
-  goToAlertsBatch() {
+  onGoToAlertsBatch() {
     this.router.navigate([ALERTS_BATCH]);
   }
 
-  goToExchanges() {
+  onGoToExchanges() {
     this.router.navigate([EXCHANGES]);
   }
 
@@ -33,5 +33,12 @@ export class AdminPanelMenuComponent {
 
   onRefreshConfig() {
     this.coinsService.refreshDopplerConfig();
+  }
+
+  onCleanTriggeredAlerts() {
+    this.coinsService.cleanTriggeredAlerts();
+  }
+  onGoToDConfig() {
+    this.router.navigate([DCONFIG]);
   }
 }

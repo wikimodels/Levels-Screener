@@ -7,12 +7,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DescriptionModalComponent } from '../../shared/description-modal/description-modal.component';
 
-import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Alert } from 'src/app/models/alerts/alert';
 import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { CoinsGenericService } from 'src/service/coins/coins-generic.service';
-import { SnackbarService } from 'src/service/snackbar.service';
 import { Subscription } from 'rxjs';
 import { CoinLinksService } from 'src/service/coin-links.service';
 import { WorkingCoinsService } from 'src/service/coins/working-coins.service';
@@ -21,7 +19,8 @@ import { VwapAlertsGenericService } from 'src/service/vwap-alerts/vwap-alerts-ge
 import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 import { Router } from '@angular/router';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
-import { ChartsOpenerService } from 'src/service/general/charts-opener.service';
+import { DialogService } from 'src/service/general/dialog.service';
+import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
 
 /**
  * @title Table with sorting
@@ -52,7 +51,6 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   buttonsDisabled = true;
   isRotating = false;
   defaultLink = 'https://www.tradingview.com/chart?symbol=BINANCE:BTCUSDT.P';
-  private openedWindows: Window[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -64,7 +62,7 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
     private matDialog: MatDialog,
     public coinLinksService: CoinLinksService,
     private coinsService: CoinsGenericService,
-    private chartsOpenerService: ChartsOpenerService,
+    private dialogService: DialogService,
     private workingCoinsService: WorkingCoinsService
   ) {}
 
@@ -137,13 +135,11 @@ export class VwapTriggeredAlertsTableComponent implements OnInit, OnDestroy {
   }
 
   onOpenDescriptionModalDialog(alert: VwapAlert): void {
-    this.matDialog.open(DescriptionModalComponent, {
-      data: alert,
-      enterAnimationDuration: 250,
-      exitAnimationDuration: 250,
-      width: '100vw',
-      height: '100vh',
-    });
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+    this.dialogService.openFullScreenDialog(SwiperViewerComponent, alert);
   }
 
   onEdit(alert: VwapAlert) {

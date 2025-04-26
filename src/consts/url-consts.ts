@@ -15,6 +15,8 @@ export const ALERTS_BATCH = 'alerts-batch';
 export const VWAP_LIGHTWEIGHT_CHART = 'vwap-lightweight-chart';
 export const LINE_LIGHTWEIGHT_CHART = 'line-lightweight-chart';
 export const LOGIN = 'login';
+export const DCONFIG = 'd-config';
+export const SWIPER_VIEWER = 'swiper-viewer';
 export const VWAP_TRIGGERED_ALERTS = 'vwap-' + AlertsCollection.TriggeredAlerts;
 export const VWAP_ARCHIVED_ALERTS = 'vwap-' + AlertsCollection.ArchivedAlerts;
 export const VWAP_ALERTS_AT_WORK = 'vwap-' + AlertsCollection.WorkingAlerts;
@@ -51,10 +53,12 @@ export const WORKING_COINS_URLS = {
 };
 
 export const GENERAL_URLS = {
+  configUrl: `${baseURL}/config`,
   refreshReposUrl: `${baseURL}/refresh-repos`,
   refreshDopplerConfigUrl: `${baseURL}/refresh-config`,
   userAuthUrl: `${baseURL}/user-auth`,
   emailValidationUrl: `${baseURL}/email/validate`,
+  cleanTriggeredAlertsUrl: `${baseURL}/clean-triggered-alerts`,
 };
 
 export const VWAP_ALERTS_URLS = {

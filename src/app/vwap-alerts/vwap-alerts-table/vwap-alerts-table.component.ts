@@ -6,7 +6,6 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 import { TooltipPosition } from '@angular/material/tooltip';
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Alert } from 'src/app/models/alerts/alert';
@@ -17,6 +16,8 @@ import { VwapAlert } from 'src/app/models/vwap/vwap-alert';
 import { Router } from '@angular/router';
 import { VWAP_LIGHTWEIGHT_CHART } from 'src/consts/url-consts';
 import { EditVwapAlertComponent } from 'src/app/edit-vwap-alert/edit-vwap-alert.component';
+import { DialogService } from 'src/service/general/dialog.service';
+import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
 
 @Component({
   selector: 'app-vwap-alerts-table',
@@ -55,7 +56,8 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
     private alertsService: VwapAlertsGenericService,
     private modelDialog: MatDialog,
     public coinLinksService: CoinLinksService,
-    private router: Router
+    private router: Router,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -99,13 +101,11 @@ export class VwapAlertsTableComponent implements OnInit, OnDestroy {
     return numSelected === numRows;
   }
   onOpenDescriptionModalDialog(alert: Alert): void {
-    this.modelDialog.open(DescriptionModalComponent, {
-      data: alert,
-      enterAnimationDuration: 250,
-      exitAnimationDuration: 250,
-      width: '100vw',
-      height: '100vh',
-    });
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+    this.dialogService.openFullScreenDialog(SwiperViewerComponent, alert);
   }
 
   onGoToChart(item: VwapAlert) {

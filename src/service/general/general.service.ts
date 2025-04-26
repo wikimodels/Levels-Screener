@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { SnackbarService } from '../snackbar.service';
 
 import { SnackbarType } from 'src/app/models/shared/snackbar-type';
@@ -52,6 +52,34 @@ export class GeneralService {
         },
         error: (error) => this.handleError(error),
       });
+  }
+
+  public cleanTriggeredAlerts(): void {
+    const options = { ...this.httpOptions };
+    this.http
+      .get<any>(GENERAL_URLS.cleanTriggeredAlertsUrl, options)
+      .subscribe({
+        next: (data) => {
+          console.log('general.service cleanTriggeredAlerts', data);
+          this.snackbarService.showSnackBar(
+            'Triggered Alerts are cleaned up',
+            '',
+            3000,
+            SnackbarType.Info
+          );
+        },
+        error: (error) => this.handleError(error),
+      });
+  }
+
+  public getConfig(): void {
+    const options = { ...this.httpOptions };
+    this.http.get<any>(GENERAL_URLS.configUrl, options).pipe(
+      tap(() => {
+        console.log('getConfig');
+      }),
+      catchError((error) => this.handleError(error))
+    );
   }
 
   //---------------------------------------------

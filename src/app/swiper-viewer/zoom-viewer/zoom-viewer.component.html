@@ -1,0 +1,16 @@
+<div class="overlay" *ngIf="isOpen">
+  <div class="modal-content">
+    <button class="close-btn" (click)="close()">✕</button>
+
+    <swiper [zoom]="true" [slidesPerView]="1" [grabCursor]="true" [initialSlide]="initialIndex"
+      [pagination]="{ clickable: true }" style="width: 100vw; height: 100vh;">
+      <ng-container *ngFor="let url of images">
+        <ng-template swiperSlide>
+          <div class="swiper-zoom-container">
+            <img [src]="url" style="width: 100%; height: auto; object-fit: contain;" />
+          </div>
+        </ng-template>
+      </ng-container>
+    </swiper>
+  </div>
+</div>

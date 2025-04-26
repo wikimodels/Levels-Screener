@@ -8,9 +8,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Alert } from 'src/app/models/alerts/alert';
 import { AlertsCollection } from 'src/app/models/alerts/alerts-collections';
 import { Subscription } from 'rxjs';
-import { DescriptionModalComponent } from 'src/app/shared/description-modal/description-modal.component';
 import { EditAlertComponent } from 'src/app/edit-alert/edit-alert.component';
 import { AlertsGenericService } from 'src/service/alerts/alerts-generic.service';
+import { DialogService } from 'src/service/general/dialog.service';
+import { SwiperViewerComponent } from 'src/app/swiper-viewer/swiper-viewer.component';
 
 @Component({
   selector: 'app-archived-table',
@@ -43,7 +44,8 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
   constructor(
     private alertsService: AlertsGenericService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -87,13 +89,11 @@ export class ArchivedTableComponent implements OnInit, OnDestroy {
   }
 
   onOpenDescriptionModalDialog(alert: Alert): void {
-    this.matDialog.open(DescriptionModalComponent, {
-      data: alert,
-      enterAnimationDuration: 250,
-      exitAnimationDuration: 250,
-      width: '100vw',
-      height: '100vh',
-    });
+    if (!alert) {
+      console.error('No alert selected. Cannot open modal.');
+      return;
+    }
+    this.dialogService.openFullScreenDialog(SwiperViewerComponent, alert);
   }
 
   onDeleteSelected() {

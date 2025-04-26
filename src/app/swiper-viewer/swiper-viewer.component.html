@@ -1,0 +1,54 @@
+<div style="display: flex; flex-direction: column; align-items: center; margin-top: 0.4rem;">
+  <div style="display: flex; align-items: center; gap: 0.1rem; margin: 0.3rem 0; cursor: pointer;" (click)="onGoBack()">
+    <img [src]="alert.imageUrl ? alert.imageUrl : 'assets/img/noname.png'" [alt]="alert.symbol"
+      style="width: 1.5rem; height: 1.5rem; border-radius: 50%; object-fit: cover; margin-right: 0.2rem;" />
+    <h1 style="font-size: 1rem; margin: 0; font-weight: 500;">
+      {{ alert.symbol }} ({{ alert.category }})
+    </h1>
+  </div>
+  <div style="margin-top: 0rem; margin-bottom: 0.8rem; margin-left: 1.2rem; margin-right: 1.2rem;">
+    {{alert.description}}
+  </div>
+
+
+  <swiper [slidesPerView]="1" [pagination]="{ clickable: true }" [navigation]="false" [zoom]="false" [grabCursor]="true"
+    style="width: 100%; max-width: 100vw; aspect-ratio: 21/9;">
+    <ng-container *ngFor="let url of alert.tvScreensUrls; let i = index">
+      <ng-template swiperSlide>
+        <div class="swiper-zoom-container" (click)="openZoom(i)">
+          <img [src]="url" style="width: 100%; height: auto; object-fit: cover;" />
+        </div>
+      </ng-template>
+    </ng-container>
+  </swiper>
+
+  <app-zoom-viewer [images]="alert.tvScreensUrls||[]" [initialIndex]="selectedIndex" [isOpen]="isZoomOpen"
+    (closed)="isZoomOpen = false">
+  </app-zoom-viewer>
+
+</div>
+
+
+
+
+<!-- GROUP -->
+<!-- <div class="card">
+    <div class="card-symbol">
+      <div>
+        <img [src]="alert.imageUrl ? alert.imageUrl : 'assets/img/noname.png'" [alt]="alert.symbol"
+          class="round-image" />
+      </div>
+      <div>
+        <h1 style="margin-top: 10px;">{{alert.symbol}} ({{alert.category}})</h1>
+      </div>
+    </div>
+    <div class="vertical-line"></div>
+    <div class="card-description" style="text-align: left;">
+      {{alert.description}}
+    </div>
+  </div>
+</div>
+
+<div style="margin: 0 auto;">
+  <div><app-carousel [images]="imageUrls"></app-carousel></div>
+</div> -->
