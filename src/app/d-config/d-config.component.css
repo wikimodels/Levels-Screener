@@ -58,3 +58,8 @@
 .custom-text-color{
   color:white
 }
+
+.green-button{
+  background-color: rgb(104, 224, 104) !important;
+  color: white !important;
+}

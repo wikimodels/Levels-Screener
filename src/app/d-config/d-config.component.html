@@ -16,16 +16,15 @@
           <mat-icon svgIcon="mop-white" class="white-icon"></mat-icon>
           <span style="margin-left: 8px;">Clean up Triggered Alerts</span>
         </button>
-        <button mat-raised-button color="primary" (click)="onRefreshCoins()">
+        <button mat-raised-button class="green-button" (click)="onRefreshCoins()">
           <mat-icon style="color:white" svgIcon="developer-mode-white"></mat-icon>
           <span style="margin-left: 8px;">Fetch Config</span>
         </button>
-
       </div>
     </div>
 
     <div class="right-column">
-      <pre><code>{{ jsonString }}</code></pre>
+      <pre><code  style="min-width: 700px;">{{ jsonString }}</code></pre>
     </div>
   </div>
 </div>
