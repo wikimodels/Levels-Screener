@@ -4,7 +4,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { SnackbarService } from '../snackbar.service';
 
 import { SnackbarType } from 'src/app/models/shared/snackbar-type';
-import { GENERAL_URLS } from 'src/consts/url-consts';
+import { GENERAL_URLS, COINS_URLS } from 'src/consts/url-consts';
 
 @Injectable({ providedIn: 'root' })
 export class GeneralService {
@@ -20,13 +20,29 @@ export class GeneralService {
     private snackbarService: SnackbarService
   ) {}
 
-  public refreshRepos(): void {
+  public refreshAlertsRepos(): void {
     const options = { ...this.httpOptions };
-    this.http.get<any>(GENERAL_URLS.refreshReposUrl, options).subscribe({
+    this.http.get<any>(GENERAL_URLS.refreshAlertsReposUrl, options).subscribe({
       next: (data) => {
-        console.log('general.service RefreshRepos ', data);
+        console.log('general.service refreshAlertsRepos ', data);
         this.snackbarService.showSnackBar(
-          'Repos refreshed',
+          'Alerts Repos refreshed',
+          '',
+          3000,
+          SnackbarType.Info
+        );
+      },
+      error: (error) => this.handleError(error),
+    });
+  }
+
+  public refreshCoinsRepo(): void {
+    const options = { ...this.httpOptions };
+    this.http.get<any>(COINS_URLS.coinsRefreshUrl, options).subscribe({
+      next: (data) => {
+        console.log('general.service refreshAlertsRepos ', data);
+        this.snackbarService.showSnackBar(
+          'Coins Repo refreshed',
           '',
           3000,
           SnackbarType.Info

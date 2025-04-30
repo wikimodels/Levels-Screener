@@ -54,7 +54,7 @@ export const WORKING_COINS_URLS = {
 
 export const GENERAL_URLS = {
   configUrl: `${baseURL}/config`,
-  refreshReposUrl: `${baseURL}/refresh-repos`,
+  refreshAlertsReposUrl: `${baseURL}/refresh-repos`,
   refreshDopplerConfigUrl: `${baseURL}/refresh-config`,
   userAuthUrl: `${baseURL}/user-auth`,
   emailValidationUrl: `${baseURL}/email/validate`,

@@ -10,10 +10,7 @@ import { GeneralService } from 'src/service/general/general.service';
 export class DConfigComponent implements OnInit, OnDestroy {
   jsonString = '';
   subscription = new Subscription();
-  constructor(
-    private generalService: GeneralService,
-    private coinsService: GeneralService
-  ) {}
+  constructor(private generalService: GeneralService) {}
   ngOnInit(): void {
     this.subscription.add(
       this.generalService.getConfig().subscribe((data) => {
@@ -23,21 +20,25 @@ export class DConfigComponent implements OnInit, OnDestroy {
   }
 
   onRefreshCoins() {
-    this.coinsService.refreshRepos();
+    this.generalService.refreshCoinsRepo();
   }
 
   onRefreshConfig() {
-    this.coinsService.refreshDopplerConfig();
+    this.generalService.refreshDopplerConfig();
   }
 
   onCleanTriggeredAlerts() {
-    this.coinsService.cleanTriggeredAlerts();
+    this.generalService.cleanTriggeredAlerts();
   }
 
-  onGoToDConfig() {
+  onGetDConfig() {
     this.generalService.getConfig().subscribe((data) => {
       this.jsonString = JSON.stringify(data, null, 2);
     });
+  }
+
+  onrefreshAlertsRepos() {
+    this.generalService.refreshAlertsRepos();
   }
 
   ngOnDestroy(): void {
