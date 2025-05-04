@@ -35,13 +35,8 @@ export class NewAlertComponent implements OnInit, OnDestroy {
   @ViewChild('autosize') autosize!: CdkTextareaAutosize;
 
   ngOnInit(): void {
-    this.coins = this.coinsService
-      .getCoins()
-      .filter(
-        (coin) =>
-          coin.exchanges.includes('Bybit') ||
-          coin.exchanges.includes('BingX PF')
-      );
+    this.coins = this.coinsService.getCoins();
+
     this.symbols = this.coins
       .filter(
         (coin) =>

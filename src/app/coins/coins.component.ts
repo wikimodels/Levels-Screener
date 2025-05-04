@@ -49,13 +49,7 @@ export class CoinsComponent {
   private initializeData(): void {
     this.subscription.add(
       this.coinsService.loadCoins().subscribe((coins) => {
-        this.coins = coins
-          .filter(
-            (coin) =>
-              coin.exchanges.includes('Bybit') ||
-              coin.exchanges.includes('BingX PF')
-          )
-          .sort((a, b) => a.symbol.localeCompare(b.symbol));
+        this.coins = coins.sort((a, b) => a.symbol.localeCompare(b.symbol));
         console.log('Coins fethed: ', this.coins.length);
 
         this.symbols = this.coins.map((d) => d.symbol);
@@ -73,11 +67,6 @@ export class CoinsComponent {
       const value = inputValue?.toUpperCase() || '';
       this.coins = this.coinsService
         .getCoins()
-        .filter(
-          (coin) =>
-            coin.exchanges.includes('Bybit') ||
-            coin.exchanges.includes('BingX PF')
-        )
         .sort((a, b) => a.symbol.localeCompare(b.symbol))
         .filter((coin) => coin.symbol.toUpperCase().includes(value));
     });
