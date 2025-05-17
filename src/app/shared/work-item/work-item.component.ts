@@ -24,4 +24,7 @@ export class WorkItemComponent implements OnInit {
   toggleItem(item: Coin): void {
     this.selectionService.toggle(item);
   }
+  stripPair(symbol: string): string {
+    return symbol.replace(/(USDT|BUSD|USD|PERP)$/i, '');
+  }
 }

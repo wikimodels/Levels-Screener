@@ -36,6 +36,7 @@ export class CoinsComponent {
 
   // Lifecycle Hooks
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     this.initializeData();
     this.subscribeToWorkingCoins();
     this.initializeForm();

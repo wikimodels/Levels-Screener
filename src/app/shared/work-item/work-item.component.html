@@ -5,7 +5,7 @@
   </div>
 
   <!-- SYMBOL -->
-  <div class="symbol-name">{{ coin.symbol }} ({{coin.category}})</div>
+  <div class="symbol-name">{{ stripPair(coin.symbol) }} ({{coin.category}})</div>
 
   <!-- EXCHANGES LINKS -->
   <div class="exchange-link" *ngFor="let exchange of coin.exchanges">

@@ -3,7 +3,7 @@
   gap: 20px;
   overflow-x: auto;
   padding: 20px;
-  margin-top: 70px;
+  margin-top: 0px;
 }
 
 .exchange-column {
@@ -16,7 +16,18 @@ table {
 }
 .exchange-column td {
   font-size: 13px;
-
 }
 
+.coin-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* or smaller/larger spacing as you prefer */
+}
+
+.coin-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 

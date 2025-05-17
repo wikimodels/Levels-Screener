@@ -16,6 +16,7 @@ import { CoinsComponent } from './coins.component';
 import { CoinsFieldComponent } from './coins-field/coins-field.component';
 import { SharedModule } from '../shared/shared.module';
 import { CoinsRoutingModule } from './coins-routing.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [CoinsComponent, CoinsFieldComponent],
@@ -32,7 +33,7 @@ import { CoinsRoutingModule } from './coins-routing.module';
     MatCheckboxModule, // For <mat-checkbox>
     MatOptionModule, // For <mat-option>
     MatSnackBarModule, // For MatSnackBar service
-
+    MatTooltipModule,
     // App Modules
     SharedModule, // Contains shared components/directives
     CoinsRoutingModule, // Routing configuration

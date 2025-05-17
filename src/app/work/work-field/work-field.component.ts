@@ -17,6 +17,7 @@ export class WorkFieldComponent implements OnInit, OnDestroy {
   selection = new SelectionModel<any>(true, []);
   constructor(private workingCoinsService: WorkingCoinsService) {}
   ngOnInit(): void {
+    window.scrollTo(0, 0);
     // ✅ Subscribe to Working Coins
     this.subscription.add(
       this.workingCoinsService.coins$.subscribe((coins) => {
